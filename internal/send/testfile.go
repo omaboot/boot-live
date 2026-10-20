@@ -19,7 +19,7 @@ import (
 	"github.com/omaboot/boot-live/internal/sysroot"
 )
 
-// The console's testfile (owner, 2026-10-17, prototype v55): OmaBoot?'s test file written by
+// The console's testfile: OmaBoot?'s test file written by
 // boot-live itself to a drive the person names, after asking. The rules for where it may go are
 // the safety rules' and a few of its own: only FAT and exFAT (Linux writes HFS+ only with its
 // journal off, too risky on someone's drive), never a disk the safety rules protect (internal,

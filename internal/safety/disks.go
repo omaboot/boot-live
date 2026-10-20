@@ -33,13 +33,13 @@ type Disk struct {
 	RO       bool     // the disk and every partition and holder read-only now
 }
 
-// Disks lists the block devices and decides which are internal: by the bus they hang off
-// (LIVE-PLAN §6), not the removable flag, because Mac SD readers sit on USB and report
-// non-removable media. USB and SD stay writable; everything else, including buses we don't
-// recognise (Thunderbolt disks among them) and FireWire disks (another Mac in Target Disk Mode
-// is someone's internal disk), is internal and gets made read-only. The boot stick is on USB, so
-// it's never touched. A disk that shows up later is protected when Protect runs again (the
-// FireWire hands-on test runs it as a FireWire disk appears).
+// Disks lists the block devices and decides which are internal: by the bus they hang off, not the
+// removable flag, because Mac SD readers sit on USB and report non-removable media. USB and SD stay
+// writable; everything else, including buses we don't recognise (Thunderbolt disks among them) and
+// FireWire disks (another Mac in Target Disk Mode is someone's internal disk), is internal and gets
+// made read-only. The boot stick is on USB, so it's never touched. A disk that shows up later is
+// protected when Protect runs again (the FireWire hands-on test runs it as a FireWire disk
+// appears).
 func Disks(r sysroot.Root) []Disk {
 	var out []Disk
 	for _, p := range r.Glob("/sys/block/*") {

@@ -10,13 +10,13 @@ import (
 	"github.com/omaboot/boot-live/internal/send"
 )
 
-// What the results stand for (owner, 2026-10-12): Hello names the system and the image before
+// What the results stand for: Hello names the system and the image before
 // anything runs; Quick results and the report repeat it with what the pass learned (the GPU as
 // Mesa names it, how long the Mac took to start).
 
 var leadingVersion = regexp.MustCompile(`^\d+(\.\d+)*`)
 
-// kernel is the running kernel as its package and version (owner, 2026-10-15): "linux-omarchy
+// kernel is the running kernel as its package and version: "linux-omarchy
 // 7.2.5-3" for release 7.2.5-3-omarchy, "linux-t2 7.2.4.arch1-3" for 7.2.4-arch1-Watanare-T2-3-t2,
 // from the image's package database; without the package there, the release's leading version
 // ("linux-omarchy 7.2.5"). The report keeps the release itself (uname -r).

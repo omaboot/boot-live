@@ -11,7 +11,7 @@ import (
 // Color is a VT palette index, 0–15. Backgrounds can only be 0–7 on the Linux console.
 type Color uint8
 
-// Colour roles, as in the prototype (VT indices).
+// Colour roles (VT indices).
 const (
 	K Color = iota // near-black: the background
 	RED
@@ -75,7 +75,7 @@ type Grid struct {
 }
 
 // Clip limits every write to the cells x0 ≤ x < x1, y0 ≤ y < y1 until Unclip: a section of a screen
-// draws inside its own box and nothing spills into the next (owner, 2026-10-13). A clip set
+// draws inside its own box and nothing spills into the next. A clip set
 // inside another stays inside it (the frame shrunk for the console cuts everything below it). It
 // returns the clip it replaced, for Restore.
 func (g *Grid) Clip(x0, y0, x1, y1 int) *[4]int {

@@ -561,7 +561,7 @@ func TestListenRuns(t *testing.T) {
 		{"headphones", "audio.headphone", nil, []answerer{right}, map[float64]int{4: 0}, "supported/challenge"},
 		// false-pass route: both ears counted right, but the speakers kept playing (Cirrus codecs)
 		{"headphones, the speakers played too", "audio.headphone", nil, []answerer{right, right, wrong}, map[float64]int{4: 0}, "partial/observed"},
-		// Ready waits for the jack: pressed too early it does nothing (owner, 2026-10-12)
+		// Ready waits for the jack: pressed too early it does nothing
 		{"headphones, Ready before the jack saw them", "audio.headphone", nil, []answerer{right}, map[float64]int{0.5: 0, 4: 0}, "supported/challenge"},
 		{"headphones, jack never sees them", "audio.headphone", unplugged, []answerer{right}, map[float64]int{9: 0, 21: 1}, "failed/observed"},
 		{"headphones, no jack control", "audio.headphone", func(f *Fake) {

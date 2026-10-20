@@ -66,11 +66,11 @@ func (p Probe) GLES() (int, int) {
 //   - supported: a hardware (not llvmpipe) OpenGL ES 3.0+ context, the test frame rendered right
 //     (the pixel read back is the colour drawn), and the 1080p compositor-like load, run for
 //     about 10 s, never fell below 30 fps in any one-second window (bench_min_fps: a pass is
-//     exercised end to end, owner 2026-10-13, "no false passes");
+//     exercised end to end, "no false passes");
 //   - partial: a hardware OpenGL ES 3.0+ context whose test frame came out wrong, whose load's
-//     slowest second ran below 30 fps (below 10: the GPU stalled during the test; owner,
-//     2026-10-10, after an iMac10,1 run read 0.9 fps with a black screen), or whose load didn't
-//     run or didn't report its slowest second;
+//     slowest second ran below 30 fps (below 10: the GPU stalled during the test; an iMac10,1 run
+//     read 0.9 fps with a black screen), or whose load didn't run or didn't report its slowest
+//     second;
 //   - failed: no context, a software renderer, or OpenGL ES 2.0 only.
 func (p Probe) Verdict() Result {
 	if e := p["error"]; e != "" && p["renderer"] == "" {

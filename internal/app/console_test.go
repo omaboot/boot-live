@@ -9,7 +9,7 @@ import (
 	"github.com/omaboot/boot-live/internal/ui"
 )
 
-// The console guard (owner, 2026-10-14: block production only): a run with a result changed in
+// The console guard (block production only): a run with a result changed in
 // the console never reaches DoesItOmarchy.com, whatever the screens offered; staging still takes
 // it, and a rerun alone doesn't mark the run.
 func TestMarkedRunNeverReachesProduction(t *testing.T) {

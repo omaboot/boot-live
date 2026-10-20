@@ -72,7 +72,7 @@ func drawQuick(gr *g.Grid, o *Options, st *State, f *Facts, p *pace.Player) Box 
 			}
 		}
 		// Boot's line in a box next to him (1/3 of the field), the effect or the GPU notice in the
-		// other 2/3; the log below keeps the full width (owner, 2026-10-13, prototype v44)
+		// other 2/3; the log below keeps the full width
 		sw, ax, aw := bandSplit(l)
 		fx.Draw(gr, params, ax, l.FxTop, aw, l.FxH, ft)
 		if notice {
@@ -163,7 +163,7 @@ func drawQuick(gr *g.Grid, o *Options, st *State, f *Facts, p *pace.Player) Box 
 }
 
 // noticeHeld is how long the GPU notice has held the pass since RemainingAt, by t: the time
-// left stands still while it's up (owner, 0.8.8 runs: it counted down under the notice), and
+// left stands still while it's up (it counted down under the notice), and
 // goes on once it's dismissed or its own countdown ends.
 func noticeHeld(st *State, t float64) float64 {
 	if st.GPU.At < 0 {
@@ -196,7 +196,7 @@ func drawNotice(gr *g.Grid, st *State, bx, by, w, h int, t float64) {
 	gr.Put(bx, by+bh-1, "└"+strings.Repeat("─", max(0, w-2))+"┘", g.AMB)
 	nx, y := bx+3, by+1
 	gr.Put(nx, y, i18n.T("Dark screen ahead?"), g.YEL)
-	y++ // the text right under the title: the notice fits the band's 2/3 (owner, 2026-10-13)
+	y++ // the text right under the title: the notice fits the band's 2/3
 	for _, s := range text1 {
 		gr.Put(nx, y, s, g.GRY)
 		y++
@@ -230,7 +230,7 @@ func drawNotice(gr *g.Grid, st *State, bx, by, w, h int, t float64) {
 func logRow(gr *g.Grid, lx, y, end int, c Check) { logRowID(gr, lx, y, end, c, 0) }
 
 // logRowID is logRow with the criterion's ID (network.ethernet) in a column idW wide after the
-// name, as the full log shows it (owner, 0.9.0 dev); idW 0 leaves it out.
+// name, as the full log shows it; idW 0 leaves it out.
 func logRowID(gr *g.Grid, lx, y, end int, c Check, idW int) {
 	sx, sw := lx+42, 33
 	if idW > 0 { // the status column only as wide as its longest word, so the evidence keeps room

@@ -1,6 +1,6 @@
 // boot-live is OmaBoot? Live's tester: it runs on the Linux console of an Intel Mac booted from
 // an OmaBoot? image, tests the Mac without touching its disks and sends the results to
-// DoesItOmarchy.com. --demo plays the S1 flow with a scripted run on a MacBook Air (13-inch,
+// DoesItOmarchy.com. --demo plays the flow with a scripted run on a MacBook Air (13-inch,
 // Mid 2012) [MacBookAir5,2]; without it the real run starts, and only on the OmaBoot? live
 // system. --sysroot points the real run's probes at a fixture tree instead (development: it
 // then writes nothing to the machine).
@@ -46,7 +46,7 @@ func main() {
 }
 
 func run() int {
-	demoMode := flag.Bool("demo", false, "play the S1 screens with a scripted run")
+	demoMode := flag.Bool("demo", false, "play the screens with a scripted run")
 	auto := flag.Bool("auto", false, "run without any input (QEMU tests): quick pass, then submit or save to external storage")
 	plain := flag.Bool("plain", false, "Boot layer off: no Boot, no band effects, no Boot lines")
 	edition := flag.String("edition", "live", "the image this runs in: live or omarchy")

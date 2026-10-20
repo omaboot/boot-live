@@ -61,7 +61,7 @@ var (
 	warnWords = regexp.MustCompile(`(?i)\bwarn`)
 )
 
-// KernelLine colours a kernel log line (owner, v50): the time dim, the driver blue, the rest grey,
+// KernelLine colours a kernel log line: the time dim, the driver blue, the rest grey,
 // amber for a warning, red for an error.
 func KernelLine(l string) Line {
 	m := kline.FindStringSubmatch(l)

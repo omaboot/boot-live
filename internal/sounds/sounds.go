@@ -1,8 +1,7 @@
-// Package sounds is Boot's sounds (LIVE-PLAN §5.7): short, quiet 8-bit blips and chimes, made
-// here at run time (no sound files), one per moment, each with three options to pick from (the
-// prototype's "Dev menu: sounds", boot-live-proto v55; the owner's picks are the defaults,
-// 2026-10-19, but call twice for "Boot needs you", 0.8.3 review). Off until M turns them on; the
-// picks and M's setting are kept on the stick.
+// Package sounds is Boot's sounds: short, quiet 8-bit blips and chimes, made here at run time
+// (no sound files), one per moment, each with three options to pick from (the defaults are the
+// picked ones, but call twice for "Boot needs you"). Off until M turns them on; the picks and M's
+// setting are kept on the stick.
 package sounds
 
 import (
@@ -58,7 +57,7 @@ type Moment struct {
 	Options         []Option
 }
 
-// Moments are the moments, in the sounds screen's order. The notes are the prototype's, as is.
+// Moments are the moments, in the sounds screen's order.
 var Moments = []Moment{
 	{ID: "pass", Label: i18n.M("Pass"), When: i18n.M("a check passed"), Default: 0, Options: []Option{
 		one(i18n.M("two-step up"), n(84, 0.05, Triangle, 0.55), n(91, 0.07, Triangle, 0.5)),
@@ -95,16 +94,16 @@ var Moments = []Moment{
 		r2Sigh}},
 	{ID: "summon", Label: i18n.M("Boot needs you"), When: i18n.M("before the hands-on tests"), Big: true, Default: 0, Options: []Option{
 		one(i18n.M("call twice"), n(79, 0.09, Pulse, 0.45), n(84, 0.13, Pulse, 0.45), rest(0.1), n(79, 0.09, Pulse, 0.45), n(84, 0.22, Pulse, 0.45)),
-		// traced from the owner's reference (worried.mp3, 1.1 s): E7 whistle, drop to A6 fading
-		// out, a breath, A6 swelling back, glide up to ~G7, hold, fade; at half the prototype's
-		// volume (owner, 0.8.3 review: too loud, its whistle high where the ear hears best)
+		// traced from a reference recording (1.1 s): E7 whistle, drop to A6 fading
+		// out, a breath, A6 swelling back, glide up to ~G7, hold, fade; at half the original's
+		// volume (too loud, its whistle high where the ear hears best)
 		{Name: i18n.M("are you ok?"), Level: 0.5, Layers: [][]Note{{shaped(100.1, 0.23, Sine, 0.42, 0, 0.5), shaped(93.1, 0.12, Sine, 0.3, 0, 0.06),
 			rest(0.1), shaped(93.1, 0.1, Sine, 0.08, 0, 0.28), shaped(93.2, 0.33, Sine, 0.28, 102.7, 0.55),
 			shaped(102.7, 0.06, Sine, 0.55, 0, 0.45), shaped(102.7, 0.14, Sine, 0.45, 0, 0.01)}}},
 		one(i18n.M("ding-dong"), n(88, 0.16, Triangle, 0.55), n(84, 0.42, Triangle, 0.55))}},
 }
 
-// r2Sigh is traced from the owner's reference (6.mp3, 3 s): slow high beeps, then fast chatter,
+// r2Sigh is traced from a reference recording (3 s): slow high beeps, then fast chatter,
 // over a low tone that rises faster and faster and fades.
 var r2Sigh = func() Option {
 	s := func(m, d, v float64) Note { return n(m, d, Sine, v) }

@@ -8,8 +8,8 @@ import (
 	"strings"
 )
 
-// What woke the Mac (owner, 2026-10-12: the MacBookAir5,2 kept waking ~3 s into a 20 s nap and
-// the report couldn't say why). /sys/power/pm_wakeup_irq stays empty when the firmware wakes
+// What woke the Mac (the MacBookAir5,2 kept waking ~3 s into a 20 s nap and the report couldn't say
+// why). /sys/power/pm_wakeup_irq stays empty when the firmware wakes
 // the Mac through an ACPI GPE or fixed event, the usual case on a Mac, so the sleep tests also
 // read the kernel's wakeup sources (/sys/class/wakeup) and the firmware's event counters
 // (/sys/firmware/acpi/interrupts) just before and just after the suspend; what went up is what

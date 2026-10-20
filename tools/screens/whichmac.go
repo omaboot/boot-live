@@ -22,7 +22,7 @@ func whichMacShots() []shot {
 		{name: "2-whichmac-two-fit-second", st: st(ui.WhichMac, 6, func(s *ui.State) { s.PickSel = 1 }), f: two},
 		{name: "2-whichmac-two-fit-all", st: st(ui.WhichMac, 6, func(s *ui.State) { s.Picking, s.PickSel = true, 0 }), f: two},
 		{name: "2-whichmac-two-fit-picked", st: st(ui.WhichMac, 6, func(s *ui.State) { s.Picked, s.PickedID = true, two.Candidates[1].ID }), f: picked(two)},
-		// the run plan on the stick (LIVE-PLAN §30): counting down, ignored, waiting for plan run, with problems
+		// the run plan on the stick: counting down, ignored, waiting for plan run, with problems
 		{name: "1-hello-plan", st: st(ui.Hello, 3.4), f: planFacts(planSample)},
 		{name: "1-hello-plan-ignored", st: st(ui.Hello, 8, func(s *ui.State) { s.PlanOff = true }), f: planFacts(planSample)},
 		{name: "1-hello-plan-console", st: st(ui.Hello, 12, func(s *ui.State) { s.PlanWait = true }), f: planFacts(strings.Replace(planSample, "results: both,", "results: both, start: console,", 1))},

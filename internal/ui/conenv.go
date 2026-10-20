@@ -136,8 +136,8 @@ func (e conEnv) WriteTestFile(dev string) error {
 	return nil
 }
 
-// Rerun measures a test again (owner, 2026-10-14: the new measurement decides, the earlier one
-// goes into its evidence). A hands-on test whose result this run has (or one the quick pass doesn't
+// Rerun measures a test again (the new measurement decides, the earlier one goes into its
+// evidence). A hands-on test whose result this run has (or one the quick pass doesn't
 // measure) opens again, as its own Redo does; a quick-pass check runs again in the background.
 func (e conEnv) Rerun(id string) (string, error) {
 	m := e.m
@@ -289,7 +289,7 @@ func (e conEnv) Frames() command.Frames {
 func (e conEnv) Target() command.Target { return e.m.be.Target() }
 
 // Record notes a redo or change command for the report's console entries (read-only commands
-// never are: owner, 2026-10-14).
+// never are).
 func (e conEnv) Record(line string, kind command.Kind) {
 	e.m.recorded++
 	e.m.be.Console(line, kind.Word())
@@ -307,8 +307,8 @@ func (e conEnv) Width() int {
 // out from when it first shows.
 func (e conEnv) Say(text string) { e.m.st.Said = Said{Text: text, Wait: true} }
 
-// End opens Esc's quit question with a choice selected, and closes the console (owner,
-// 2026-10-15): quit (to the prompt, or the installer), restart or shutdown. During the hands-on
+// End opens Esc's quit question with a choice selected, and closes the console: quit (to the
+// prompt, or the installer), restart or shutdown. During the hands-on
 // tests the question only offers to end them, so only quit opens it there; with the OmaBoot?
 // drive gone, Esc's box is the drive's, which offers restart and shutdown.
 func (e conEnv) End(choice string) error {

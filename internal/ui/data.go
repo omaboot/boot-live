@@ -63,7 +63,7 @@ type Facts struct {
 	Parts   string  // the line under the Mac on Which Mac
 	Omarchy string  // the Omarchy version the image carries
 
-	// Disk is the first internal disk, drawn next to Hello's wordmark (prototype v54), MoreDisks
+	// Disk is the first internal disk, drawn next to Hello's wordmark, MoreDisks
 	// how many others there are; nil when there are none. DryRun: a fixture run, nothing was set
 	// read-only. Written, when set, is how many bytes have gone to the internal disks since they
 	// were set read-only (-1: sysfs doesn't say).
@@ -370,8 +370,8 @@ type NetState struct {
 	// SignIn: the connection wants a sign-in page (a captive portal answered for boot.watch).
 	SignIn bool
 
-	// Parked is the connection turned off for another (owner, 2026-10-11/12: one connection
-	// carries the run), as Via names it; picking its line switches back. "" when none is.
+	// Parked is the connection turned off for another (one connection carries the run), as Via
+	// names it; picking its line switches back. "" when none is.
 	Parked string
 
 	Refreshed string // "catalog snapshot refreshed: …", or while Checking what it checks
@@ -399,7 +399,7 @@ func Duration(d time.Duration) string {
 	return i18n.T("%d s", s)
 }
 
-// PlanFacts is the run plan on the stick (internal/plan, LIVE-PLAN §30): this Mac's section to
+// PlanFacts is the run plan on the stick (internal/plan): this Mac's section to
 // run, or why it isn't used.
 type PlanFacts struct {
 	File      string    // its name on the stick

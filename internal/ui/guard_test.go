@@ -19,7 +19,7 @@ func (s *guardStub) Submit(string, string) { s.submitted++ }
 func (s *guardStub) Save(string, string)   { s.saved++ }
 
 // Submit on a run marked in the console opens the "Changed in the console" box, and with
-// DoesItOmarchy.com as the target no choice in it sends anything (owner, 2026-10-14); a staging
+// DoesItOmarchy.com as the target no choice in it sends anything; a staging
 // target still takes the report.
 func TestGuardNeverSendsToProduction(t *testing.T) {
 	for _, prod := range []bool{true, false} {
@@ -46,8 +46,7 @@ func TestGuardNeverSendsToProduction(t *testing.T) {
 }
 
 // The screensaver starts with the console open, after the same idle time, and covers it too;
-// the waking key does nothing else, and the console is still open as it was (owner, 0.7.2
-// review, 1a).
+// the waking key does nothing else, and the console is still open as it was.
 func TestScreensaverOverConsole(t *testing.T) {
 	m := &Model{st: NewState(), f: &Facts{}}
 	m.st.Scene = Results

@@ -6,7 +6,7 @@ OMARCHY ?= 4.0.5
 PKG     := github.com/omaboot/boot-live/internal/buildinfo
 LDFLAGS := -s -w -X '$(PKG).Version=$(VERSION)' -X '$(PKG).Commit=$(COMMIT)' -X '$(PKG).Omarchy=$(OMARCHY)'
 BIN     := dist/boot-live
-# Dev builds carry the console's dev-only commands (force, goto, font, fps, target; LIVE-PLAN §24),
+# Dev builds carry the console's dev-only commands (force, goto, font, fps, target),
 # which live in files built with the omaboot_dev tag. A dev VERSION turns the tag on; a release
 # VERSION (no "dev") leaves it off, so its binary doesn't contain them. TAGS= overrides either way.
 TAGS    ?= $(if $(findstring dev,$(VERSION)),omaboot_dev)
@@ -54,7 +54,7 @@ check:
 po:
 	go run ./tools/i18n-extract
 
-# Try the S1 screens in a terminal emulator (needs at least 120×40; 160×50 matches a MacBook).
+# Try the screens in a terminal emulator (needs at least 120×40; 160×50 matches a MacBook).
 # ` opens the console.
 demo: build
 	./$(BIN) --demo --term

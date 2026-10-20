@@ -93,7 +93,7 @@ func (r *Runner) CodeKey(key string) {
 }
 
 // Skip is "Skip this one": not_tested for each criterion it would have decided, with reason
-// no-equipment when the test needs gear the person may not have, else other (LIVE-PLAN §21.7).
+// no-equipment when the test needs gear the person may not have, else other.
 // Boot always says why (a port test's box under the band was left blank, 0.7.2 review). A
 // Skipper may take it as an answer instead; Skip reports whether the test was skipped.
 func (r *Runner) Skip() bool {
@@ -162,7 +162,7 @@ func (r *Runner) Outcome() *Outcome {
 
 // NoComeback is the outcome of a test the Mac didn't come back from: it hung (a sleep that
 // never woke), the Mac was forced off, and the run was picked up from the copy saved before the
-// test (owner, 0.7.3 review). Each criterion the test decides here is failed; from says which
+// test. Each criterion the test decides here is failed; from says which
 // copy ("boot-live 0.7.3 dev, 2026-10-15 18:45 UTC").
 func NoComeback(e *Env, s Spec, from string) Outcome {
 	what := "the Mac didn't come back from the " + s.Title + " test"
@@ -232,7 +232,7 @@ func (notBuilt) View(*Ctx) Screen { return Screen{} }
 func (notBuilt) Act(*Ctx, int)    {}
 func (notBuilt) Stop(*Ctx)        {}
 
-// PlanSkipped is the outcome of a test the run plan skips (LIVE-PLAN §30): it isn't opened, and
+// PlanSkipped is the outcome of a test the run plan skips: it isn't opened, and
 // each criterion it would decide here is not tested, reason other.
 func PlanSkipped(e *Env, s Spec) Outcome {
 	var rs []checks.Result

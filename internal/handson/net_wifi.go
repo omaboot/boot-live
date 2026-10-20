@@ -12,7 +12,7 @@ import (
 	"github.com/omaboot/boot-live/internal/i18n"
 )
 
-// network.wifi, "Wi-Fi", a test of its own (owner, 2026-10-13; prototype scene "Wi-Fi"),
+// network.wifi, "Wi-Fi", a test of its own,
 // whatever the Network screen did (an offline run too): the tester picks a network from a scan
 // and types its password; the Mac joins it for the rest of the run (the run stays online
 // through it, and the status line follows), and the boot.watch test moves data over the Wi-Fi

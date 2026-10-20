@@ -16,15 +16,15 @@ import (
 
 // The sound tests where the person listens: the built-in speakers, the headphone jack, and
 // sound over HDMI / DisplayPort. The machine plays something only a working output can carry
-// and the person answers what they heard (method challenge, LIVE-PLAN §21.3 and §11's step 3
-// choices): a count of beeps on one side at a time (2 to 5, generated, language-free) and, for
-// the speakers, a spoken word picked out of four clearly different ones (assets/audio, Piper's
-// Amy voice). A wrong answer gets one retry with a new count or word; a second miss is a missed
-// challenge. "I hear nothing" is the person's observation that a side is silent. The beeps are
-// a 700 Hz tone (the usual Morse practice pitch); the ▶ cursor goes to "Play it again" each time
-// a sound starts, and the current step says which side they're about.
+// and the person answers what they heard (method challenge): a count of beeps on one side at a time
+// (2 to 5, generated, language-free) and, for the speakers, a spoken word picked out of four
+// clearly different ones (assets/audio, Piper's Amy voice). A wrong answer gets one retry with a
+// new count or word; a second miss is a missed challenge. "I hear nothing" is the person's
+// observation that a side is silent. The beeps are a 700 Hz tone (the usual Morse practice pitch);
+// the ▶ cursor goes to "Play it again" each time a sound starts, and the current step says which
+// side they're about.
 //
-// audio.speakers, "Built-in speakers" (one result; owner, 2026-10-11):
+// audio.speakers, "Built-in speakers" (one result):
 //
 //   - supported: both sides' beeps counted right (method observed); the word picked right too
 //     makes it a challenge; skipping the word leaves it supported (observed);
@@ -36,18 +36,18 @@ import (
 //
 // A Mac with one built-in speaker (identify.OneSpeaker: Mac mini, Mac Pro, the 2008 Airs) gets
 // the same rounds, both sides through its one speaker, and the same rule: a side it doesn't
-// play is sound lost (owner's Macmini4,1, 0.8.5 dev: the right side unheard).
+// play is sound lost (Macmini4,1, 0.8.5 dev: the right side unheard).
 //
 // audio.headphone, "Headphone / analog audio output": the person plugs headphones in and puts
 // them on; Ready comes once the jack control ("Headphone Jack", which is what PipeWire switches
-// outputs by) reports them, as otherwise the beeps would come out of the speakers (owner,
-// 2026-10-12). A card with no jack control gets Ready straight away. Then the same two counts in
-// the headphones, quieter. With both counted right, 3 beeps play in both ears (by themselves,
-// owner, 2026-10-15) and one question follows: did the speakers stay quiet while it beeped in
-// the headphones? Macs' Cirrus codecs are known to keep the speakers playing with headphones in
-// (criteria review, 0.5.0). The counts stay the proof that the headphones play; the answer only
-// keeps a pass from hiding the speakers playing too. While the headphones play, the speaker
-// pin's state and the speaker switches are read for the evidence (speakerState).
+// outputs by) reports them, as otherwise the beeps would come out of the speakers. A card with no
+// jack control gets Ready straight away. Then the same two counts in
+// the headphones, quieter. With both counted right, 3 beeps play in both ears (by themselves) and
+// one question follows: did the speakers stay quiet while it beeped in the headphones? Macs' Cirrus
+// codecs are known to keep the speakers playing with headphones in (criteria review, 0.5.0). The
+// counts stay the proof that the headphones play; the answer only keeps a pass from hiding the
+// speakers playing too. While the headphones play, the speaker pin's state and the speaker switches
+// are read for the evidence (speakerState).
 //
 //   - supported: the jack reported the headphones, both sides were counted right, and the
 //     speakers stayed quiet;
@@ -700,7 +700,7 @@ func (l *listen) Act(c *Ctx, i int) {
 }
 
 // Skip takes "Skip this one" during the speakers' word as no word: both sides' beeps were
-// counted right to get there, and they decide the result (owner, 2026-10-11).
+// counted right to get there, and they decide the result.
 func (l *listen) Skip(c *Ctx) bool {
 	r := l.cur()
 	if !l.ready || r == nil || !r.word || r.result != "" {
@@ -721,7 +721,7 @@ func (l *listen) played1(r *listenRound) string {
 }
 
 // hpWait is how long the headphones wait for the jack before "They're in, nothing happens"
-// is offered (owner, 2026-10-12).
+// is offered.
 const hpWait = 20.0
 
 // headphonesIn says whether Ready can play: the jack reports headphones, or the card has no jack
@@ -769,7 +769,7 @@ func (l *listen) after(c *Ctx) {
 	case l.kind == outHeadphones && len(rs) == 2 && rs[0].result == heardOK && rs[1].result == heardOK:
 		l.say, l.sayAt, l.face = i18n.T("both ears check out. one question about the speakers."), c.T, boot.Pleased
 		// its 3 beeps in both ears play by themselves, like every round's, so there's something to
-		// listen to the speakers through (owner, 2026-10-15); play puts the cursor on "Play it
+		// listen to the speakers through; play puts the cursor on "Play it
 		// again", not a ready yes
 		l.next(c, &listenRound{side: sideBoth, quiet: true})
 		return

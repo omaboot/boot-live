@@ -32,7 +32,7 @@ type IO interface {
 	// backend's own state (online through the link in use, by watchLink's rule: the link there
 	// with its carrier, up, and its address; a default route through it and the site's name
 	// resolving when it came up), so a test's "the network is back" and the status line can't
-	// disagree (owner, 0.6.0 review: the lid test said so seconds before "Ethernet up").
+	// disagree (the lid test said so seconds before "Ethernet up").
 	NetNow() Net
 	// InhibitLid holds back logind's own lid handling (it would suspend the Mac too) until the
 	// returned function is called.

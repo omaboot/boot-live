@@ -30,13 +30,12 @@ import (
 //
 // input.keyboard-backlight, "Keyboard backlight": the keyboard's LED (/sys/class/leds/
 // *kbd_backlight*) goes dark, blinks a random 2 to 4 times and stays dark until the tester picks
-// the number of blinks (a challenge; owner, 2026-10-13: a registered LED is no proof the keys
-// light). Only then does it go back to where it was: in 0.5.0 a dim step and the way back came
-// right after the last blink and read as one more (owner, 2026-10-13). Nothing on screen follows
+// the number of blinks (a challenge; a registered LED is no proof the keys light). Only then does
+// it go back to where it was: in 0.5.0 a dim step and the way back came
+// right after the last blink and read as one more. Nothing on screen follows
 // the blinks, so the screen can't give the count away. On Macs before the T2 the LED is
 // applesmc's (the SMC key LKSB): OmaBoot? writes it only through the kernel's LED class, as an
-// installed system's brightness keys do, and puts it back after (owner approved writing it,
-// 2026-10-13).
+// installed system's brightness keys do, and puts it back after.
 //
 //   - supported: the tester picked the right number of blinks (challenge);
 //   - partial: a wrong number twice (a new count after the first miss): the light changed, but
@@ -309,7 +308,7 @@ func smcFixed(c *Ctx, r checks.Result) checks.Result {
 }
 
 // answers: the keyboard's are "Show it again" (1), the counts (their own number keys) and
-// "It didn't blink" (0), and only once the blinks are over (prototype hoKbd); the screen's are
+// "It didn't blink" (0), and only once the blinks are over; the screen's are
 // what was seen, then "Show it again", greyed while it plays.
 func (l *light) answers(c *Ctx) []Action {
 	busy := l.playing(c.T) || l.shown == 0

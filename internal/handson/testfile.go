@@ -10,7 +10,7 @@ import (
 	"github.com/omaboot/boot-live/internal/fsread"
 )
 
-// OmaBoot?'s test file (owner, 2026-10-16): OMABOOT-TEST.BIN, copied to the top folder of any
+// OmaBoot?'s test file: OMABOOT-TEST.BIN, copied to the top folder of any
 // USB stick, SD card or FireWire drive the person already has, so nothing has to be erased for
 // the port tests (tools/testfile writes it; made once, it's at get.omaboot.live/test/, and
 // TestTestFileFixed keeps it byte for byte what's there). The port tests find it by reading the

@@ -14,7 +14,7 @@ import (
 	"github.com/omaboot/boot-live/internal/ui"
 )
 
-// Picking a run up again (owner, 0.7.3 review): only the newest unsent copy from this Mac, by this
+// Picking a run up again: only the newest unsent copy from this Mac, by this
 // version, whose report is still there is offered; a note from another Mac, one used or set
 // aside, one cut short, or one whose copy is gone never is; one from another version is named,
 // never offered (0.7.5). Once answered, it isn't offered again, and picking up restores the
@@ -80,8 +80,8 @@ func TestResumeOffer(t *testing.T) {
 	}
 }
 
-// A copy from another boot-live version is never picked up (owner, 2026-10-15: a report names one
-// version): Which Mac names it, and once answered its note is set aside; the copy stays.
+// A copy from another boot-live version is never picked up (a report names one version): Which Mac
+// names it, and once answered its note is set aside; the copy stays.
 func TestResumeOtherVersion(t *testing.T) {
 	dir := t.TempDir()
 	r := New(Options{Root: sysroot.Root("../../testdata/macbookair5,2"), Edition: ui.Live, StickDir: dir, Version: "0.7.5 dev"})

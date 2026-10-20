@@ -12,7 +12,7 @@ import (
 	"github.com/omaboot/boot-live/internal/identify"
 )
 
-// ── The port map (owner-approved prototype v32) ────────────────────────────────
+// ── The port map ───────────────────────────────────────────────────────────────
 //
 // Above a port test's Found lines: the Mac's ports where DoesItOmarchy's drawing puts them, each
 // in its state's colour (handson.PortState), the port to plug into ringed in pulsing violet.

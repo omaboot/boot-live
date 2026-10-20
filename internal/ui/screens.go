@@ -14,7 +14,7 @@ import (
 	"github.com/omaboot/boot-live/internal/sounds"
 )
 
-// Scene is one S1 screen.
+// Scene is one screen.
 type Scene int
 
 const (
@@ -150,7 +150,7 @@ type State struct {
 	DozeT   float64 // seconds dozing
 	Blanked bool    // the console is blanked
 
-	Con  *command.Console // the command console (console.go; LIVE-PLAN §24)
+	Con  *command.Console // the command console (console.go)
 	Said Said             // Boot's line from the console (boot say), in his box on every screen
 
 	Sound    sounds.Prefs // Boot's sounds: on or off (M), and the picks (sound.go)
@@ -247,7 +247,7 @@ func netWord(st *State) string {
 	return i18n.T("no network")
 }
 
-// viaIcon is the status line's icon for how the Mac is online, with its space (owner, 2026-10-11).
+// viaIcon is the status line's icon for how the Mac is online, with its space.
 func viaIcon(via string) string {
 	switch via {
 	case "Ethernet":
@@ -259,7 +259,7 @@ func viaIcon(via string) string {
 }
 
 // netRight is the status line's right side: Omarchy's version, four blank cells, the network
-// (no bullet between them, owner, 2026-10-13).
+// (no bullet between them).
 func netRight(f *Facts, st *State) string { return omarchy(f) + "    " + netWord(st) }
 
 // Render draws the screen for st into gr.
@@ -366,7 +366,7 @@ func drawHello(gr *g.Grid, o *Options, st *State, f *Facts) Box {
 			}
 			boot.Draw(gr, l.BootX, l.BandTop+1, ex, life(st, t))
 			boot.Wordmark(gr, l.FieldX, l.BandTop+1, "OmaBoot?")
-			if !fatal { // the disk locks, next to the wordmark (prototype v54)
+			if !fatal { // the disk locks, next to the wordmark
 				diskBand(gr, l.FieldX+52, l.BandTop+1, l.FieldW-53, t, helloDisksAt, f)
 			}
 		}
@@ -393,7 +393,7 @@ func drawHello(gr *g.Grid, o *Options, st *State, f *Facts) Box {
 		mark, text string
 		mc         g.Color
 	}
-	// whole lines, one after another (owner, 2026-10-12: no typing); the system and the image
+	// whole lines, one after another (no typing); the system and the image
 	// above the console
 	setup := []setupLine{
 		{helloDisksAt, "■", f.DisksLine, g.BVIO},
@@ -405,7 +405,7 @@ func drawHello(gr *g.Grid, o *Options, st *State, f *Facts) Box {
 	if fatal {
 		setup = []setupLine{{1.4, "×", f.Fatal, g.BRED}}
 	}
-	// the setup lines in a terminal-like window, like a test's Output box (owner, 2026-10-13):
+	// the setup lines in a terminal-like window, like a test's Output box:
 	// as wide as its longest line, as tall as all of them, so it never moves as they come
 	x, y := b.X+1, l.ContentY
 	n, ww := 0, 0
@@ -464,7 +464,7 @@ const (
 
 // macActions are Which Mac's actions once the configuration is settled, and what each means. An
 // unfinished run's copy (Facts.Resume) turns "That's my Mac" into its two answers: pick it up, or
-// start fresh (owner, 0.7.3 review).
+// start fresh.
 func macActions(f *Facts, st *State) ([]Action, []int) {
 	if f.Resume != nil && !st.Answered && !st.PassDone {
 		r := f.Resume
@@ -511,7 +511,7 @@ func resumeLine(r *Resume) string {
 		r.Saved.UTC().Format("2006-01-02 15:04"), len(r.Done), r.Of, i18n.S(r.Title))
 }
 
-// otherLine is Which Mac's line on another version's copy (owner, 2026-10-15: never picked up).
+// otherLine is Which Mac's line on another version's copy (never picked up).
 func otherLine(o *OtherCopy, version string) string {
 	return i18n.T("Found a copy of an unfinished run from boot-live %[1]s (saved %[2]s UTC). This is boot-live %[3]s, so every test runs again; the copy stays on external storage, and DoesItOmarchy.com can still import it.",
 		o.Version, o.Saved.UTC().Format("2006-01-02 15:04"), version)

@@ -9,8 +9,8 @@ import (
 )
 
 // Again is what a result measured again in the console (rerun) carries in its evidence: the new
-// measurement decides, the earlier one goes into its evidence (owner, 2026-10-14: "measured again
-// in the console; first run: partial, 0:42"). took is how long the first run took, in seconds.
+// measurement decides, the earlier one goes into its evidence ("measured again in the console;
+// first run: partial, 0:42"). took is how long the first run took, in seconds.
 func Again(first Result, took float64) string {
 	s := first.Status
 	if s == NotTested && first.Reason != "" {

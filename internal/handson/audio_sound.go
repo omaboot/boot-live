@@ -7,8 +7,8 @@ import (
 	"sort"
 )
 
-// The sounds the audio tests play, made here: beeps generated on the fly (LIVE-PLAN §5.7: no
-// sound files for tones), the spoken word from the built-in clips (assets/audio), and the
+// The sounds the audio tests play, made here: beeps generated on the fly (no sound files for
+// tones), the spoken word from the built-in clips (assets/audio), and the
 // level maths for the microphone. Everything is 16-bit PCM in a WAV, which aplay takes as is.
 
 // Sides a sound plays on.
@@ -27,12 +27,12 @@ const (
 	beepLevel = 0.25  // of full scale (−12 dBFS): gentle, with the mixer at a moderate level
 	// The headphones' beeps, 12 dB under the speakers' (−24 dBFS): with the mixer as the tests
 	// set it (Master 65%, Headphone 90% mapped: about −14 dB), some 38 dB under the jack's
-	// loudest, which is around 65–70 dB SPL in sensitive earbuds (owner: too loud, 2026-10-11).
+	// loudest, which is around 65–70 dB SPL in sensitive earbuds (too loud).
 	headphoneLevel = 0.063
 	wordPeak       = 0.45 // the word's peak, of full scale
 	wordGap        = 0.7  // seconds between the word's two plays
 	// The microphone test's notes: 1.5 s each, at −18 dBFS (6 dB under the beeps), faded in and
-	// out over 0.12 s so they start and end softly (owner, 2026-10-13: not harsh).
+	// out over 0.12 s so they start and end softly (not harsh).
 	toneLen   = 1.5
 	noteLevel = 0.125
 	noteFade  = 0.12
@@ -65,7 +65,7 @@ func addTone(s []int16, at, secs, hz, level float64, side int) {
 
 // addToneEdge is addTone with edges edge seconds long. The tone is mixed into what s holds, so
 // overlapping notes cross-fade: written over, the next note cut the last one's fade short with a
-// pop at every note (owner's Air, 0.8.1 dev, the microphone's encore).
+// pop at every note (a MacBook Air, 0.8.1 dev, the microphone's encore).
 func addToneEdge(s []int16, at, secs, hz, level, edgeSecs float64, side int) {
 	frames, from, tone := len(s)/2, int(at*beepRate), int(secs*beepRate)
 	edge := edgeSecs * beepRate
@@ -100,8 +100,8 @@ func toneWAV(hz, lead float64) []byte {
 	return wavBytes(beepRate, 2, s)
 }
 
-// motifWAV is the five notes again, the way the film plays them (owner, 0.6.1 review: "just for
-// fun"): quicker, joined, the low C a little longer and the G held, after lead seconds of
+// motifWAV is the five notes again, the way the film plays them ("just for fun"): quicker, joined,
+// the low C a little longer and the G held, after lead seconds of
 // silence. It plays once the notes have passed, after the recording; nothing listens to it.
 func motifWAV(lead float64) []byte {
 	lens := [micN]float64{0.42, 0.42, 0.42, 0.62, 1.5}
@@ -282,14 +282,14 @@ func goertzel(s []int16, hz float64) float64 {
 	return 4 * math.Hypot(re, im) / float64(n) // the Hann window's coherent gain is ½
 }
 
-// Where toneLevel measures a tone's background (re-derived for the five notes, owner 0.6.0
-// review): the aroundN frequencies nearest the tone on a 50 Hz grid of offsets, from ±100 Hz out,
-// lower first on a tie. ±100 Hz is past the windowed tone's main lobe (±40 Hz at 50 ms) and its
-// first side lobes (the tone leaks about −50 dB there), close enough to share its noise: a clap,
-// speech or a bump raises them as much as the tone's own frequency. Each sits at aroundLow Hz or
-// more, out of the rumble where a laptop's microphone and its fan are loudest (for the low C4,
-// 262 Hz, all but one sit above it, 162–862 Hz), and aroundHarm Hz or more from the tone's 2nd to
-// 4th harmonics, which small speakers add to a low note (C4's 2nd is C5, 523 Hz).
+// Where toneLevel measures a tone's background (re-derived for the five notes): the aroundN
+// frequencies nearest the tone on a 50 Hz grid of offsets, from ±100 Hz out, lower first on a tie.
+// ±100 Hz is past the windowed tone's main lobe (±40 Hz at 50 ms) and its first side lobes (the
+// tone leaks about −50 dB there), close enough to share its noise: a clap, speech or a bump raises
+// them as much as the tone's own frequency. Each sits at aroundLow Hz or more, out of the rumble
+// where a laptop's microphone and its fan are loudest (for the low C4, 262 Hz, all but one sit
+// above it, 162–862 Hz), and aroundHarm Hz or more from the tone's 2nd to 4th harmonics, which
+// small speakers add to a low note (C4's 2nd is C5, 523 Hz).
 const (
 	aroundN    = 8
 	aroundLow  = 150.0

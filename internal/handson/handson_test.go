@@ -187,7 +187,7 @@ func TestRules(t *testing.T) {
 		{"keyboard light: blinks counted", "input.keyboard-backlight", 12, nil, map[float64]int{11: pickRight}, "supported/challenge"},
 		{"lid wakes by the lid's source", "power.lid", 15, demo("power.lid"), nil, "supported/automatic"},
 
-		// false-pass routes (owner, 2026-10-13): none of these may come out supported
+		// false-pass routes: none of these may come out supported
 		{"light sensor stuck", "input.ambient-light-sensor", 20, func(f *Fake) { f.Set("/sys/bus/acpi/devices/APP0001:00/light", "(120,0)") },
 			map[float64]int{15: 1}, "failed/observed"},
 		{"light sensor stuck at 0, flashlight", "input.ambient-light-sensor", 20, func(f *Fake) { f.Set("/sys/bus/acpi/devices/APP0001:00/light", "(0,0)") },

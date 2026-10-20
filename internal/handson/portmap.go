@@ -12,7 +12,7 @@ import (
 	"github.com/omaboot/boot-live/internal/identify"
 )
 
-// The port map (owner-approved prototype v32): the Mac's ports as DoesItOmarchy's port map
+// The port map: the Mac's ports as DoesItOmarchy's port map
 // drawing places them (the catalog snapshot's "ports", per configuration), shown across the band on
 // the port tests with each port in its state for the test on screen. A test asks for one port
 // at a time, in drawing order (the "next" port, ringed in violet); whatever shows up is matched
@@ -66,7 +66,7 @@ type PortMap struct {
 	// layout for it, so nothing moves as states change.
 	NoteW int
 	// Choices are the port IDs the answers name, in their order (which port holds the
-	// OmaBoot? stick); the screen rings the one under the cursor as Picked (owner, 2026-10-12).
+	// OmaBoot? stick); the screen rings the one under the cursor as Picked.
 	Choices []string
 	Picked  string
 	// Phone is the tethering phone's note when the test places one ("iPhone"), for the whole
@@ -118,8 +118,8 @@ func PortName(p identify.Port) string {
 }
 
 // PortTag is a port's short tag on the map and in the answers, from its connector ID: left-2 →
-// "L2", back-3 → "B3" (owner, 2026-10-14: in brackets after the name, so a question can name one
-// port exactly). An iMac's mirrored back has its own tags, numbered from the viewer's left
+// "L2", back-3 → "B3" (in brackets after the name, so a question can name one port exactly). An
+// iMac's mirrored back has its own tags, numbered from the viewer's left
 // (identify.MirrorBack): only the screens show tags, the report keeps the IDs.
 func PortTag(p identify.Port) string {
 	if p.Tag != "" {
@@ -286,7 +286,7 @@ func (gd *guide) label(p identify.Port) string { return (&PortMap{Call: gd.call}
 
 // callUSBC has the screens name the Thunderbolt 3 ports "USB-C", by the connector a test that
 // uses them as USB-C ports (USB, a monitor) needs: on a crowded iMac back the map shortened them
-// to "TB 3", and the USB-C test read as asking for something else (owner, 0.8.8 dev runs). The
+// to "TB 3", and the USB-C test read as asking for something else (0.8.8 dev runs). The
 // evidence keeps the drawing's names. A nil guide stays nil.
 func (gd *guide) callUSBC() *guide {
 	if gd != nil {

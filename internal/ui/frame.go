@@ -1,4 +1,4 @@
-// Package ui draws the screens: every S1 screen sits in one violet frame, with the status line
+// Package ui draws the screens: every screen sits in one violet frame, with the status line
 // above it, the key hints and version below it, the screen's title set into its top edge and the
 // step track set into its bottom edge. Screens draw into a grid.Grid at a scene time t, so the
 // same code serves Bubble Tea and the screen dumps.
@@ -21,7 +21,7 @@ type Edition struct {
 	Installer bool   // only OmaBoot? Omarchy has the Omarchy installer
 }
 
-// Editions, as named in LIVE-PLAN §15.
+// The editions.
 var (
 	Live    = Edition{Key: "live", Name: "Live"}
 	Omarchy = Edition{Key: "omarchy", Name: "Omarchy", Installer: true}
@@ -59,7 +59,7 @@ func width(s string) int { return len([]rune(s)) }
 
 // header is the status line above the frame: product, Mac and configuration on the left;
 // Omarchy version and network state on the right. No bullets between the items: four blank
-// cells set them apart (owner, 2026-10-13, prototype v44).
+// cells set them apart.
 func header(gr *g.Grid, o *Options, right string, mac bool, m MacInfo) {
 	gr.Fill(0, 0, gr.W, 1, ' ', g.GRY, g.K)
 	end := gr.W - width(right) - 3 // the left side stops short of the right one
@@ -114,8 +114,8 @@ type frameSpec struct {
 
 // frame draws the header, the frame, its title, the step track, the hint bar and the version.
 // An open console takes rows above the hint bar: the frame shrinks to make room, and what the
-// screen draws below its bottom edge is cut (owner, v49: nothing hidden, the step track stays;
-// tall mode cuts a full screen). Render draws the box itself.
+// screen draws below its bottom edge is cut (nothing hidden, the step track stays; tall mode cuts a
+// full screen). Render draws the box itself.
 func frame(gr *g.Grid, o *Options, st *State, m MacInfo, f frameSpec) Box {
 	if st.Sound.On { // the speaker, while Boot's sounds are on
 		f.right = icons.Speaker + "    " + f.right
@@ -155,7 +155,7 @@ func frame(gr *g.Grid, o *Options, st *State, m MacInfo, f frameSpec) Box {
 		gr.Clip(0, 0, gr.W, y1)
 		// a frame shrunk below what the screens are laid out for (the smallest screen with the
 		// short console) keeps that layout and is cut at its bottom edge: what's lowest is hidden,
-		// never drawn onto another line's row (owner, 2026-10-14)
+		// never drawn onto another line's row
 		if b.H < conFloor {
 			b.H = conFloor
 			b.Y1 = b.Y + b.H
@@ -172,7 +172,7 @@ const conFloor = MinH - 6 - command.Short
 // Boot's sounds are on). A key that works here has its
 // cap in reverse video (dark on the frame's violet); one that doesn't keeps its place, all dim.
 // omaboot-v has no Backspace symbol (U+232B), so its cap reads "delete", the word printed on that
-// key on Mac keyboards. ` is the console's, on every screen (owner, 2026-10-14).
+// key on Mac keyboards. ` is the console's, on every screen.
 func hintBar(gr *g.Grid, x, y int, k Keys) {
 	esc := i18n.T("quit")
 	switch {
@@ -211,8 +211,8 @@ func hintBar(gr *g.Grid, x, y int, k Keys) {
 	}
 }
 
-// Steps of the S1 flow, shown in the frame's bottom edge.
-// The step track's steps; the hands-on tests are a step of their own (owner, 2026-10-11).
+// Steps of the flow, shown in the frame's bottom edge.
+// The step track's steps; the hands-on tests are a step of their own.
 const (
 	stepHandsOn = 5
 	stepFinish  = 6
@@ -238,8 +238,8 @@ func handsOnStep(h *HandsOn) string {
 
 // steps sets the step track into the frame's bottom edge: ✓ done (bright green, joined by a
 // bright green ═ up to the step on now), ▶ now (violet marker, bright label), ■ to come (dim,
-// joined by a dim ─), and "step n of 7" at the right (owner, 2026-10-13, prototype v44: green
-// ticks for done steps). The hands-on step passed without a single result (straight to Finish)
+// joined by a dim ─), and "step n of 7" at the right (green ticks for done steps). The hands-on
+// step passed without a single result (straight to Finish)
 // keeps a dim ·. On a narrow screen the joins shorten, then the "step n of 7" goes.
 func steps(gr *g.Grid, b Box, cur int, ho *HandsOn) {
 	names := stepNames(ho)
@@ -394,7 +394,7 @@ func listKey(key string, items []Action, sel *int) bool {
 
 // divider draws a line across the frame (├───┤), optionally with a label in it at column lx.
 // The line is dim; its ├ ┤ ends are three-way joins with the frame, so they take the frame's
-// violet (owner, 2026-10-10, night).
+// violet.
 func divider(gr *g.Grid, b Box, y int, label string, lx int, lc g.Color) {
 	gr.Put(b.X0, y, "├", b.FC)
 	gr.Put(b.X0+1, y, strings.Repeat("─", max(0, b.X1-b.X0-1)), g.DIM)
@@ -460,7 +460,7 @@ func mark(s pace.Status) (string, g.Color, string) {
 	case pace.Pass:
 		return "✓", g.BGRN, i18n.T("pass")
 	case pace.Partial:
-		return "◐", g.AMB, i18n.T("partial") // a half-filled circle (owner, 2026-10-13; it was ~)
+		return "◐", g.AMB, i18n.T("partial") // a half-filled circle (it was ~)
 	case pace.Fail:
 		return "×", g.BRED, i18n.T("fail")
 	case pace.Live:

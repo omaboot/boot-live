@@ -344,8 +344,8 @@ func TestGPUTemperature(t *testing.T) {
 	}
 }
 
-// The network checks' verdicts (owner, 0.5.0: supported means exercised end to end; 2026-10-13:
-// data verified both ways through boot.watch): a scan, a join somewhere else, a link or an
+// The network checks' verdicts (supported means exercised end to end; data verified both ways
+// through boot.watch): a scan, a join somewhere else, a link or an
 // address alone never pass; a failed test counts against the Mac only when boot.watch was there
 // to answer, and a sign-in page, the Mac's clock or boot.watch itself never do.
 func TestNetworkVerdicts(t *testing.T) {
@@ -445,7 +445,7 @@ func TestNetworkVerdicts(t *testing.T) {
 
 // The quick pass reports what it sees on Wi-Fi and Ethernet and never passes them, even with a
 // network joined on the Network screen and boot.watch answering: the hands-on tests move the
-// data and decide (owner, 2026-10-13).
+// data and decide.
 func TestQuickNetworkNeverPasses(t *testing.T) {
 	const kib = 1 << 10
 	verified := bootwatch.Outcome{Reached: true, Down: 1344 * kib, DownOK: 1344 * kib, Up: 64 * kib, UpOK: 64 * kib}

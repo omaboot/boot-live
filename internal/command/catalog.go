@@ -7,7 +7,7 @@ import (
 	"github.com/omaboot/boot-live/internal/i18n"
 )
 
-// catalog reads the catalog snapshot the run matches against (owner, 2026-10-15): offline,
+// catalog reads the catalog snapshot the run matches against: offline,
 // from the snapshot in the image or the one refreshed from the site in this run.
 func init() {
 	Register(Cmd{Name: "catalog", Args: i18n.M("<what>"), Help: i18n.M("the catalog snapshot, offline (Tab lists what)"), Order: 45,

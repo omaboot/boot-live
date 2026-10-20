@@ -15,7 +15,7 @@ import (
 	"github.com/omaboot/boot-live/internal/pace"
 )
 
-// ── The command console (LIVE-PLAN §24, owner 2026-10-14, prototype v52) ──────────
+// ── The command console ───────────────────────────────────────────────────────────
 //
 // A drop-down console in its own full-width box above the hint bar, hidden until toggled: `
 // (the key left of 1; § on ISO Macs) or Ctrl+` (NUL on the console, which works in text fields
@@ -42,12 +42,12 @@ func conAge(st *State) float64 {
 func conOpen(st *State) bool { return st.Con != nil && st.Con.Open }
 
 // conShown reports whether the console's box is on screen: it's up, and the screensaver isn't
-// covering it (owner, 0.7.2 review: Boot dozes over the whole screen, the console box too; it's
-// open as it was once he wakes).
+// covering it (Boot dozes over the whole screen, the console box too; it's open as it was once he
+// wakes).
 func conShown(st *State) bool { return conOpen(st) && !st.Doze }
 
 // conHeight is the rows the box takes this frame, 0 when closed: 6, or half the screen when tall,
-// empty or not (owner, 2026-10-15; v50 fitted it to its output), sliding up as it opens.
+// empty or not, sliding up as it opens.
 func conHeight(gr *g.Grid, st *State) int {
 	if !conShown(st) {
 		return 0
@@ -69,7 +69,7 @@ func conAvail(st *State) bool {
 	return !(st.Scene == Test && h != nil && h.Run != nil && h.Out == nil && h.Run.TakesKeys())
 }
 
-// life is Boot's idle motion at t, his eyes down at the console while it opens (owner, v49).
+// life is Boot's idle motion at t, his eyes down at the console while it opens.
 func life(st *State, t float64) boot.Life {
 	l := boot.LifeAt(t)
 	l.Down = conOpen(st) && conAge(st) < 1.4
@@ -100,7 +100,7 @@ func drawTiming(gr *g.Grid, f command.Frames) {
 // sayFor is how long Boot keeps a line from the console (boot say) at most.
 const sayFor = 8 * time.Second
 
-// Said is Boot's line from the console (boot say, owner 2026-10-15): it stands in for his own in
+// Said is Boot's line from the console (boot say): it stands in for his own in
 // his box on whatever screen is showing, for sayFor from when it first shows or until his own
 // line there changes, then his own is back. Every box of his goes through it (sayBox, speech).
 // A screen with no room for his box (the smallest console's with the console open) shows it
@@ -186,7 +186,7 @@ func drawConsole(gr *g.Grid, b Box, h int, st *State) {
 		cx := x + 2
 		for _, s := range l {
 			if s.BG != g.K {
-				cx = gr.PutBG(cx, y+1+i, s.Text, s.FG, s.BG) // the help list's tags (v51)
+				cx = gr.PutBG(cx, y+1+i, s.Text, s.FG, s.BG) // the help list's tags
 			} else {
 				cx = gr.Put(cx, y+1+i, s.Text, s.FG)
 			}
@@ -234,7 +234,7 @@ func drawConsole(gr *g.Grid, b Box, h int, st *State) {
 }
 
 // conMark is the frame's top edge on a run whose results were changed in the console, from the
-// first such command on (owner, v49).
+// first such command on.
 func conMark(gr *g.Grid, b Box, st *State) {
 	if st.Con.Marked() {
 		m := " " + i18n.T("results changed in the console") + " "
@@ -405,7 +405,7 @@ func (m *Model) bugDone(msg BugMsg) {
 	send := m.bugSend
 	m.bugSend = false
 	switch {
-	case !m.f.CanSendBug: // bugreport keeps the kernel log whole: it may name serial numbers (owner, 2026-10-14)
+	case !m.f.CanSendBug: // bugreport keeps the kernel log whole: it may name serial numbers
 		m.conPrint(command.Line{command.S(i18n.T("saved to external storage only; may contain serial numbers"), command.Label)})
 	case send:
 		m.be.SendBug(msg.Path)

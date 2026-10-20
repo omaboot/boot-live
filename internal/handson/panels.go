@@ -43,7 +43,7 @@ func outline(gr *g.Grid, x, y, w, h int, col g.Color) {
 	gr.Put(x, y+h-1, "└"+strings.Repeat("─", w-2)+"┘", col)
 }
 
-// keyboardArt is a laptop keyboard from above, keys as caps (prototype keyboardArt): four rows
+// keyboardArt is a laptop keyboard from above, keys as caps: four rows
 // and the space bar, five rows in all, in col. It returns its width.
 func keyboardArt(gr *g.Grid, x, y, w int, col g.Color) int {
 	rows := []int{14, 14, 13, 12}
@@ -59,8 +59,8 @@ func keyboardArt(gr *g.Grid, x, y, w int, col g.Color) int {
 }
 
 // kbdLightArt is the keyboard light test's animation: a pointer down to the keyboard and a dim
-// keyboard. It never changes with the blinks (owner, 2026-10-13: the screen mustn't give the
-// count away); once decided it says how many there were.
+// keyboard. It never changes with the blinks (the screen mustn't give the count away); once decided
+// it says how many there were.
 func kbdLightArt(gr *g.Grid, x, y, w, h int, blinks int, decided bool) {
 	kw := max(2, min(4, (w-2)/14))
 	kx := x + max(0, (w-14*kw-2)/2)
@@ -103,7 +103,7 @@ func screenArt(gr *g.Grid, x, y, w, h int, _ float64) {
 	}
 }
 
-// handPixels is a hand from the side, fingers up, as Pixels draws it (prototype HAND).
+// handPixels is a hand from the side, fingers up, as Pixels draws it.
 var handPixels = []string{".w.w.w.w..", ".w.w.w.w..", ".w.w.w.w..", "wwwwwwwww.", "wwwwwwwwww", "wwwwwwwww.", ".wwwwwww..", ".wwwwwww.."}
 
 // phonePixels is a phone with its flashlight on (the light sensor in a dark room).

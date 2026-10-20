@@ -1,4 +1,4 @@
-// Package handson is the hands-on tests (LIVE-PLAN §21): after Quick results, "Keep going" leads
+// Package handson is the hands-on tests: after Quick results, "Keep going" leads
 // to a "Boot needs you" screen and then one screen per test a person takes part in: what to do,
 // what the machine sees live, and the person's answers. Tests without a plug-in come first, then
 // the plug-in tests grouped, then the ones that put the Mac to sleep.
@@ -24,7 +24,7 @@ import (
 	"github.com/omaboot/boot-live/internal/identify"
 )
 
-// Group is where a test goes in the flow (LIVE-PLAN §21.7).
+// Group is where a test goes in the flow.
 type Group int
 
 const (
@@ -122,7 +122,7 @@ type Env struct {
 	// the catalog.
 	Ports []identify.PortSide
 	// Wiring is this Mac's port wiring when set directly (the demo); otherwise wiring reads it
-	// from the catalog (the snapshot's "wiring", from accepted reports, LIVE-PLAN §23):
+	// from the catalog (the snapshot's "wiring", from accepted reports):
 	// connector → the stable paths seen on it ("left-2" → "usb2:0000:00:14.0/1", …).
 	Wiring map[string][]string
 	// USBA are the hub ports ("1-2", "2-2") the USB-A test counted as USB-A ports this run: the
@@ -240,7 +240,7 @@ type Skipper interface {
 // digits typed, Backspace (while the field holds a digit) and Enter (once it holds one) go to
 // CodeKey as "0"–"9", "backspace" and "enter"; the run keeps the field's Value and checks it as
 // soon as the last digit is typed (no Enter needed: Enter does nothing). "s" still skips, and
-// Backspace on an empty field still goes back (owner, 2026-10-13).
+// Backspace on an empty field still goes back.
 type Coder interface {
 	CodeKey(c *Ctx, key string)
 }
@@ -285,7 +285,7 @@ func (c *Ctx) Decide(o Outcome) {
 // or phase starts, for the answer most likely wanted then (the audio tests' "Play it again"). The
 // cursor stays where the person moves it until the next call. Select(-1) puts it on nothing:
 // while the test waits for something physical (a port, a hand over the sensor), so a stray
-// Enter can't answer; ↑↓ or a number key picks one then (owner, 2026-10-13).
+// Enter can't answer; ↑↓ or a number key picks one then.
 func (c *Ctx) Select(i int) { c.sel, c.selSet = max(-1, i), true }
 
 // TakeSelect reports (once) the answer a Select asked the cursor onto (-1: none).
@@ -342,7 +342,7 @@ type Question struct {
 // Screen is what a test's screen shows. The frame, Boot, the divider, the answers' keys,
 // "Skip this one", the result box and the hint bar are the screen's; the rest comes from here.
 //
-// The layout (owner-approved prototype v46, 2026-10-13): the band keeps Boot on the left; its
+// The layout: the band keeps Boot on the left; its
 // field is 1/3 Boot's line in a violet box (◀ at him) and 2/3 the test's animation (Anim). Under
 // the divider, the left column (about 46%) has "What to do" (Steps), "What happens", the code
 // field (Code) and the answers; the right column has the Output box (Live, fixed height, each
@@ -356,7 +356,7 @@ type Question struct {
 type Screen struct {
 	// Steps are "What to do", numbered: one short sentence each, in order. Step is the one to do
 	// now (0-based): those before it get a green ✓, it gets a violet number and white text, those
-	// after it stay grey; Step = len(Steps) marks every one done (owner, 2026-10-13). With no
+	// after it stay grey; Step = len(Steps) marks every one done. With no
 	// Steps, Do is the one current step.
 	Steps []string
 	Step  int
@@ -370,7 +370,7 @@ type Screen struct {
 	SayAt float64   // when the line started (the run's T)
 	Face  boot.Expr // Boot's face ("" idle)
 	// Hint is what Boot offers after 20 s with no key on the test (the box turns amber, "hint" in
-	// its edge): a nudge, never the instructions themselves (owner, 2026-10-13). "" for none.
+	// its edge): a nudge, never the instructions themselves. "" for none.
 	Hint string
 
 	// Anim draws the test's animation in the band, 2/3 of its field (the whole field with
@@ -378,11 +378,11 @@ type Screen struct {
 	// nil: a Panel that fits the band's height draws there instead.
 	Anim Panel
 	// FullBand gives the animation the band's whole field and moves Boot's line under the band
-	// (the port tests, owner, 2026-10-13). Implied by Map.
+	// (the port tests). Implied by Map.
 	FullBand bool
 	// SayRows are the text rows of Boot's box under the band (FullBand, Map): as many as the
 	// test's longest line needs at the narrowest console, fixed so nothing below it moves
-	// (prototype: sized to the longest line); 0 for 3.
+	// (sized to the longest line); 0 for 3.
 	SayRows int
 	// Map is the Mac's port map with each port's state, drawn across the band's whole field (the
 	// port tests); nil for none. Its height depends only on the Mac, so nothing moves.
@@ -391,7 +391,7 @@ type Screen struct {
 	// OutTitle is the Output box's title (translated): "What I see" when empty, or Heading.
 	OutTitle string
 	// Heading is the older name for OutTitle: "Found" for ports and devices, "What I hear" for
-	// the microphone (owner, 2026-10-11); OutTitle wins when both are set.
+	// the microphone; OutTitle wins when both are set.
 	Heading string
 	// Live are the Output box's lines, the machine's view, refreshed every step. The screen
 	// stamps each line with the run's m:ss when it first showed its current text, draws the
@@ -404,7 +404,7 @@ type Screen struct {
 
 	// Side is a small picture SideH rows tall at the top of the right column, over What I see,
 	// which gives up those rows (the external display's cable and monitor, with its port map in
-	// the band: owner, 2026-10-19). nil for none.
+	// the band). nil for none.
 	Side  Panel
 	SideH int
 
@@ -415,7 +415,7 @@ type Screen struct {
 
 	// Question is a question that isn't part of the test (which port the OmaBoot? stick is in):
 	// drawn in a violet box of its own in place of "What to do" and "What happens", with the
-	// Actions as its answers and "Skip this one" under the box (owner, 2026-10-14). nil for none.
+	// Actions as its answers and "Skip this one" under the box. nil for none.
 	Question *Question
 
 	Ask     string   // a line over the answers: what they're about (the audio tests' "Left channel")
@@ -435,7 +435,7 @@ type Screen struct {
 // Full reports whether the animation takes the band's whole field (Map or FullBand).
 func (s Screen) Full() bool { return s.FullBand || s.Map != nil }
 
-// CodeField is a typed code's field, as the run keeps it (prototype codeField): three boxed
+// CodeField is a typed code's field, as the run keeps it: three boxed
 // digits, the next one with the violet cursor, "type the 3 digits" beside them, and a
 // line under them: Wrong (amber) after a wrong try, else Tries (dim, "2 tries").
 type CodeField struct {
@@ -452,7 +452,7 @@ type Line struct {
 	Color g.Color
 	Text  string
 	Dim   bool // the text in dim grey
-	Fixed bool // an OmaBoot? fix is in use: drawn with a FIX tag (owner, 0.4.5 review)
+	Fixed bool // an OmaBoot? fix is in use: drawn with a FIX tag
 	// Side and Kind make a port's line (guide.line): "left side → [icon] USB 3 · …", the sides
 	// padded so the arrows line up, the port kind's icon in Color (its state's).
 	Side, Kind string
@@ -480,14 +480,14 @@ func Bad(text string) Line { return Line{Mark: "×", Color: g.BRED, Text: text} 
 type Panel func(gr *g.Grid, x, y, w, h int, t float64)
 
 // Action is one of the person's answers on a test's screen. Each shows its key: Key, else its
-// place among the answers (1, 2, 3 …); pressing the key picks it (owner, 2026-10-13: "2" picks
-// "It blinked 2 times", whatever its place).
+// place among the answers (1, 2, 3 …); pressing the key picks it ("2" picks "It blinked 2 times",
+// whatever its place).
 type Action struct {
 	Label, Does string
 	Off         bool   // shown greyed, never picked
 	Gap         bool   // a blank row above it, setting it apart from the answers before it
 	Key         string // its key, one digit ("2"); "" for its place. "s" is Skip's
 	// Bars, 1 to 4, draws a Wi-Fi network's signal before Does as four squares, the strong ones
-	// cyan, like the Network screen's list (owner, 0.6.1 review); 0 draws none.
+	// cyan, like the Network screen's list; 0 draws none.
 	Bars int
 }

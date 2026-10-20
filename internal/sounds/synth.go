@@ -5,7 +5,7 @@ import (
 	"math"
 )
 
-// The synth is the prototype's Web Audio graph, sample by sample: each note an oscillator with a
+// The synth is a Web Audio graph done sample by sample: each note an oscillator with a
 // 6 ms attack and a release (a shaped note swells or fades to its End over its length, then
 // releases in 12 ms; any other holds, then releases in 35 ms), a slide an exponential glide;
 // the notes mixed at 0.12 through a 3.2 kHz low-pass that takes the edge off the pulse voice (a
@@ -84,7 +84,7 @@ func addNote(buf []float64, at float64, nt Note) {
 	}
 }
 
-// env is the note's volume t seconds in, as the prototype's gain ramps make it.
+// env is the note's volume t seconds in, as the gain ramps make it.
 func env(nt Note, t float64) float64 {
 	d, v := nt.Dur, nt.Vol
 	switch {

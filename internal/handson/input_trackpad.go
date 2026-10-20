@@ -646,7 +646,7 @@ func (tp *trackpad) step(p tpPart) string {
 	return i18n.T("Swipe sideways with three fingers.")
 }
 
-// draw is the trackpad (prototype: a pad with a finger path): its corner targets, the move to
+// draw is the trackpad (a pad with a finger path): its corner targets, the move to
 // make now drawn faintly inside it, and the fingers on it as the trackpad reports them; beside
 // it, the move's name and how many are done.
 func (tp *trackpad) draw(gr *g.Grid, x, y, w, h int, t float64) {

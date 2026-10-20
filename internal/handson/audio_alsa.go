@@ -333,7 +333,7 @@ func (p *procPlayer) Setup() string {
 // pcmSetup is how an open playback device took the stream: the hardware parameters ALSA chose
 // (/proc/asound/cardC/pcmDp/sub0/hw_params), the channel map the driver reports for it (the
 // 'Playback Channel Map' control: which speaker each channel of the stream goes to) and the
-// mixer controls set. The left/right question (owner's MacBook Air run, 2026-10-11) is answered
+// mixer controls set. The left/right question is answered
 // from this: channel 1 of the WAV is the left one, and the map says where the driver sends it.
 func (s *System) pcmSetup(p PCM, mixed string) string {
 	var parts []string

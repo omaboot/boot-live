@@ -14,7 +14,7 @@ import (
 	"github.com/omaboot/boot-live/internal/sysroot"
 )
 
-// storage.optical, "Internal optical drive reads discs" (owner, 0.7.2 review): the person
+// storage.optical, "Internal optical drive reads discs": the person
 // inserts any CD or DVD; the machine asks the drive for its state (CDROM_DRIVE_STATUS, polled
 // twice a second) until it has a disc, asks what kind it is (CDROM_DISC_STATUS), reads it, and
 // ejects it (CDROMEJECT after unlocking the door: slot-loading drives have no button, so software
@@ -46,7 +46,7 @@ import (
 //
 // The band shows a slot-loading drive from above, the disc waiting at its slot, drawn in while
 // it reads (spinning, with how much is read), then pushed back out: a tray drive works the same
-// way and shares the picture (owner, 0.7.3).
+// way and shares the picture.
 
 func init() {
 	Register(Spec{ID: "storage.optical", Group: Plug, Order: 90, Title: i18n.M("Optical drive"),
@@ -704,11 +704,11 @@ const (
 	opSkipped                // all dim
 )
 
-// opArt is the optical test's band (owner, 0.7.3): a slot-loading drive from above, its slot in
+// opArt is the optical test's band: a slot-loading drive from above, its slot in
 // its right edge; the disc (silver, its hub dark) waits in front of the slot, nudging at it; it
 // slides in, spins (a violet sector going round) while the drive reads, with a bar of how much
 // is read; and slides back out. The picture sits at the band's right end with its words just
-// left of it (owner, 0.7.4): white while it works, green once it read (green only for that), red
+// left of it: white while it works, green once it read (green only for that), red
 // when it didn't, all dim when skipped.
 type opArt struct {
 	state       opLook

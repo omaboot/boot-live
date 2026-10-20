@@ -17,7 +17,7 @@ import (
 	"github.com/omaboot/boot-live/internal/ui"
 )
 
-// The run plan (internal/plan, LIVE-PLAN §30): read from the stick in Setup, before Hello; the
+// The run plan (internal/plan): read from the stick in Setup, before Hello; the
 // screens drive the run from it (ui/runplan.go) and tell the backend what happened, for the
 // report's notes.
 

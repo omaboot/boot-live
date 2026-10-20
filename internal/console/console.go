@@ -28,7 +28,7 @@ type Options struct {
 }
 
 // TallKeymap makes Ctrl+↑ and Ctrl+↓ send xterm's sequences, which Bubble Tea reads as ctrl+up and
-// ctrl+down: the console's tall and short (LIVE-PLAN §24; owner, 2026-10-14). The stock keymap
+// ctrl+down: the console's tall and short. The stock keymap
 // sends plain arrows for them. Only these two bindings change: Up is keycode 103, Down 108, and
 // F100/F101 are function keys no keymap uses.
 const TallKeymap = `string F100 = "\033[1;5A"

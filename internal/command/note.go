@@ -22,7 +22,7 @@ func init() {
 			if err := env.Note(text); err != nil {
 				return err
 			}
-			// notes are public once the report is accepted (owner, 2026-10-14)
+			// notes are public once the report is accepted
 			out.Dim(i18n.T("noted; shown on the report's page once accepted"))
 			return nil
 		}})

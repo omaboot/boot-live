@@ -8,8 +8,8 @@ import (
 	"github.com/omaboot/boot-live/internal/ui"
 )
 
-// The status line follows the connection in use live, on every screen (owner, 2026-10-13: a
-// Thunderbolt Ethernet adapter pulled out still read "Ethernet up"). watchLink reads the link's
+// The status line follows the connection in use live, on every screen (a Thunderbolt Ethernet
+// adapter pulled out still read "Ethernet up"). watchLink reads the link's
 // carrier, operstate and address in sysfs once a second: when the link carrying the run goes
 // (unplugged, cable out, address gone) the Mac is marked offline at once; when that same link
 // comes back with an address and the default route, it is online again.

@@ -1,4 +1,4 @@
-// Package checks is the S1 quick pass (LIVE-PLAN §18): one automatic check per criterion a live
+// Package checks is the quick pass: one automatic check per criterion a live
 // boot can decide without a person, each with a time limit, returning a status, the method and
 // the evidence. The pass/partial/fail rule of each check is written next to it, against the
 // criterion's wording in doesitomarchy's data/capabilities.yaml. Criteria the pass doesn't
@@ -9,9 +9,8 @@
 // little data over Wi-Fi or Ethernet to prove those carry traffic (the boot.watch test, bound to
 // the interface, every byte checked both ways). The one load they make is CPU work for the
 // thermal check, watched by the thermal watchdog; the one write, the fans' minimum raised for
-// the load's last 10 s and put back on every way out (thermal.go; LIVE-PLAN §6's approved
-// exception, owner 2026-10-13). A result is supported only when its function was exercised:
-// presence alone is at most not tested (uncertain) (owner, 0.5.0).
+// the load's last 10 s and put back on every way out (thermal.go). A result is supported only when
+// its function was exercised: presence alone is at most not tested (uncertain).
 package checks
 
 import (
@@ -58,8 +57,8 @@ type Result struct {
 	Label    string // the log's name for the check (translated)
 	Detail   string // the log's short evidence (translated)
 	FixID    string // the OmaBoot? fix it ran with, or ""
-	// Ports are a port test's answers for DoesItOmarchy.com's port wiring (the report's "ports",
-	// LIVE-PLAN §23): which connector each port it saw is, by its stable sysfs path.
+	// Ports are a port test's answers for DoesItOmarchy.com's port wiring (the report's "ports"):
+	// which connector each port it saw is, by its stable sysfs path.
 	Ports    []PortAnswer
 	Fix      string // that fix's short name for the log, e.g. applesmc
 	Effect   boot.Effect
@@ -390,7 +389,7 @@ func Run(ctx context.Context, e *Env, plan []Check, emit func(Result)) {
 				r.Detail = cut(r.Evidence, 60)
 			}
 			r.Begin, r.Finish = begin, time.Since(start).Seconds()
-			if c.ID == "graphics" && r.Evidence != "" { // the owner: the GPU check felt slow one boot (0.7.5)
+			if c.ID == "graphics" && r.Evidence != "" { // the GPU check felt slow on one boot (0.7.5)
 				r.Evidence += fmt.Sprintf("; the GPU check took %.1f s", r.Finish-r.Begin)
 			}
 			emit(r)

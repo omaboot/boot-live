@@ -26,7 +26,7 @@ const receivedAt = 1.6
 func sending(st *State, f *Facts) bool { return st.SendAt >= 0 && f.Report == "" && st.SendErr == "" }
 
 // minSending: the "sending to …" line stays up at least this long, however fast the site answers
-// (over a LAN it's a fraction of a second, so it was never seen; owner, 0.4.5 review).
+// (over a LAN it's a fraction of a second, so it was never seen).
 const minSending = 1.5
 
 // sentAt is when the screen shows the report as sent: when the site answered, or once the
@@ -60,7 +60,7 @@ func finishActions(o *Options, st *State, f *Facts) []Action {
 		submit.Does, submit.Off = i18n.T("offline: go back (delete) to Network to get online, or save a copy"), true
 	}
 	// saving says "external storage" (a second drive labelled BOOTLIVE, or the OmaBoot? drive's own
-	// reports partition), the drive OmaBoot? runs from is "the OmaBoot? drive" (owner, 2026-10-15)
+	// reports partition), the drive OmaBoot? runs from is "the OmaBoot? drive"
 	save := i18n.T("the report, in results/ on external storage; send it later")
 	if f.Report != "" {
 		save = i18n.T("the report and its code, in results/ on external storage")
@@ -174,7 +174,7 @@ func ConsentNotice(o *Options, f *Facts) string {
 }
 
 // planConsent is the consent_notice of a report a run plan sends: nobody saw the form, so it
-// says that the plan's author agreed (LIVE-PLAN §31).
+// says that the plan's author agreed.
 func planConsent(o *Options, f *Facts) string {
 	return i18n.T("Sent by a run plan (%s): whoever wrote it agreed to this notice.", "omaboot-plan.yaml") + " " + ConsentNotice(o, f)
 }
@@ -292,7 +292,7 @@ func drawFinish(gr *g.Grid, o *Options, st *State, f *Facts) Box {
 			}
 		}
 		// from Submit report until it's in, the way out next to the big word: the report rides it
-		// to the site (prototype v54); Boot's box keeps left of it
+		// to the site; Boot's box keeps left of it
 		sayW := l.FieldW - 1
 		if form || snd {
 			px := hx + width(word)*12 + 1
@@ -354,7 +354,7 @@ func drawFinish(gr *g.Grid, o *Options, st *State, f *Facts) Box {
 		groupsGrid(gr, b, sy+2, groups, t, 0, 0, false)
 	}
 	ay := sy + 2 + half*2 // one blank line under the last group
-	if sent {             // straight away, naming the server: no blank moment after sending (owner, 0.4.5 review)
+	if sent {             // straight away, naming the server: no blank moment after sending
 		if u >= 0 {
 			x := gr.Put(x0, ay, "■", g.BVIO)
 			x = gr.Put(x+1, ay, i18n.T("Report received by %s, pending review:", f.Site), g.WHT)
@@ -393,7 +393,7 @@ func drawFinish(gr *g.Grid, o *Options, st *State, f *Facts) Box {
 // guardActions are the "Changed in the console" box's: DoesItOmarchy.com never takes the run, so
 // with it as the target only external storage is offered; a staging target (dev builds) still takes it.
 func guardActions(st *State, f *Facts) []Action {
-	// "external storage", not "the stick", in the guard box (owner, 2026-10-14): a second drive or
+	// "external storage", not "the stick", in the guard box: a second drive or
 	// the OmaBoot? drive's own reports partition, wherever Save finds room
 	a := []Action{{Label: i18n.T("Save a copy to external storage"), Does: i18n.T("the report and these commands, in results/")},
 		{Label: i18n.T("Don't send (back to results)")}}
@@ -410,8 +410,8 @@ func guardActions(st *State, f *Facts) []Action {
 	return append([]Action{send}, a...)
 }
 
-// drawGuard is Submit on a run whose results were changed in the console (owner, 2026-10-14,
-// prototype v49): an amber box listing the commands instead of the send form.
+// drawGuard is Submit on a run whose results were changed in the console: an amber box listing the
+// commands instead of the send form.
 func drawGuard(gr *g.Grid, st *State, f *Facts, x0, y, end int) {
 	gr.Put(x0, y, i18n.T("Submit report"), g.WHT)
 	gr.Put(x0+width(i18n.T("Submit report")), y, cut("  ·  "+i18n.N("%d result for %s", "%d results for %s", len(f.All()), len(f.All()), macLabel(f.Mac)), end-x0-14), g.DIM)

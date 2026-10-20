@@ -11,7 +11,7 @@ import (
 )
 
 // Challenges: where a person decides, they prove what they saw by answering something the
-// machine made up (owner, 2026-10-13: "no false passes"): the keyboard backlight's blink count
+// machine made up ("no false passes"): the keyboard backlight's blink count
 // and the native resolution's test patterns (display_native.go) are picked from choices; the
 // sleep test's code and the external display's are typed (see Typed codes below).
 
@@ -61,8 +61,8 @@ func proofCode(rng *rand.Rand, avoid ...int) int {
 // ── Typed codes ───────────────────────────────────────────────────────────────
 //
 // Where the person reads a code off a screen the machine can't see itself (the built-in screen
-// after a nap, an external monitor), they type it in (owner, 2026-10-13: the 4-choice list with
-// a retry let a blind guess pass about 44 % of the time). A code is 3 digits, 100–999, and it
+// after a nap, an external monitor), they type it in (the 4-choice list with a retry let a blind
+// guess pass about 44 % of the time). A code is 3 digits, 100–999, and it
 // gets codeTries tries, a new code after a miss: a blind guess passes about 2 in 900.
 
 // codeTries is how many tries a typed code gets.
@@ -80,7 +80,7 @@ type typed struct {
 }
 
 // key takes a key typed into the field ("0"–"9", "backspace", "enter"). The code is checked as
-// soon as its last digit is typed, no Enter (owner, 2026-10-13): then it empties the field and
+// soon as its last digit is typed, no Enter: then it empties the field and
 // reports what was typed. Enter does nothing.
 func (t *typed) key(k string) (string, bool) {
 	switch {
@@ -140,8 +140,7 @@ const bigCodeH = 6
 // blank row so it stands clear of the lines above (bigCodeH rows in all).
 func bigCode(n int) Panel { return bigCodeIn(n, g.WHT) }
 
-// bigCodeIn is bigCode in col: a typed code turns green when it's right, red when it's wrong
-// (owner, 0.6.2 review).
+// bigCodeIn is bigCode in col: a typed code turns green when it's right, red when it's wrong.
 func bigCodeIn(n int, dc g.Color) Panel {
 	s := fmt.Sprint(n)
 	return func(gr *g.Grid, x, y, w, h int, _ float64) {

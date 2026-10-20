@@ -670,8 +670,8 @@ func (m *Model) netContinue() {
 	m.goTo(Quick)
 }
 
-// restoreQuick takes the quick pass's results from the copy picked up (0.7.5; owner,
-// 2026-10-15: picking up doesn't run the pass again) and goes on to the hands-on tests: "Boot
+// restoreQuick takes the quick pass's results from the copy picked up (0.7.5; picking up doesn't
+// run the pass again) and goes on to the hands-on tests: "Boot
 // needs you", then the test the Mac didn't come back from (failed) or the one after it.
 func (m *Model) restoreQuick(r *Resume) {
 	m.f.Checks = m.f.Checks[:0]
@@ -755,7 +755,7 @@ func (m *Model) finishKey(k tea.KeyMsg) tea.Cmd {
 		i--
 	}
 	switch i {
-	case 0: // Submit report; a run changed in the console gets the amber box instead (owner, 2026-10-14)
+	case 0: // Submit report; a run changed in the console gets the amber box instead
 		if st.Con.Marked() {
 			st.Guard, st.GuardSel = true, 0
 			return nil

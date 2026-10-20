@@ -17,8 +17,8 @@ func (s *joinStub) NetConnect(ssid, password string) { s.ssid, s.password = ssid
 func (s *joinStub) NetClear()                        { s.cleared = true }
 
 // The backend's state comes every two seconds while the password is typed, with no SSID (it
-// learns it when the join starts): the network picked is still the one joined (owner's Air,
-// 0.7.13 dev: "… is gone: scan again").
+// learns it when the join starts): the network picked is still the one joined ("… is gone: scan
+// again").
 func TestJoinKeepsThePick(t *testing.T) {
 	be := &joinStub{}
 	m := &Model{st: NewState(), f: &Facts{}, be: be}
@@ -41,7 +41,7 @@ func TestJoinKeepsThePick(t *testing.T) {
 
 // After a failed join the backend's state still carries the error until it drops it (NetClear),
 // and a state already on its way when the network is picked again carries it too: neither
-// closes the password box (owner's Air, 0.8.1 dev). The same error from the next join does.
+// closes the password box. The same error from the next join does.
 func TestOldErrorKeepsThePasswordBox(t *testing.T) {
 	be := &joinStub{}
 	m := &Model{st: NewState(), f: &Facts{}, be: be}

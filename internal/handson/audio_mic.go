@@ -19,15 +19,15 @@ import (
 // noise (criteria review, 0.5.0). So the microphone has to hear something the test made:
 //
 //  1. A loopback, automatic: the five notes of the Close Encounters of the Third Kind motif, D5
-//     E5 C5 C4 G4 (micNotes, owner 0.6.0 review), soft and faded in and out, one after another
+//     E5 C5 C4 G4 (micNotes), soft and faded in and out, one after another
 //     in that order through the built-in speakers while it records, each found in the recording
 //     with a Goertzel filter (noteHits: 10 dB over the frequencies around it, 10 dB over the room
 //     at that frequency, over −75 dBFS and the loudest of the notes, in at least 8 windows of
-//     50 ms). After the last note (so the tune plays whole, owner 0.6.0 review), a control
+//     50 ms). After the last note (so the tune plays whole), a control
 //     round as long as a note with the speakers off: there the microphone must NOT hear any of
 //     the notes (controlHits windows or more is "heard"). A note that keeps sounding, a stuck
 //     capture buffer or a detector that answers yes whenever it listens fails the control, so
-//     it can't pass on the notes (owner, 2026-10-13). Headphones in the jack would take the
+//     it can't pass on the notes. Headphones in the jack would take the
 //     notes, so they have to come out first (as for the speakers test).
 //  2. If the notes can't be played (no playback device on the built-in codec, the device
 //     refused), a note isn't found, or the control round hears one: a clap challenge, "Clap N
@@ -88,8 +88,8 @@ type micNote struct {
 // micN is how many notes the test plays.
 const micN = 5
 
-// micNotes are the Close Encounters of the Third Kind motif, in the order they play (owner,
-// 0.6.0 review): D5, E5, C5, then C4 an octave lower, then G4.
+// micNotes are the Close Encounters of the Third Kind motif, in the order they play: D5, E5, C5,
+// then C4 an octave lower, then G4.
 var micNotes = [micN]micNote{{"D5", 587.33, false}, {"E5", 659.25, false}, {"C5", 523.25, false}, {"C4", 261.63, true}, {"G4", 392.00, false}}
 
 // micFallback is the rule once neither the notes nor the claps came through: the room's level
@@ -265,8 +265,8 @@ const (
 
 // micRule is the loopback's rule over the rounds played so far (each decided), of total: every
 // note found and the control round quiet. The low C4 alone may be missed, and only when it
-// played and simply wasn't heard (owner, 0.6.0 review: laptop speakers are weak under about 300
-// Hz). Any other note missed, a second miss, a note that couldn't be played, the control round
+// played and simply wasn't heard (laptop speakers are weak under about 300 Hz). Any other note
+// missed, a second miss, a note that couldn't be played, the control round
 // hearing a note, or no control round at all: the claps. The control round keeps its guard
 // whichever notes were heard, so the exception can't let a stuck or noisy detector pass.
 func micRule(played []*tone, total int) int {

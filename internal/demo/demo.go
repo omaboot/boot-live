@@ -1,4 +1,4 @@
-// Package demo is the scripted run that --demo plays: the prototype's MacBook Air (13-inch,
+// Package demo is the scripted run that --demo plays: a MacBook Air (13-inch,
 // Mid 2012) [MacBookAir5,2] with made-up results. Prose is marked for the catalog with i18n.M
 // and translated where it is drawn.
 package demo
@@ -152,7 +152,7 @@ func Facts() *ui.Facts {
 		Parts:     MacParts,
 		Omarchy:   Omarchy,
 		DisksLine: i18n.N("%d internal disk set read-only (%s)", "%d internal disks set read-only (%s)", DiskCount, DiskCount, Disks),
-		// the MacBook Air's SSD as Hello draws it (prototype v54)
+		// the MacBook Air's SSD as Hello draws it
 		Disk: &safety.Layout{Name: "sda", Model: "APPLE SSD SM128E", Bytes: 121332826112, Parts: []safety.Part{
 			{Name: "sda1", Label: "EFI System Partition", Bytes: 209715200},
 			{Name: "sda2", Label: "Macintosh HD", Bytes: 120473067520},

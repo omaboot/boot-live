@@ -11,7 +11,7 @@ import (
 	"github.com/omaboot/boot-live/internal/i18n"
 )
 
-// network.ethernet, "Ethernet", a test of its own (owner, 2026-10-13), modelled on Wi-Fi's,
+// network.ethernet, "Ethernet", a test of its own, modelled on Wi-Fi's,
 // whatever the Network screen did: the tester plugs a cable from a router or switch into the
 // Mac's Ethernet port; the test waits for the link (carrier) and an IPv4 address (networkd's
 // DHCP: the run is online through the cable afterwards, and the status line follows), and the

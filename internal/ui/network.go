@@ -16,7 +16,7 @@ import (
 // Three views on one step: the list (Wi-Fi networks, then the actions), online (the connection
 // and what next), and "Set static IP address" (a form). Above both, the found lines: Ethernet,
 // a phone or modem, Wi-Fi. One cursor runs over the lines it can sit on, then the networks, then
-// the actions (owner, 2026-10-12): Enter on a line that's ready or off asks, then switches to it;
+// the actions: Enter on a line that's ready or off asks, then switches to it;
 // on Wi-Fi it shows the networks. Going back to the step later keeps the connection.
 
 // netJoining reports whether the step is busy getting online.
@@ -189,7 +189,7 @@ func switchTo(st *State) string {
 
 // drawSwitch asks before leaving a working connection for another (a line that's ready or off,
 // or a Wi-Fi network): the other one then carries the run alone, so whatever is sent goes over
-// it, and the old one is turned off, not unplugged (owner, 2026-10-11/12).
+// it, and the old one is turned off, not unplugged.
 func drawSwitch(gr *g.Grid, o *Options, b Box, st *State) {
 	n, to := st.Net, switchTo(st)
 	head := i18n.T("Switch to %s?", connName(n, to))
@@ -364,7 +364,7 @@ func netFound(gr *g.Grid, x, y0 int, t float64, ns NetState, cur, end int) {
 		if i == LineWiFi {
 			tc = g.DIM
 		}
-		ic := nc // each row's icon in its state's colour, bright cyan for the one in use (owner, 2026-10-12)
+		ic := nc // each row's icon in its state's colour, bright cyan for the one in use
 		if here {
 			gr.Put(x, y, "▶", g.BVIO)
 			nc, ic = g.WHT, g.WHT
@@ -444,7 +444,7 @@ func netList(gr *g.Grid, x, y int, t float64, ns NetState, cur, picked int, hint
 		if here || pick {
 			nc = g.WHT
 		}
-		ic := nc // the Wi-Fi icon, bright cyan on the network the Mac is on (owner, 2026-10-12)
+		ic := nc // the Wi-Fi icon, bright cyan on the network the Mac is on
 		if ns.Online && ns.Via == "Wi-Fi" && n.SSID == ns.SSID {
 			ic = g.BCYN
 		}
@@ -464,8 +464,7 @@ func netList(gr *g.Grid, x, y int, t float64, ns NetState, cur, picked int, hint
 
 // snapLine is the catalog snapshot line once online: checking (with a spinner), then what the
 // check found, with a ✓ or × and the server, not dimmed; under it, dim, the snapshot built into
-// the stick and whether it's the one in use. Its own rows, a blank one above (owner, 2026-10-12
-// and 0.4.6 review).
+// the stick and whether it's the one in use. Its own rows, a blank one above.
 func snapLine(gr *g.Grid, x, y int, t float64, ns NetState, end int) {
 	if ns.Refreshed == "" || t <= ns.RefreshedAt {
 		return
@@ -512,7 +511,7 @@ func drawNetwork(gr *g.Grid, o *Options, st *State, f *Facts) Box {
 	sayY, sayW := l.BandTop+5, l.FieldW-1
 	if o.Plain {
 		netIntro(gr, o, l)
-	} else { // the way out on the band's right (prototype v54)
+	} else { // the way out on the band's right
 		sayY, sayW = netBand(gr, l, i18n.T("Getting online"), i18n.T("To send your report. Offline works too: save the report and send it later."), netPathOf(st, f), t)
 	}
 	if !o.Plain {
@@ -619,7 +618,7 @@ func drawNetwork(gr *g.Grid, o *Options, st *State, f *Facts) Box {
 		}
 		actions(gr, x, netListY(ly, shown), listActions(st), sel, active, 0, end)
 	}
-	if st.Pw { // the Wi-Fi test's box (owner, 0.8.1 dev); joining, its keys' row is the spinner's
+	if st.Pw { // the Wi-Fi test's box; joining, its keys' row is the spinner's
 		pw := st.PwShown
 		if !st.PwShow {
 			pw = make([]rune, st.PwLen) // dots: only the count
@@ -677,7 +676,7 @@ func drawStatic(gr *g.Grid, o *Options, st *State, f *Facts) Box {
 	if o.Plain {
 		gr.Put(l.FieldX, l.BandTop, head, g.WHT)
 		gr.Put(l.FieldX, l.BandTop+1, note, g.DIM)
-	} else { // the way out with the typed values on it (prototype v54)
+	} else { // the way out with the typed values on it
 		sayY, sayW = netBand(gr, l, head, note, staticPathOf(st, f, applying, done), t)
 	}
 	target := f.Static

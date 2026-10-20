@@ -68,7 +68,7 @@ func after(d time.Duration, f func()) { time.AfterFunc(d, f) }
 // Pick does nothing: the demo has one configuration.
 func (b *Backend) Pick(string) {}
 
-// NetStart: no cable, no phone; a Wi-Fi scan finds the prototype's networks.
+// NetStart: no cable, no phone; a Wi-Fi scan finds the demo's networks.
 func (b *Backend) NetStart() {
 	b.mu.Lock()
 	online := b.ns.Online
@@ -205,7 +205,7 @@ func (b *Backend) GPUGo() {
 	}
 }
 
-// Submit is received after a moment, with the prototype's code; a second one is refused.
+// Submit is received after a moment, with the demo's code; a second one is refused.
 func (b *Backend) Submit(string, string) {
 	b.mu.Lock()
 	sent := b.code != ""

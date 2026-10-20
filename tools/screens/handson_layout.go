@@ -6,7 +6,7 @@ import (
 	"github.com/omaboot/boot-live/internal/ui"
 )
 
-// The hands-on layout's own pieces (owner-approved prototype v46, 2026-10-13): a test opened
+// The hands-on layout's own pieces: a test opened
 // paused by Backspace and Boot's hint after 20 s with no key (dressed onto a real run's screen).
 // The typed-code field is in the sleep and external display tests' own shots (h5, h7).
 func init() {

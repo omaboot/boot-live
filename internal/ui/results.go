@@ -14,7 +14,7 @@ import (
 // ── Quick results, and the read-only report ───────────────────────────────────
 
 // resultsActions: Keep going (the hands-on tests) is the default, then Finish and send, the one
-// way to send or save, then "Quit without sending", which asks first (owner, 0.3.0 review). Keep
+// way to send or save, then "Quit without sending", which asks first. Keep
 // going is greyed out when this Mac has no hands-on tests in this version.
 func resultsActions(st *State) []Action {
 	keep := Action{Label: i18n.T("Keep going"), Does: i18n.T("no hands-on tests for this Mac in this version"), Off: true}
@@ -77,7 +77,7 @@ func groupsGrid(gr *g.Grid, b Box, y0 int, groups []Group, t, from, step float64
 		}
 		gx, gy := b.X+1+col*(b.W>>1), y0+row*2
 		nx := gx
-		if ic, ok := groupIcons[grp.Name]; ok { // the category's icon before its name (owner, 2026-10-11)
+		if ic, ok := groupIcons[grp.Name]; ok { // the category's icon before its name
 			nx = gr.Put(gx, gy, ic, g.BCYN) + 1
 		}
 		gr.Put(nx, gy, padTo(i18n.S(grp.Name), 15-(nx-gx)), g.GRY)
@@ -99,7 +99,7 @@ func groupsGrid(gr *g.Grid, b Box, y0 int, groups []Group, t, from, step float64
 
 // fromLine is the line under the counts: how many checks, with which fixes.
 // The fixes count the hands-on tests' too (the lid wake fix), and stay once hands-on results
-// come in (owner, 0.4.6 review).
+// come in.
 func fromLine(f *Facts) string {
 	s := i18n.T("From %d automatic checks", len(f.Checks))
 	if n := len(f.HandsOn); n > 0 {
@@ -156,7 +156,7 @@ func drawResults(gr *g.Grid, o *Options, st *State, f *Facts, review bool) Box {
 		}
 		boot.Draw(gr, l.BootX, l.BandTop+1, ex, life(st, t))
 	}
-	// the ring on the band's right (prototype v54): the lines under the headline wrap to its left
+	// the ring on the band's right: the lines under the headline wrap to its left
 	ring := ringOf(f)
 	rw := 24
 	rx := l.FieldX + l.FieldW - rw - 3
@@ -203,7 +203,7 @@ func drawResults(gr *g.Grid, o *Options, st *State, f *Facts, review bool) Box {
 	}
 	if tc > 1.0 && rx == 0 {
 		gr.Put(hx, top+2, cut(fromLine(f), b.X+b.W-hx), g.DIM)
-		if !review && f.TestedOn != "" { // what these results stand for (owner, 2026-10-12)
+		if !review && f.TestedOn != "" { // what these results stand for
 			gr.Put(hx, top+3, cut(testedLine(f, false), b.X+b.W-hx), g.DIM)
 		}
 		// the boot timing, or (amber) a warning when the OmaBoot? drive reads slowly (0.7.5)
@@ -244,7 +244,7 @@ func drawResults(gr *g.Grid, o *Options, st *State, f *Facts, review bool) Box {
 		divider(gr, b, l.RuleY, "", 0, g.BVIO)
 	}
 	ox, end := b.X+1, b.X+b.W
-	if review { // the report's state first, then the summary (owner, 2026-10-11)
+	if review { // the report's state first, then the summary
 		y := l.ContentY
 		x := gr.Put(ox, y, "■", g.BVIO)
 		switch {
@@ -258,7 +258,7 @@ func drawResults(gr *g.Grid, o *Options, st *State, f *Facts, review bool) Box {
 		default:
 			gr.Put(x+1, y, i18n.T("Not sent yet: Submit report on Finish sends it."), g.WHT)
 		}
-		// the report opens with what it covers, under its state (owner, 2026-10-12)
+		// the report opens with what it covers, under its state
 		if f.TestedOn != "" {
 			y++
 			gr.Put(ox+2, y, cut(testedLine(f, true), end-(ox+2)), g.DIM)
@@ -319,7 +319,7 @@ func reportRows(cs []Check) []*reportRow {
 }
 
 // reportItems itemises every test under Show report's summary: Quick pass and Hands-on side by
-// side, grouped by category (owner, 2026-10-11). ↑↓ scroll both columns together when they
+// side, grouped by category. ↑↓ scroll both columns together when they
 // don't fit.
 func reportItems(gr *g.Grid, b Box, l Layout, st *State, f *Facts, y0 int) {
 	xs := []int{b.X + 1, b.X + 1 + b.W/2}
@@ -402,7 +402,7 @@ func drawLog(gr *g.Grid, b Box, l Layout, st *State, checks []Check, startup []s
 	divider(gr, b, l.RuleY, i18n.T("Full log"), b.X+1, g.WHT)
 	gr.Fill(b.X, l.RuleY+1, b.W, l.Bottom-l.RuleY, ' ', g.GRY, g.K)
 	n := len(checks) + logExtra(startup, st)
-	var con []string // every console command and its output (owner, 2026-10-14)
+	var con []string // every console command and its output
 	if st.Con != nil {
 		con = st.Con.Log
 	}

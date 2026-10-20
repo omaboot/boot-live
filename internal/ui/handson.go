@@ -15,25 +15,25 @@ import (
 	"github.com/omaboot/boot-live/internal/pace"
 )
 
-// ── Hands-on tests (LIVE-PLAN §21) ─────────────────────────────────────────────
+// ── Hands-on tests ─────────────────────────────────────────────────────────────
 //
 // "Keep going" on Quick results opens "Boot needs you": what's coming, roughly how long, what to
 // have at hand. Then one screen per test, in the registry's order (no plug-in first, then the
-// plug-ins grouped, then sleep), all in one layout (owner-approved prototype v46, 2026-10-13):
+// plug-ins grouped, then sleep), all in one layout:
 // Boot and his line in the band with the test's animation, then what to do, what happens and
 // the answers on the left, the output and the result on the right (handson.Screen says how).
 //
 // Once a test decides, its result shows and the test holds: 1 Continue goes to the next test,
 // 2 Redo runs it again (a new result replaces this one); Backspace redoes it too. Backspace on a
 // test that hasn't decided opens the one before, paused: nothing starts, its last result shows,
-// Continue or Redo (owner, 2026-10-13; this replaces the beat before the next test and sleep
-// and wake's own ▶ Continue). Esc asks, then ends the hands-on tests and goes to Finish with
+// Continue or Redo (this replaces the beat before the next test and sleep and wake's own ▶
+// Continue). Esc asks, then ends the hands-on tests and goes to Finish with
 // what's done. One report per run: the results join the quick pass's.
 
-// hintAfter is how long a test waits with no key before Boot offers its hint (owner, 2026-10-13).
+// hintAfter is how long a test waits with no key before Boot offers its hint.
 const hintAfter = 20.0
 
-// outRows is the Output box's fixed height (prototype: 16, kept between 8 and what fits).
+// outRows is the Output box's fixed height (16, kept between 8 and what fits).
 const outRows = 16
 
 // attentionReady is when the "Boot needs you" list is up and its keys work.
@@ -55,7 +55,7 @@ type HandsOn struct {
 	Paused bool
 	// KeyAt is the run's time of the last key on this test: Boot's hint counts from it.
 	KeyAt float64
-	// A test that sleeps waits for a copy of the report on the stick (LIVE-PLAN §21): Keeping
+	// A test that sleeps waits for a copy of the report on the stick: Keeping
 	// while it's saved, then where it went (Kept) or why it didn't (KeepErr; the test goes on).
 	Keeping       bool
 	Kept, KeepErr string
@@ -68,7 +68,7 @@ type HandsOn struct {
 	woke bool // Woke was called for the run on screen
 
 	// Again is, by test ID, the first run of a test measured again in the console, for its
-	// results' evidence (owner, 2026-10-14); pending holds it (ID, note) until the new run decides.
+	// results' evidence; pending holds it (ID, note) until the new run decides.
 	Again   map[string]string
 	pending [2]string
 	// retest is the test Resume opens first when the run was picked up after it hung (Sleep and
@@ -416,7 +416,7 @@ func drawAttention(gr *g.Grid, o *Options, st *State, f *Facts) Box {
 			ex = boot.Work
 		}
 		boot.Draw(gr, l.BootX, l.BandTop+1, ex, life(st, t))
-		// the band split like the tests' (owner, 2026-10-13): the heading and Boot's box in the
+		// the band split like the tests': the heading and Boot's box in the
 		// 1/3, what to have at hand in the 2/3
 		sw, ax, aw := bandSplit(l)
 		gr.Put(l.FieldX, l.BandTop+1, cut(i18n.T("Boot needs you."), sw), g.WHT)
@@ -471,7 +471,7 @@ func drawAttention(gr *g.Grid, o *Options, st *State, f *Facts) Box {
 	if cols > 1 {
 		rows = (len(plan) + cols - 1) / cols
 	}
-	// each test's criterion IDs, dim, after its time (owner, 0.6.1 review): the widest sets the
+	// each test's criterion IDs, dim, after its time: the widest sets the
 	// column, and it gives way (cut) before the titles do
 	ids := make([]string, len(plan))
 	idW, titleW := 0, 0
@@ -485,7 +485,7 @@ func drawAttention(gr *g.Grid, o *Options, st *State, f *Facts) Box {
 			break
 		}
 		y, cx := y0+2+i%rows, x+2+(i/rows)*colW
-		m, mc := "", g.DIM // no bullet for a test still to come (owner, 0.6.1 review); a done one shows its mark
+		m, mc := "", g.DIM // no bullet for a test still to come; a done one shows its mark
 		if out, ok := h.Results[s.ID]; ok && len(out.Results) > 0 {
 			m, mc, _ = mark(out.Results[0].Pace())
 		}
@@ -798,7 +798,7 @@ func drawTestOutput(gr *g.Grid, rx, rw int, l Layout, v testView) {
 
 // drawQuestion is a question that isn't part of the test, in a violet box of its own in place
 // of "What to do": its text white, its note dim, its answers (all but the last of acts) inside;
-// "Skip this one" (the last) under the box, since it skips the whole test (owner, 2026-10-14).
+// "Skip this one" (the last) under the box, since it skips the whole test.
 func drawQuestion(gr *g.Grid, x, y, w int, q *handson.Question, acts []answer, sel int) {
 	text, note := wrap(q.Text, w-4), wrap(q.Note, w-4)
 	own := acts[:len(acts)-1]
@@ -852,7 +852,7 @@ func stepsOf(v testView) []string {
 }
 
 // drawSteps is "What to do": numbered steps, a done one with a green ✓, the current one's
-// number violet and its text white, the ones to come grey (owner, 2026-10-13). It returns the
+// number violet and its text white, the ones to come grey. It returns the
 // row after them and a blank row.
 func drawSteps(gr *g.Grid, x, y, w int, v testView) int {
 	steps := stepsOf(v)

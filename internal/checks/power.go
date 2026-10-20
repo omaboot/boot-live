@@ -164,7 +164,7 @@ var (
 	ssidRe  = regexp.MustCompile(`(?m)^Subsystem Id:\s*(0x[0-9a-fA-F]+)`)
 )
 
-// audio is an extra, not a criterion (S1): the HD Audio controller has its driver bound and a
+// audio is an extra, not a criterion: the HD Audio controller has its driver bound and a
 // codec answered. Playback and the microphone are hands-on tests for S2.
 //
 //   - supported: an analog (non-HDMI) codec found and the controller's driver bound;

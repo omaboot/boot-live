@@ -9,7 +9,7 @@ import (
 )
 
 func init() {
-	// omaboot-v's size classes only; other fonts wait for PF-11 (LIVE-PLAN §24.1)
+	// omaboot-v's size classes only; other fonts wait for PF-11
 	Register(Cmd{Name: "font", Args: i18n.M("16|24|32"), Help: i18n.M("load the console font at another size"), Dev: true, Order: 140,
 		Complete: func(_ Env, args []string) []string {
 			if len(args) == 0 {

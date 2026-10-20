@@ -11,8 +11,8 @@ import (
 // and, when the Mac was online, the network, each within sleepBack seconds of waking.
 //
 // The network is the status line's (IO.NetNow: the backend's state, by watchLink's rule), so
-// the Output never says it's back while the status line says it isn't (owner, 0.6.0 review:
-// "the network is back" seconds before "Ethernet up"). After a wake it must also hold for
+// the Output never says it's back while the status line says it isn't ("the network is back"
+// seconds before "Ethernet up"). After a wake it must also hold for
 // netSettle seconds: a link reads as up for a moment after the resume before a Thunderbolt
 // adapter re-enumerates and drops it.
 

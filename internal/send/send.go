@@ -92,7 +92,7 @@ func (t Target) Production() bool {
 }
 
 // ErrChanged: a report whose results were changed in the console (a console entry of kind
-// change) never goes to DoesItOmarchy.com; staging and external storage still take it (owner, 2026-10-14).
+// change) never goes to DoesItOmarchy.com; staging and external storage still take it.
 var ErrChanged = errors.New("results in this run were changed in the console: DoesItOmarchy.com doesn't take its report")
 
 // Allowed is the console guard, the last word before anything is sent: a report with results

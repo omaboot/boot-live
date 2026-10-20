@@ -12,7 +12,7 @@ import (
 	"github.com/omaboot/boot-live/internal/identify"
 )
 
-// ── Which Mac (0.7.9: prototype v53 B with the match table, owner 2026-10-17) ─────────────
+// ── Which Mac (with the match table) ──────────────────────────────────────────────────────
 //
 // While Boot looks, the band's right side runs through the catalog and stops on this Mac's
 // entry (or entries). Under the band: the six Intel Mac families, the ones ruled out going dim
@@ -569,7 +569,7 @@ func drawWhichMac(gr *g.Grid, o *Options, st *State, f *Facts) Box {
 			return b
 		}
 		y += matchTable(gr, x, y, end, v, cols, sel, t) + 1
-		if list == nil { // the Mac's name and parts under the table, as in the prototype's line-up (owner, 0.7.14 review)
+		if list == nil { // the Mac's name and parts under the table
 			if t <= macReady {
 				return b
 			}

@@ -1,6 +1,6 @@
 // Package plan reads a run plan: omaboot-plan.yaml on the stick's OMABOOT partition, which
 // answers a run's questions ahead and lets a run with no hands-on test go with nobody at the
-// Mac (PF-15 v1, LIVE-PLAN §30). It only parses, checks and resolves the file for a Mac; the
+// Mac (PF-15 v1). It only parses, checks and resolves the file for a Mac; the
 // screens and the backend act on it.
 //
 //	version: 1

@@ -13,7 +13,7 @@ import (
 // the MacBook way, bytes 6–7, with right = 0). The interface is four sysfs files next to the
 // light file: writing an index to key_at_index picks a key (a variable in the driver, nothing
 // sent to the SMC), and key_at_index_name, _type and _data read that key's name, type and raw
-// bytes from the SMC. Nothing is ever written to the SMC itself (LIVE-PLAN §6).
+// bytes from the SMC. Nothing is ever written to the SMC itself.
 //
 // The index of a key is found by a binary search over the names (0.7.12, the Air's 0.7.9 run):
 // the SMC lists its keys sorted, which applesmc's own lookups rely on, so about 10 names find

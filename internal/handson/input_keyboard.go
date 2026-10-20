@@ -15,7 +15,7 @@ import (
 
 // input.keyboard, "Built-in keyboard and function keys" (laptops only: the criterion's `when` is
 // feature:builtin-keyboard, so desktops never get this test). The screen draws the Mac's
-// keyboard (US ANSI for now; LIVE-PLAN §21.5) and lights each key as the built-in keyboard
+// keyboard (US ANSI for now) and lights each key as the built-in keyboard
 // reports it through evdev. The keyboard is grabbed for the test, so no key reaches the console:
 // no VT switch, no Ctrl+Alt+Del, nothing the screen would act on.
 //
@@ -662,8 +662,8 @@ func legend(k kbKey, room int) string {
 	return t
 }
 
-// draw is the keyboard in the band (prototype keyboardArt, owner 2026-10-13: the 19-row
-// keyboard didn't fit the band and crowded the answers): one row of caps per row of keys, each
+// draw is the keyboard in the band (the 19-row keyboard didn't fit the band and crowded the
+// answers): one row of caps per row of keys, each
 // key's legend over its cap where there's room. A cap is dim until the key is seen, violet once
 // seen, white while held, red when it stayed dark in a decided partial or fail; the keys not part
 // of the test are shaded.

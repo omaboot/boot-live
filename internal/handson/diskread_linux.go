@@ -94,7 +94,7 @@ func (s *System) ReadDisk(name string, fileOnly bool) DiskJob {
 }
 
 // BootDriveSpeed reads the OmaBoot? drive (disk, sdb) raw at a few places, for the boot timing
-// (0.7.5; the owner's iMac10,1 booted 4× slower one day, its stick reading 0.7 MB/s against 16.6
+// (0.7.5; an iMac10,1 booted 4× slower one day, its stick reading 0.7 MB/s against 16.6
 // the run before): 2 MiB at 15, 40, 65 and 90 % into airootfs.sfs (base is archisobasedir), or
 // into the disk when no image is found, with O_DIRECT like the USB test, so the device answers
 // and not the page cache. It gives up after 20 s with what it has.

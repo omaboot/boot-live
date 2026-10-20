@@ -16,7 +16,7 @@ import (
 	"github.com/omaboot/boot-live/internal/fsread"
 )
 
-// The USB port tests' raw read (owner, 2026-10-13): every USB disk a port sees is read straight
+// The USB port tests' raw read: every USB disk a port sees is read straight
 // off the whole-disk device, opened read-only and with O_DIRECT so each read reaches the device
 // and not the page cache. Nothing is mounted and nothing is ever written (diskread_linux.go
 // opens the device O_RDONLY; the package's tests check that no code path can write a disk).

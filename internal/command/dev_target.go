@@ -5,7 +5,7 @@ package command
 import "github.com/omaboot/boot-live/internal/i18n"
 
 func init() {
-	// it only shows where Submit sends: no switching (LIVE-PLAN §24.1)
+	// it only shows where Submit sends: no switching
 	Register(Cmd{Name: "target", Help: i18n.M("where Submit sends"), Dev: true, Order: 120, Run: func(env Env, _ []string, out *Out) error {
 		t := env.Target()
 		if t.URL == "" {

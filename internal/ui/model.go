@@ -15,7 +15,7 @@ import (
 	"github.com/omaboot/boot-live/internal/sounds"
 )
 
-// FPS is the redraw rate: animations stay inside Boot's area at 10–15 fps (LIVE-PLAN §5.1).
+// FPS is the redraw rate: animations stay inside Boot's area at 10–15 fps.
 const FPS = 15
 
 type tickMsg time.Time
@@ -52,7 +52,7 @@ type Backend interface {
 	// run's one report; the backend answers with the summary (QuickDoneMsg) brought up to date.
 	Record(rs []checks.Result)
 
-	// What the console's commands ask of the run (LIVE-PLAN §24).
+	// What the console's commands ask of the run.
 	IDs() []command.ID                                // this Mac's hardware IDs
 	KernelLog() []string                              // "[    1.234] driver: message"
 	ReportJSON(handle, notice string) ([]byte, error) // the report as it stands
@@ -94,7 +94,7 @@ type KeepInfo struct {
 }
 
 // Resume is an unfinished run's copy on external storage, from this Mac and this boot-live
-// version, not sent: Which Mac offers to pick the run up from it (owner, 0.7.3 review). The
+// version, not sent: Which Mac offers to pick the run up from it. The
 // quick pass's results and the hands-on tests it decided come back; the test that was running
 // when it was saved goes in as failed, the Mac not having come back from it; then the hands-on
 // tests carry on (0.7.5: the quick pass doesn't run again, unless the copy lacks its results).
@@ -189,7 +189,7 @@ const (
 	EndRefused  Ending = "refused" // the run couldn't start safely
 )
 
-// Model is the S1 flow as a Bubble Tea program, driven by a Backend.
+// Model is the flow as a Bubble Tea program, driven by a Backend.
 type Model struct {
 	o      Options
 	st     State
@@ -440,7 +440,7 @@ func (m *Model) clock() (repaint bool) {
 
 // waiting reports whether the screen is waiting for input: the screensaver may start. Never
 // during the quick pass, nor while something is on its way (a console command's answer too).
-// An open console doesn't count: Boot dozes over it after the same idle time (owner, 0.7.2 review).
+// An open console doesn't count: Boot dozes over it after the same idle time.
 func (m *Model) waiting() bool {
 	st := &m.st
 	busy := st.Scene == Quick || st.Saving || sending(st, m.f) || netBusy(st.Net) || m.rerunning != "" || m.bugging || m.writing != "" || m.sleepChecking
@@ -474,8 +474,8 @@ func (m *Model) netMsg(n NetState) {
 	old, t := st.Net, m.timeIn(Network)
 	n.At, n.ListAt, n.RefreshedAt = old.At, old.ListAt, old.RefreshedAt
 	// The error picking a network cleared (joinNow) is still in the states already on their way:
-	// it isn't new, and it would close the password box (owner's Air, 0.8.1 dev: after a failed
-	// join, every pick's box closed within two seconds). The backend drops it (NetClear) before
+	// it isn't new, and it would close the password box (after a failed join, every pick's box
+	// closed within two seconds). The backend drops it (NetClear) before
 	// it can send another.
 	if m.oldErr != "" {
 		if n.Err == m.oldErr {
@@ -503,11 +503,11 @@ func (m *Model) netMsg(n NetState) {
 	// The network picked for the password box is the screen's until the join starts: the backend
 	// only learns it then, and its state comes every two seconds (the links' watch), so taking
 	// its SSID wiped the pick while the password was typed, and Join asked for "" ("… is gone:
-	// scan again", owner's Air, 0.7.13 dev).
+	// scan again", 0.7.13 dev).
 	if st.Pw && !netBusy(n) {
 		n.SSID = old.SSID
 	}
-	if st.Scene == Network { // a connection made or failed: its blip (owner, 0.8.4 review)
+	if st.Scene == Network { // a connection made or failed: its blip
 		switch {
 		case n.Err != "" && n.Err != old.Err:
 			m.sound("fail")

@@ -20,7 +20,7 @@ import (
 // the IO: on the Mac, the run's own plumbing (internal/app: iwd, networkd, the boot.watch test
 // bound to one interface), so a network joined here keeps the run online and the status line
 // follows; on the Fake, a script. Both tests are offered whatever the Network screen did, an
-// offline run too: the test brings its interface up itself (owner, 2026-10-13).
+// offline run too: the test brings its interface up itself.
 
 // Netter is an IO that can work the Mac's network. An IO without it (a test's own) gets the
 // network tests decided not_tested.
@@ -160,8 +160,8 @@ func progressText(p bootwatch.Progress, server string) string {
 	return i18n.T("reaching %s", server)
 }
 
-// movingLine is the Output's line while a transfer goes through server over iface (owner, 0.6.0
-// review: the Output names the server the test uses).
+// movingLine is the Output's line while a transfer goes through server over iface (the Output names
+// the server the test uses).
 func movingLine(server, iface string) Line {
 	return Wait(i18n.T("testing through %s over %s", server, iface))
 }

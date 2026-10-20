@@ -45,7 +45,7 @@ func quitCaseOf(st *State, f *Facts) quitCase {
 }
 
 // quitActions are the question's choices: stay (the default), quit to the prompt, then Shutdown
-// and Restart as on Finish (owner, 2026-10-12). Ending the hands-on tests only goes to Finish.
+// and Restart as on Finish. Ending the hands-on tests only goes to Finish.
 func quitActions(o *Options, c quitCase) []Action {
 	stay := Action{Label: i18n.T("Keep testing"), Does: i18n.T("back to where you were")}
 	quit := Action{Label: i18n.T("Quit to prompt"), Does: i18n.T("close %s; the command line stays", o.Edition.Product())}
@@ -123,7 +123,7 @@ func quitNote(c quitCase, f *Facts) string {
 }
 
 // endActions are Finish's question before Shutdown or Restart with the report neither sent nor
-// saved (owner, 0.6.1 review): go back (the default), or go ahead and lose the run's results.
+// saved: go back (the default), or go ahead and lose the run's results.
 func endActions(what Ending) []Action {
 	anyway := Action{Label: i18n.T("Shut down anyway"), Does: i18n.T("this run's results are lost")}
 	if what == EndReboot {
@@ -156,7 +156,7 @@ func drawQuit(gr *g.Grid, o *Options, b Box, st *State, f *Facts) {
 // drawAsk draws a question over the screen: a box in the band's field with a border (red when
 // something is lost, violet for a plain choice), Boot (ex) outside it; the heading (hc), what
 // comes after, and the choices. What it means is Boot's to say: in his box under the band, its ▲
-// up at him, as on the port tests (owner, 2026-10-13: his lines in his box on every screen);
+// up at him, as on the port tests (his lines in his box on every screen);
 // with no Boot (plain), in the question's box.
 func drawAsk(gr *g.Grid, o *Options, b Box, st *State, ex boot.Expr, head, lose, after string, acts []Action, sel int, bc, hc g.Color) {
 	l := layout(b, o.Plain)

@@ -18,7 +18,7 @@ import (
 // person plugs something into each port of the kind, one at a time; the machine watches the USB
 // buses (sysfs, polled twice a second) and records each port a device shows up on: its bus
 // path, the device and the speed it negotiated. Then it checks that the port moves data
-// (ports_read.go, owner 2026-10-13): a disk is read raw, read-only (diskread.go: the OmaBoot?
+// (ports_read.go): a disk is read raw, read-only (diskread.go: the OmaBoot?
 // stick checked against its image's checksums, anything else read twice and compared), a mouse
 // or keyboard has to send a move or a key, anything else counts by enumerating, as before.
 // Nothing is ever written to any device.
@@ -264,7 +264,7 @@ func (u *usbPorts) placePhone(c *Ctx) {
 }
 
 // preselect puts the which-port question's cursor (and the map's ring) on the port the wiring
-// says p is in, when it knows: Enter confirms it (owner, 2026-10-14).
+// says p is in, when it knows: Enter confirms it.
 func (u *usbPorts) preselect(c *Ctx, p *usbPort) {
 	p.Wired = u.gd.wiredTo(c.Env, usbStables(c.IO, p.Key))
 	if k := u.gd.index(p.Wired); k >= 0 {
@@ -897,7 +897,7 @@ func (u *usbPorts) Act(c *Ctx, i int) {
 }
 
 // rereadable is the port whose read failed with its disk still in, the newest first: Read it
-// again reads it once more where it is (owner, 0.8.0 review; plugging it back in did, unsaid).
+// again reads it once more where it is (plugging it back in did, unsaid).
 // nil when there's none.
 func (u *usbPorts) rereadable() *usbPort {
 	var found *usbPort
@@ -1016,7 +1016,7 @@ func (u *usbPorts) View(c *Ctx) Screen {
 	if u.usbC() {
 		kind = "USB-C"
 	}
-	s.Anim = plugArt(kind, len(seen)) // no port map: a plug going in, a box per port seen (prototype v54)
+	s.Anim = plugArt(kind, len(seen)) // no port map: a plug going in, a box per port seen
 	switch {
 	case u.wokeNow():
 		s.Say, s.Face = u.wokeSay(), boot.Hmm
@@ -1114,10 +1114,10 @@ func (u *usbPorts) portText(p *usbPort) string {
 }
 
 // steps are the guided screen's "What to do": the stick's question and the phone's when they
-// went up, then plugging in and the port's check, then leaving the stick (prototype hoPortsAir);
+// went up, then plugging in and the port's check, then leaving the stick;
 // with copytoram, moving the stick itself from ring to ring.
 func (u *usbPorts) steps() (steps []string, step int) {
-	plug := 0 // the which-port questions are a box of their own, not steps (owner, 2026-10-14)
+	plug := 0 // the which-port questions are a box of their own, not steps
 	switch {
 	case u.ram:
 		steps = append(steps, i18n.T("Take the OmaBoot? drive out and put it in the port in the violet ring."),
@@ -1555,7 +1555,7 @@ func DemoPhone(f *Fake, p *Phone) {
 // for the screens of a desktop's port map (tools/screens): the chipset's USB 3 controller
 // (buses 1 and 2, the four USB-A ports), Alpine Ridge's (buses 3 and 4, the two Thunderbolt 3
 // ports) and the Thunderbolt 3 host. The OmaBoot? stick is a USB-A one in the first USB-A port
-// for the USB-A test (prototype hoPortsImac: the test asks which port), else a USB-C one in the
+// for the USB-A test (the test asks which port), else a USB-C one in the
 // first Thunderbolt 3 port. "usb-c-asleep" is the USB-C test with the USB-A stick and
 // Alpine Ridge's controller asleep (the iMac18,1's 0.8.8 run): a USB-C stick shows up in the
 // second Thunderbolt 3 port at 17 s, once the test has kept the controller awake.

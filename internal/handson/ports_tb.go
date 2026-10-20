@@ -54,8 +54,8 @@ import (
 // adapter carrying it, unplugged and plugged back in for the test), the result waits for the
 // network to come back through it before it's handed over (Continue comes with it), as the
 // status line has the network (IO.NetNow): up to tbNetWait seconds, then it goes on with a line
-// saying it didn't come back; "Skip this one" stops the wait and keeps the result (owner, 0.6.0
-// review). The connection is on the device when its interface's PCI device went away during the
+// saying it didn't come back; "Skip this one" stops the wait and keeps the result. The connection
+// is on the device when its interface's PCI device went away during the
 // test, or is one of the PCI devices that came in behind a Thunderbolt device. Nothing is
 // written for this: it only reads /sys/class/net and the status line's network.
 //
@@ -429,7 +429,7 @@ func (x *thunderbolt) Step(c *Ctx) {
 	switch {
 	case x.dev.authed() && x.ends > 0 && c.T-x.pciAt >= 1.5:
 		x.decide(c, checks.Supported)
-	case c.T-x.devAt >= 20 && (x.dev.authed() || x.letIn != ""): // held back, it waits for Let it in (owner, 0.8.0 review)
+	case c.T-x.devAt >= 20 && (x.dev.authed() || x.letIn != ""): // held back, it waits for Let it in
 		x.decide(c, checks.Partial)
 	}
 }
@@ -651,7 +651,7 @@ func (x *thunderbolt) Act(c *Ctx, i int) {
 
 func (x *thunderbolt) Stop(*Ctx) {}
 
-// steps are "What to do" with the port map (prototype hoPortsAirTb, hoPortsImacTb): one port,
+// steps are "What to do" with the port map: one port,
 // or each in turn; the step to do now follows the ports done.
 func (x *thunderbolt) steps() ([]string, int) {
 	gd := x.gd

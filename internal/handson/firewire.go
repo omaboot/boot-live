@@ -12,7 +12,7 @@ import (
 	"github.com/omaboot/boot-live/internal/safety"
 )
 
-// ports.firewire, "FireWire" (owner, 0.7.2 review): the person plugs in any FireWire device (a
+// ports.firewire, "FireWire": the person plugs in any FireWire device (a
 // drive, a camera, another Mac in Target Disk Mode); the machine watches the FireWire bus
 // (/sys/bus/firewire/devices, polled twice a second) for a node other than the Mac's own to
 // appear, and takes its vendor and model from the config ROM the kernel read (method

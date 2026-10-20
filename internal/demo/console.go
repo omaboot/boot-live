@@ -16,17 +16,17 @@ import (
 	"github.com/omaboot/boot-live/internal/ui"
 )
 
-// The console's commands on the demo's Mac (LIVE-PLAN §24): the prototype's IDs and kernel log,
+// The console's commands on the demo's Mac: made-up IDs and kernel log,
 // and a report made up from the demo's results.
 
-// IDs are the demo Mac's hardware IDs (prototype v49).
+// IDs are the demo Mac's hardware IDs.
 func (b *Backend) IDs() []command.ID {
 	return []command.ID{{Key: "model", ID: MacID, Name: MacName}, {Key: "board", ID: BoardID},
 		{Key: "cpu", ID: "i5-3427U", Name: "Intel Core i5 @ 1.80GHz"}, {Key: "gpu", ID: "8086:0166", Name: "HD Graphics 4000 i915"},
 		{Key: "wifi", ID: "14e4:4353", Name: "BCM43224 bcma-pci-bridge"}, {Key: "audio", ID: "8086:1e20", Name: "Cirrus CS4206 snd_hda_intel"}}
 }
 
-// Kmsg is the demo Mac's kernel log (prototype v49).
+// Kmsg is the demo Mac's kernel log.
 var Kmsg = []string{
 	"[    0.000] Linux version 7.2.5-1-omarchy (linux-omarchy@archlinux) #1 SMP PREEMPT_DYNAMIC",
 	"[    0.412] i915 0000:00:02.0: vgaarb: deactivate vga console",

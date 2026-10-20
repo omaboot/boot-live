@@ -138,7 +138,7 @@ func (r *Run) closeWifi() {
 // Fixture reports whether the run reads a fixture tree (nothing is written then).
 func (r *Run) Fixture() bool { return !r.Opt.Root.IsSystem() }
 
-// Setup does what comes before anything else (LIVE-PLAN §6): on the live system it makes the
+// Setup does what comes before anything else: on the live system it makes the
 // internal disks read-only and checks them, and refuses to go on otherwise; then it starts the
 // thermal watchdog, reads the hardware, loads the catalog snapshot and identifies the Mac.
 func (r *Run) Setup() {
@@ -196,7 +196,7 @@ func (r *Run) DisksLine() string {
 }
 
 // Written is how many bytes have gone to the internal disks since they were set read-only, or -1
-// when sysfs doesn't say (Hello's "0 B written", prototype v54).
+// when sysfs doesn't say (Hello's "0 B written").
 func (r *Run) Written() int64 {
 	sum, known := int64(0), false
 	for _, d := range safety.Internal(r.Disks) {
@@ -237,7 +237,7 @@ func short(v string) string {
 func gb(mib int) int { return int(math.Round(float64(mib) / 1024)) }
 
 // Site is where reports go, as the screens name it: the production site always reads
-// "DoesItOmarchy.com" (owner, 2026-10-10: readability); any other target (staging) by its host.
+// "DoesItOmarchy.com" (readability); any other target (staging) by its host.
 // Only what is shown changes; requests go to the target's URL as it is.
 func (r *Run) Site() string { return SiteName(r.Opt.Target.Host()) }
 
@@ -527,7 +527,7 @@ func (r *Run) merged(e *checks.Env) []checks.Result {
 	return out
 }
 
-// ErrAlreadySent: a run sends one report (LIVE-PLAN §19.3); a new report needs a new quick pass.
+// ErrAlreadySent: a run sends one report; a new report needs a new quick pass.
 var ErrAlreadySent = errors.New("this run's report was already sent")
 
 // Submit checks the report and sends it to the target, once per run.
@@ -610,7 +610,7 @@ func (r *Run) CanRefresh() bool { return r.Opt.Target.URL != "" && !r.Fixture() 
 // SignInPage asks boot.watch for one echo over the connection just up (plain HTTP first,
 // where a captive portal shows itself) and says why it looks like a sign-in page, or "" when it
 // doesn't or can't tell. It never decides whether the Mac is online: boot.watch being down
-// mustn't stop a report reaching the site (owner, 2026-10-13).
+// mustn't stop a report reaching the site.
 func (r *Run) SignInPage() string {
 	if r.Fixture() || r.Opt.Target.Watch == "" {
 		return ""
@@ -626,7 +626,7 @@ func (r *Run) SignInPage() string {
 // RefreshSnapshot fetches a newer catalog snapshot from the target once online, and says what
 // it found ("" when there's no target).
 // It also reports whether the check worked, and a line on the snapshot built into the stick,
-// saying whether it's still the one in use (owner, 0.4.6 review).
+// saying whether it's still the one in use.
 func (r *Run) RefreshSnapshot() (line string, ok bool, stick string) {
 	if !r.CanRefresh() {
 		return "", false, ""

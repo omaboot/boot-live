@@ -13,18 +13,18 @@ import (
 	"github.com/omaboot/boot-live/internal/sounds"
 )
 
-// Boot's sounds (LIVE-PLAN §5.7; owner, 2026-10-19): off until M turns them on, the setting and
+// Boot's sounds: off until M turns them on, the setting and
 // the picks kept on the stick for the next boot. Hello when Boot appears; All good as Which Mac
-// finds the Mac (owner, 0.8.3 review: timed with the search landing); on Network, pass as a
-// connection is made and fail as one fails (owner, 0.8.4 review; netMsg); in the quick pass one
-// blip per result as its line shows (owner, 0.8.3 review: one per reaction of Boot's left the
-// second of two "Omarchy required" lines silent, a burst getting one reaction), a hands-on
+// finds the Mac (timed with the search landing); on Network, pass as a
+// connection is made and fail as one fails (netMsg); in the quick pass one
+// blip per result as its line shows (one per reaction of Boot's left the second of two "Omarchy
+// required" lines silent, a burst getting one reaction), a hands-on
 // test's when it's decided, at most one every 0.3 s; a chime by outcome when the tests are done (Quick results, then Finish after
 // hands-on tests), and the call on "Boot needs you" each time its frame flashes. Nothing plays
 // while something is measured: the quick pass's thermal load and idle GPU, a hands-on test
 // before it's decided (the audio tests play their own sounds), sleepcheck. Boot's sounds are
 // never evidence of anything. The console's sounds opens the sounds screen: the three options of
-// each moment to pick from (the prototype's "Dev menu: sounds", for every build).
+// each moment to pick from, in every build.
 
 // blipGap is the least time between two blips (chimes don't wait): under the quick pass's
 // least gap between lines (pace.Default.Line, 0.8 s), so every line gets its blip.
@@ -268,7 +268,7 @@ func (m *Model) preview() {
 	m.play(mo, st.Sound.Pick(mo.ID))
 }
 
-// drawSounds is the sounds screen (prototype v55's "Dev menu: sounds"): each moment, when it
+// drawSounds is the sounds screen (the "Dev menu: sounds"): each moment, when it
 // plays, and its three options, the pick in brackets.
 func drawSounds(gr *g.Grid, o *Options, st *State, f *Facts) Box {
 	quiet := st.Hush

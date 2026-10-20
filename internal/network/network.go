@@ -1,4 +1,4 @@
-// Package network gets the Mac online for sending the report (LIVE-PLAN §4 step 4). Ethernet and
+// Package network gets the Mac online for sending the report. Ethernet and
 // USB tethering come up on their own (the live system runs systemd-networkd with DHCP on every
 // wired and tethered interface, with route metrics Ethernet 100, phones 150, Wi-Fi 600: the
 // lowest carries the run); Wi-Fi goes through iwd over D-Bus: scan, pick, password, connect,

@@ -110,7 +110,7 @@ const (
 )
 
 // BigDigits draws the digits of s large, in c: 3×5 pixels each, every pixel a full block two
-// cells wide (prototype bigCode: a typed code, a countdown, the quick pass's temperature).
+// cells wide (a typed code, a countdown, the quick pass's temperature).
 // Anything but a digit leaves its place blank. It returns the column after the last digit.
 func BigDigits(gr *g.Grid, x, y int, s string, c g.Color) int {
 	for i, ch := range s {

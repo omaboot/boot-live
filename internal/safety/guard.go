@@ -1,4 +1,4 @@
-// Package safety keeps the run non-destructive (LIVE-PLAN §6): the real mode starts only on
+// Package safety keeps the run non-destructive: the real mode starts only on
 // the OmaBoot? live system, every internal disk is made read-only and checked before any test,
 // and a thermal watchdog stops any load near the chips' own critical temperatures. Nothing here
 // writes to NVRAM, EFI variables, the SMC or firmware.

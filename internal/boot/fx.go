@@ -217,7 +217,7 @@ func (e Effect) Draw(gr *g.Grid, p Params, x0, y0, w, h int, t float64) {
 		}
 	case Heat:
 		// the fire fills the band's whole height; the temperature sits in big digits in the middle
-		// of it, on a dark plate (owner, 2026-10-13, prototype v44)
+		// of it, on a dark plate
 		for j := 0; j < h; j++ {
 			for i := 0; i < w; i++ {
 				v := Noise(float64(i)*0.18, float64(j)*0.35+t*2.4, 5) * (0.45 + 0.75*float64(j+1)/fh) * 1.35 * math.Min(1, 0.25+t/1.5)

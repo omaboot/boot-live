@@ -21,8 +21,7 @@ import (
 
 // camera.builtin, "Built-in webcam": the tool streams the camera (V4L2, camera_v4l2.go: YUYV,
 // or MJPEG decoded here) and shows it live inside the frame as grey half-blocks, mirrored like
-// a mirror; the person says whether they see themselves move (method observed, LIVE-PLAN
-// §21.4).
+// a mirror; the person says whether they see themselves move (method observed).
 //
 //   - supported: the camera streamed frames and the tester saw themselves move in the preview;
 //   - partial: frames came, but the tester saw a wrong picture (frozen, garbled, upside down,
@@ -323,7 +322,7 @@ func (k *camera) View(c *Ctx) Screen {
 	}
 	if k.dev.node == "" {
 		s.Steps, s.Happens, s.Hint = []string{i18n.T("No camera to look at.")}, "", ""
-		if k.gone != "" { // the lens that won't open (prototype v54)
+		if k.gone != "" { // the lens that won't open
 			s.Anim = lensShut(k.gone)
 		}
 		return s

@@ -214,7 +214,7 @@ func (ch *charging) View(c *Ctx) Screen {
 	}
 	if ch.bat != "" {
 		s.Live = append(s.Live, Fact(i18n.T("%s: %s, %d%%", path.Base(ch.bat), strings.ToLower(ch.status), ch.level)))
-		switch { // the battery's health (owner, 0.8.3 review)
+		switch { // the battery's health
 		case ch.health > 0 && ch.cycles > 0:
 			s.Live = append(s.Live, Fact(i18n.T("health: %d%% of design, %d cycles", ch.health, ch.cycles)))
 		case ch.health > 0:
@@ -235,7 +235,7 @@ func (ch *charging) View(c *Ctx) Screen {
 	return s
 }
 
-// chargeArt is the charging test's animation (owner, 0.6.1 review), in square pixels: the
+// chargeArt is the charging test's animation, in square pixels: the
 // battery with its charge and, while the charger is in, a bolt in its middle; then the Mac's side
 // and a MagSafe-style connector, its strain relief and the cord. Plugged in, the battery, the
 // bolt, the connector and the cord are green; pulled out, the connector stands off the Mac, it and

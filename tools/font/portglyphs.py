@@ -4,7 +4,7 @@ Each symbol is a square of S×S pixels (S = the cell height), split into a left 
 at private-use code points U+E200 + 2k and +1. Shapes are drawn on a 16-unit grid and rasterised
 at each size by sampling pixel centres, so they stay crisp at 16, 24 and 32 px.
 
-Same shapes and rasteriser as boot-wip/proto-tools/portglyphs.py (the prototype, mockup v26).
+The port shapes and their rasteriser.
 """
 import math
 

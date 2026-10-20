@@ -2,7 +2,7 @@ package command
 
 import "github.com/omaboot/boot-live/internal/i18n"
 
-// plan shows the run plan (omaboot-plan.yaml on the stick, LIVE-PLAN §30) this run uses, its
+// plan shows the run plan (omaboot-plan.yaml on the stick) this run uses, its
 // Wi-Fi password never shown; plan check reads the file on the stick again and checks it, with
 // the line and the fix for each problem; plan run starts it from the screen the run is on (one
 // with start: console, one ignored at Hello, or one stopped), and plan stop hands the run back.

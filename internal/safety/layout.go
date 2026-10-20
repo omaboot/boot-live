@@ -14,7 +14,7 @@ type Part struct {
 	Bytes       int64
 }
 
-// Layout is a disk as Hello draws it (prototype v54): its model, size and partitions, from sysfs
+// Layout is a disk as Hello draws it: its model, size and partitions, from sysfs
 // only. Anything sysfs doesn't say is left empty or 0.
 type Layout struct {
 	Name, Model string

@@ -21,7 +21,7 @@ import (
 	"github.com/omaboot/boot-live/internal/ui"
 )
 
-// Picking up where a run left off (owner, 0.7.3 review): before a test that sleeps, the copy of
+// Picking up where a run left off: before a test that sleeps, the copy of
 // the report goes on external storage with a note beside it, resume/<the copy's name>: the test
 // about to run, the quick pass's results, the hands-on tests decided so far, this Mac's hardware
 // fingerprint and the boot-live that wrote it. A Mac that never comes back is forced off; on the
@@ -31,7 +31,7 @@ import (
 // removed once the run's final report is saved or sent, and a Keep writes a new one. The copy
 // itself is a plain report, as before.
 //
-// Picking up (0.7.5; owner, 2026-10-15) restores the quick pass's results from the note and goes
+// Picking up (0.7.5) restores the quick pass's results from the note and goes
 // on to the hands-on tests without running the pass again: the test it hung in failed, then the
 // next. A note without the quick pass's results (cut down, or older) runs the pass again, Which
 // Mac saying why. A note from another boot-live version is never offered: a report names one tool

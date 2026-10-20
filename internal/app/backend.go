@@ -280,7 +280,7 @@ func (b *Backend) upWith(st network.State, ssid, static, gw string) {
 	if !r.CanRefresh() || refreshed { // once a run: switching connections needn't check again
 		return
 	}
-	// it runs by itself, up to 15 s; the line says so meanwhile (owner, 2026-10-12)
+	// it runs by itself, up to 15 s; the line says so meanwhile
 	checking := i18n.T("checking %s for a newer catalog snapshot", r.Site())
 	b.update(func(n *ui.NetState) { n.Refreshed, n.Checking = checking, true })
 	go func() {

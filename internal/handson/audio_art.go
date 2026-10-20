@@ -9,8 +9,8 @@ import (
 	"github.com/omaboot/boot-live/internal/i18n"
 )
 
-// The sound tests' band pictures (owner-approved prototype v46, 2026-10-13: the test's animation
-// takes 2/3 of the band's field): the Mac's two speakers with sound waves on the side playing,
+// The sound tests' band pictures (the test's animation takes 2/3 of the band's field): the Mac's
+// two speakers with sound waves on the side playing,
 // headphones with their plug and the ear playing, the monitor with its speakers, and the
 // microphone's meter. The waves run the whole time a sound plays, never in step with the beeps,
 // so the picture can't give a count away.
@@ -223,7 +223,7 @@ func speakersArt(side int, playing, muted bool) Panel {
 	}
 }
 
-// How the headphones' plug moves (owner, 0.6.1 review).
+// How the headphones' plug moves.
 const (
 	hpStill  = iota // where the jack says it is
 	hpReach         // asking to plug them in: the plug moves toward the jack and back, never in

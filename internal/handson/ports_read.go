@@ -8,8 +8,8 @@ import (
 	"github.com/omaboot/boot-live/internal/i18n"
 )
 
-// How the USB port tests know a port moves data, not only that something enumerated on it
-// (owner, 2026-10-13): each device that shows up gets a check of its own.
+// How the USB port tests know a port moves data, not only that something enumerated on it: each
+// device that shows up gets a check of its own.
 //
 //   - a disk (a stick, a card reader with a card): read raw, diskread.go. Read fine → the port
 //     moved data. An I/O error, a short read, a stall or a mismatch → the port is partial

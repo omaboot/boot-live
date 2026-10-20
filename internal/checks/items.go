@@ -11,8 +11,8 @@ import (
 )
 
 // Applies guesses whether a criterion applies to this Mac. The catalog decides that from each
-// configuration's features and ports, which the snapshot doesn't carry yet (LIVE-PLAN §18: "the
-// snapshot will likely gain each configuration's applicable criteria"), so until it does the
+// configuration's features and ports, which the snapshot doesn't carry yet ("the snapshot will
+// likely gain each configuration's applicable criteria"), so until it does the
 // tool decides from what it can see: the identifier, the chassis, the GPUs, the battery, and
 // the configuration's parts when it's known. A wrong guess costs little: the server flags an
 // item that doesn't apply and never counts it. Criteria it can't guess are left out.

@@ -24,7 +24,7 @@ import (
 	"github.com/omaboot/boot-live/internal/ui"
 )
 
-// What the console's commands ask of the real run (LIVE-PLAN §24).
+// What the console's commands ask of the real run.
 
 // The report's limits on its console entries (pkg/report's check).
 const (
@@ -159,7 +159,7 @@ func (b *Backend) Rerun(id string) (string, error) {
 }
 
 // Rerun takes a check's new results: each replaces the one it measured again, carrying the
-// first run in its evidence (owner, 2026-10-14); a result set by hand goes back to what was
+// first run in its evidence; a result set by hand goes back to what was
 // measured. The quick pass's timing stays the first run's.
 func (r *Run) Rerun(got []checks.Result) []checks.Result {
 	r.mu.Lock()
@@ -234,7 +234,7 @@ func forcedResult(x checks.Result, status string) checks.Result {
 
 // Bugreport saves the full log, the kernel log, the report, the screen under the console and
 // the Wi-Fi log to the stick's results/ as one tar file, and answers with a BugMsg. Only to the stick: the kernel
-// log may name serial numbers (owner, 2026-10-14).
+// log may name serial numbers.
 func (b *Backend) Bugreport(f ui.BugFiles) {
 	r := b.R
 	go func() {

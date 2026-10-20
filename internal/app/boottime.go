@@ -19,7 +19,7 @@ import (
 	"github.com/omaboot/boot-live/internal/ui"
 )
 
-// Boot timing (0.7.5; owner, 2026-10-15): how long the Mac took to start, in systemd's parts and
+// Boot timing (0.7.5): how long the Mac took to start, in systemd's parts and
 // boot-live's own (started, first frame, quick pass), and how fast the OmaBoot? drive reads. One
 // iMac10,1 boot was 4× slower than the one before, its stick reading 0.7 MB/s against 16.6, and
 // the GPU check then ran out of time: the report now says so. It goes in the report as an extra
@@ -402,7 +402,7 @@ var journalAt = regexp.MustCompile(`^\[\s*(\d+\.\d+)\]`)
 
 // launchJournal is the whole journal (every unit, not only the kernel's) from 3 s before the
 // launch's first step to 1 s after its last: the Air's 0.8.0 run had 5 s with no kernel line
-// between getty@tty1 starting and fbcon taking the console (owner, 0.8.0 review). At most 400
+// between getty@tty1 starting and fbcon taking the console. At most 400
 // lines.
 func launchJournal(launch []string, run func(...string) string, fixture bool) []string {
 	if fixture || len(launch) == 0 {

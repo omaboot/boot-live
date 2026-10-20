@@ -5,7 +5,7 @@ package command
 import "github.com/omaboot/boot-live/internal/i18n"
 
 // The dev-only commands are in files built with the omaboot_dev tag (dev builds: make build with
-// a dev VERSION), so a release binary doesn't contain them (owner, 2026-10-14).
+// a dev VERSION), so a release binary doesn't contain them.
 
 func init() {
 	Register(Cmd{Name: "force", Args: i18n.M("<test> <result>"), Help: i18n.M("set a result by hand"), Kind: Change, Dev: true, Order: 90,

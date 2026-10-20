@@ -7,7 +7,7 @@ import (
 )
 
 // The Wi-Fi and Ethernet tests (internal/handson/net_wifi.go, net_ethernet.go) on the demo Mac:
-// the Wi-Fi run starts offline (prototype scene "Wi-Fi"), and the person's password is typed
+// the Wi-Fi run starts offline, and the person's password is typed
 // into the field (netShot's keys).
 func init() {
 	testShots = append(testShots, func() []shot {

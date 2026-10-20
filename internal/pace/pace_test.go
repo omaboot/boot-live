@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-// The prototype's example run (boot-live-proto v20, CHECKS): the SMC trio lands as one burst. Only
+// An example run: the SMC trio lands as one burst. Only
 // the fix gets a comment, as on the screen (partial, failed and fixed results).
 func protoItems() []Item {
 	return []Item{

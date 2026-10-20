@@ -5,7 +5,7 @@ import (
 	"github.com/omaboot/boot-live/internal/i18n"
 )
 
-// testfile (owner, 2026-10-17, prototype v55): OmaBoot?'s test file, OMABOOT-TEST.BIN, made by
+// testfile: OmaBoot?'s test file, OMABOOT-TEST.BIN, made by
 // boot-live itself (the same bytes as the download) on a drive the person names, so nobody has
 // to download it on another computer. Never on its own: testfile write asks first, and only y
 // writes. FAT and exFAT drives and the OmaBoot? drive's OMABOOT partition; never HFS+ (Linux
@@ -30,7 +30,7 @@ func init() {
 		Run: testfile})
 }
 
-// TestFileName is the test file's name, the download's (owner: the same bytes, the same name).
+// TestFileName is the test file's name, the download's (the same bytes, the same name).
 const TestFileName = "OMABOOT-TEST.BIN"
 
 func testfile(env Env, args []string, out *Out) error {

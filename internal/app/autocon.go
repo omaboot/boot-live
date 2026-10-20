@@ -9,8 +9,7 @@ import (
 )
 
 // autoCommands are the console commands --auto runs after the quick pass, read-only ones only,
-// so the image build's QEMU smoke test exercises the console's registry without a screen
-// (LIVE-PLAN §24.1).
+// so the image build's QEMU smoke test exercises the console's registry without a screen.
 var autoCommands = []string{"ids", "report", "why boot.installer-efi64", "log Linux version"}
 
 // autoEnv is the console's way into an unattended run: what's read-only works, the rest says so.

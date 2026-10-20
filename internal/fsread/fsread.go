@@ -1,6 +1,6 @@
 // Package fsread finds a file in the top folder of a disk's file systems by reading the disk's
-// bytes, never mounting it (owner, 2026-10-16: OmaBoot?'s test file goes on any stick, card or
-// drive the person already has, so nothing has to be erased for the port tests). It gives back
+// bytes, never mounting it (OmaBoot?'s test file goes on any stick, card or drive the person
+// already has, so nothing has to be erased for the port tests). It gives back
 // where the file's bytes are on the disk; the caller reads them.
 //
 // It reads, and only reads: the partition table (none, MBR, GPT or Apple's partition map), then

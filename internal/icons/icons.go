@@ -42,7 +42,7 @@ func Port(kind string) (sym [2]rune, ok bool) {
 }
 
 // The icons, drawn from Nerd Fonts (fa: Font Awesome; md: Material Design Icons, the glyph names)
-// two cells wide (owner, 2026-10-12): each is a left and a right half at our own code points
+// two cells wide: each is a left and a right half at our own code points
 // U+E000 + 2i and + 2i + 1 in tools/font/build.py's order. The Linux console maps only 16-bit
 // code points and shows U+F000-U+F1FF as raw glyph numbers, so the Nerd code points can't be used.
 const (
@@ -121,6 +121,6 @@ func PortIcon(kind string) (icon string, ok bool) {
 }
 
 // ConsoleKey is the hint bar's key cap for the console key: the ` drawn larger and centred, as
-// the font's own sits small at the cell's top edge (owner, 2026-10-15; tools/font/build.py
-// key_grave). Typing ` is unchanged.
+// the font's own sits small at the cell's top edge (tools/font/build.py key_grave). Typing ` is
+// unchanged.
 const ConsoleKey = ''

@@ -33,8 +33,8 @@ func TestNativePicture(t *testing.T) {
 	}
 }
 
-// The keyboard light stays dark after the blinks until the tester answers (owner, 2026-10-13: the
-// way back right after the last blink read as one more), then goes back to where it was.
+// The keyboard light stays dark after the blinks until the tester answers (the way back right after
+// the last blink read as one more), then goes back to where it was.
 func TestKeyLightDarkUntilAnswered(t *testing.T) {
 	s, _ := Lookup("input.keyboard-backlight")
 	f := NewFake()

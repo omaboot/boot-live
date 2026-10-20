@@ -70,8 +70,7 @@ func ThermalVerdict(s Samples) Result {
 // FanVerdict decides thermal.fans, "Fans respond to load", from the same samples. Live boots can
 // read fans only with OmaBoot?'s applesmc fix (the caller checks that). A load alone may not be
 // enough for the SMC to speed a fan up, so for the load's last fanRaise the check raises each
-// fan's minimum (applesmc's fanN_min, the SMC still in charge) and the fan has to follow
-// (owner, 2026-10-13; LIVE-PLAN §6's approved exception).
+// fan's minimum (applesmc's fanN_min, the SMC still in charge) and the fan has to follow.
 //
 //   - supported: a fan whose minimum was raised went at least halfway to it (and 100 rpm or
 //     more), or a fan sped up by at least 100 rpm during the load;
@@ -132,7 +131,7 @@ func FanVerdict(s Samples) Result {
 	if followed || rise >= 100 {
 		return pass(ev)
 	}
-	// a fan flat out from the start has nowhere to go (owner's Macmini4,1, 0.8.5 dev: 5511 rpm
+	// a fan flat out from the start has nowhere to go (Macmini4,1, 0.8.5 dev: 5511 rpm
 	// throughout, its drive swapped for an SSD; the SMC runs the fans flat out when a temperature
 	// sensor it expects is missing)
 	for i := range first {
@@ -143,7 +142,7 @@ func FanVerdict(s Samples) Result {
 	return skip(Uncertain, ev+"; no fan sped up")
 }
 
-// ── Raising the fans' minimum (LIVE-PLAN §6's approved exception, owner 2026-10-13) ──────────
+// ── Raising the fans' minimum ────────────────────────────────────────────────────────────────
 //
 // The only write the quick pass makes: each fan's minimum (applesmc's fanN_min, which the driver
 // writes to the SMC's F<n>Mn key), raised for fanRaise at the end of the thermal load, never

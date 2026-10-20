@@ -18,7 +18,7 @@ import (
 // (checks/gpu.go: the right mode on the panel), but a right mode can still show a split or
 // garbled picture (the iMac10,1's radeon before its fix). So the test draws a black-and-white
 // test pattern in the band, one of six, and the tester names it; then a new one, and again (two
-// rounds, no retry: a blind guess passes 1 in 30; prototype hoNative, owner 2026-10-13):
+// rounds, no retry: a blind guess passes 1 in 30):
 //
 //   - both named right: the quick pass's verdict stands, the evidence saying "picture confirmed"
 //     (a supported one then rests on the challenge);
@@ -42,9 +42,9 @@ const nativeID = "display.native-resolution"
 // nativeRounds is how many patterns the tester names.
 const nativeRounds = 2
 
-// The six test patterns (prototype PATTERNS), each unlike the others at a glance even on a split
-// or shifted picture. The box's X and the lone line are named so a diagonal can't fit both (owner,
-// 0.6.1 review: "a box with a cross" read as "a diagonal").
+// The six test patterns, each unlike the others at a glance even on a split
+// or shifted picture. The box's X and the lone line are named so a diagonal can't fit both ("a box
+// with a cross" read as "a diagonal").
 const (
 	patChecker = iota
 	patUpright
@@ -66,7 +66,7 @@ func patternID(p int) string {
 	return [...]string{"checkerboard", "vertical stripes", "horizontal stripes", "box with an X", "one diagonal line", "nested boxes"}[p]
 }
 
-// patternOn reports whether cell i, j of a w×h pattern p is white (prototype patternArt).
+// patternOn reports whether cell i, j of a w×h pattern p is white.
 func patternOn(p, i, j, w, h int) bool {
 	u, v := float64(i)/float64(max(1, w-1)), float64(j)/float64(max(1, h-1))
 	switch p {

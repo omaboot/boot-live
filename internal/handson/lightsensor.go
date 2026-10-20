@@ -590,11 +590,11 @@ func (l *lightSensor) View(c *Ctx) Screen {
 	return s
 }
 
-// lsArt is the light sensor's animation (prototype lightArt): the top of the screen with the
+// lsArt is the light sensor's animation: the top of the screen with the
 // camera (the sensor sits by it), a hand sliding over it, the reading as a bar, and a big
 // countdown of the seconds left to hold (3, 2, 1, then 0: let go).
 //
-// Laid out right-aligned in the band's 2/3 (owner, 0.6.0 review): the reading, the countdown and
+// Laid out right-aligned in the band's 2/3: the reading, the countdown and
 // their labels in a column against the right edge, sized to the longest label this mode can
 // show (so nothing moves when one changes); the screen's top to their left, with a lane between
 // the two as wide as the hand, where it waits before sliding in. The hand only ever moves from

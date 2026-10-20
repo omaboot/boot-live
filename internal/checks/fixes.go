@@ -36,8 +36,7 @@ const (
 	FixTB3USBAwake = "omaboot.thunderbolt3-usb-awake"
 )
 
-// DetectFixes finds the OmaBoot? fixes that took effect, not just the ones on the image
-// (LIVE-PLAN §14, step 2b):
+// DetectFixes finds the OmaBoot? fixes that took effect, not just the ones on the image:
 //
 //   - the radeon panel clock fix logs "iMac LVDS test: ATOM panel clock" when it corrects the
 //     panel table;

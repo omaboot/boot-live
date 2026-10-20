@@ -8,7 +8,7 @@ import (
 )
 
 // smc reads one SMC key raw, read-only, through applesmc's key_at_index interface (0.7.2 review:
-// the iMac10,1's light reading never moved; the owner pokes ALV0 by hand). Nothing is written
+// the iMac10,1's light reading never moved; ALV0 can be poked by hand). Nothing is written
 // to the SMC.
 func init() {
 	Register(Cmd{Name: "smc", Args: i18n.M("<key>"), Help: i18n.M("an SMC key's type and raw bytes (ALV0)"), Order: 46,

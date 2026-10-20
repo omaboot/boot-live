@@ -18,8 +18,8 @@ import (
 // (a phone in its Bluetooth settings, headphones in pairing mode, a mouse); the machine powers
 // the adapter on, scans (classic and Low Energy) and lists what it hears, and the person picks
 // their own device from the list (method challenge): devices of strangers nearby show up too,
-// so hearing something proves little until the person finds theirs among it (owner, 0.5.0: a
-// person proves what they saw). No pairing, no connection. The scan goes straight to the
+// so hearing something proves little until the person finds theirs among it (a person proves what
+// they saw). No pairing, no connection. The scan goes straight to the
 // kernel's Bluetooth management interface (the socket bluetoothd itself uses; btmgmt does the
 // same), so it needs no bluez on the live image and works beside a running bluetoothd too. What
 // it tests is the part that differs between Macs: the adapter, its driver and firmware, and the
@@ -39,8 +39,8 @@ import (
 //     (no socket: not the Mac's fault); not_tested (no-equipment): skipped.
 //
 // The person is told to open their phone's Bluetooth settings first: a phone shows its name
-// only while that screen is open (owner, 2026-10-13: opened after the list appeared, every
-// device showed unnamed). The list to pick from starts as the devices heard when the scan has had
+// only while that screen is open (opened after the list appeared, every device showed unnamed). The
+// list to pick from starts as the devices heard when the scan has had
 // a few seconds after the first, nearest first; after that it only grows at its end (so nothing
 // moves under the cursor): a device that turns up with a name, or gets one, joins it as it
 // arrives, and names fill in on the lines already there. It shows btPickMax at a time, "the 8
@@ -51,8 +51,8 @@ import (
 // its kind, maker, radio and signal, like everything heard, with how many were named.
 //
 // Device names show on the screen (so the person can spot theirs) and never go into the
-// report: a phone's name is often its owner's. Addresses are never shown. A device with no
-// name counts all the same (an iPhone advertising over Low Energy has none; its maker shows).
+// report: a phone's name is often the person's own name. Addresses are never shown. A device with
+// no name counts all the same (an iPhone advertising over Low Energy has none; its maker shows).
 // A soft-blocked adapter is unblocked for the test (rfkill), and Low Energy switched on if it's
 // off (bluetoothd does that, and there's none); the scan stopped, the power, Low Energy and
 // the block put back as they were when the screen is left. A Bluetooth firmware the kernel

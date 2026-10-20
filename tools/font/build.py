@@ -8,7 +8,7 @@ together and:
      no code point is freed. Glyphs shared with other scripts (A, Ω as the ohm sign, ε as ∈, π as
      Cyrillic п ...) stay under their other code points;
   1b. removes the symbols boot-live never draws (UNUSED: double-line box drawing, DOS leftovers),
-     to make room for the icons' second cells (owner, 2026-10-12); every letter stays;
+     to make room for the icons' second cells; every letter stays;
   2. merges glyphs whose bitmaps are identical at all three sizes (g and Cyrillic д, u and и,
      ɛ and ∈): one glyph, both code points;
   3. draws the port symbols (portglyphs.py) and the marks (MARKS: the partial mark ◐, the
@@ -33,11 +33,11 @@ SIZES = (16, 24, 32)
 PSF2_MAGIC = 0x864AB572
 GREEK = range(0x0370, 0x0400)
 # Symbols no boot-live screen draws: Terminus's double-line box drawing and CP437 leftovers.
-# ‡ went to make room for the partial mark ◐ (owner, 2026-10-13).
+# ‡ went to make room for the partial mark ◐.
 UNUSED = set(map(ord, "╬╪║╒╔╗╘╙╚╛╝╞╟╠╡╣╦╧╨╩" "⌐⌠⌡₧ⁿ≡∩" "♦○↕↔" "‡" "¤"))  # ¤ made room for the console key (2026-10-15)
 TTF = "/usr/share/fonts/TTF/JetBrainsMonoNerdFont-Regular.ttf"
 
-# The Nerd icons, two cells each (owner, 2026-10-12: one cell read as too small), drawn from their
+# The Nerd icons, two cells each (one cell read as too small), drawn from their
 # Nerd Fonts code point at TALL of the cell height and split into a left and a right glyph at our own
 # private code points ICON_BASE + 2i and + 2i + 1 (U+E000 up), in this list's order. Not at the Nerd code points:
 # the Linux console's Unicode map holds 16-bit code points only (Material Design's U+F0000 up
@@ -86,7 +86,7 @@ ICONS = [
 
 
 # The result marks drawn here, one cell each: ◐, a circle with its left half filled, is the partial
-# mark (owner, 2026-10-13, prototype v44; it was "~"). Drawn like boot-wip/proto-tools/markglyphs.py,
+# mark (it was "~"). Drawn like the other marks,
 # sampling pixel centres, so it is crisp at 16, 24 and 32 px.
 def half_circle(w, h):
     """◐ as an h-row grid of w booleans: the ring of stroke h/16, the left half filled."""
@@ -105,7 +105,7 @@ def half_circle(w, h):
 def key_grave(w, h):
     """The console key's ` for the hint bar's key cap: an even stroke in the font's weight, about
     a third of the cell high and centred, where the font's own ` is small and at the top edge
-    (owner, 2026-10-15, candidate B). Our own code point: typing ` is unchanged."""
+   . Our own code point: typing ` is unchanged."""
     x0, y0, x1, y1 = w * .25, h * .27, w * .75, h * .62
     r = 1.5 * max(1, round(h / 16)) / 2
     grid = []
@@ -175,7 +175,7 @@ def pack(grid, x0, w, h):
 # --- the new glyphs ---------------------------------------------------------------------------
 
 def icon_raster(ttf, cp, w, h):
-    """As the prototype's nerdicons.py (v36): the icon scaled to fit w-2 wide and TALL of h high, centred."""
+    """The icon scaled to fit w-2 wide and TALL of h high, centred."""
     ref = ImageFont.truetype(ttf, 100)
     x0, y0, x1, y1 = ref.getbbox(chr(cp), anchor="ls")
     sc = min((w - 2) / (x1 - x0), (h * TALL) / (y1 - y0))

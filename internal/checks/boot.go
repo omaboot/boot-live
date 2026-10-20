@@ -11,7 +11,7 @@ import (
 )
 
 // bootEFI decides boot.installer-efi64, "Stock installer boots via 64-bit EFI: the unmodified
-// Omarchy installer ISO boots natively from the Mac's startup manager". The owner's O1: booting
+// Omarchy installer ISO boots natively from the Mac's startup manager". Booting
 // OmaBoot?'s rebuilt ISO (Omarchy's ISO, its GRUB and kernels, plus our changes) counts.
 //
 //   - supported: this system booted through 64-bit EFI (/sys/firmware/efi, fw_platform_size 64);
@@ -78,7 +78,7 @@ func bootInstall(_ context.Context, e *Env) []Result {
 
 // bootPowerCycle is boot.power-cycle, "Survives a power cycle": only an installed system can be
 // restarted and come back (live: no), so it's always not_tested, reason live-limit. It has a line
-// of its own so the quick pass lists every Boot criterion the summary counts (owner, 0.4.5 review).
+// of its own so the quick pass lists every Boot criterion the summary counts.
 func bootPowerCycle(context.Context, *Env) []Result {
 	r := skip(LiveLimit, "a live boot can't restart an installed system")
 	r.Detail = i18n.T("a live boot can't restart an installed system")

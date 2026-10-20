@@ -54,7 +54,7 @@ func drawDoze(gr *g.Grid, o *Options, b Box, s float64) {
 		gr.Put(b.X+b.W/2-width(l2)/2, by+boot.H+4, l2, g.DIM)
 		return
 	}
-	// his words in his box under him, its ▲ up at him (owner, 2026-10-13: every screen); whole,
+	// his words in his box under him, its ▲ up at him (every screen); whole,
 	// no cursor: he's asleep
 	says := []line{{-1e6, l1}, {-1e6, l2}}
 	w := sayWidth(b.W-2, says)

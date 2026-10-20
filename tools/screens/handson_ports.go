@@ -28,7 +28,7 @@ func init() {
 			playShot("h9-usb-a-skipped", "ports.usb-a", 2.6, nil, ui.Pick{At: 2, Action: -1}),
 			macShot("h9-usb-a-nomap-same-port", "ports.usb-a", 10.5, nil, nil),
 			macShot("h9-usb-a-nomap-pass", "ports.usb-a", 12, nil, nil, ui.Pick{At: 11, Action: 0}),
-			// the raw read (owner, 2026-10-13): a stick read twice, a read failing and retried, the
+			// the raw read: a stick read twice, a read failing and retried, the
 			// OmaBoot? stick moved with copytoram, a mouse counted by its moves
 			playShot("h9-usb-a-read-twice", "ports.usb-a", 3.75, nil, answer),
 			readShot("h9-usb-a-read-reading", "fail", 4.1, answer),
@@ -72,7 +72,7 @@ func init() {
 			phoneShot("h9-imac-usb-a-iphone-counted", iPhone, 2.8, answer, phonePort),
 			phoneShot("h9-imac-usb-a-iphone-seen", iPhone, 4.5, answer, phonePort),
 			phoneShot("h9-imac-usb-a-android-question", pixel, 2, answer),
-			// with DoesItOmarchy.com's wiring for the Mac (LIVE-PLAN §23): the question starts on its port
+			// with DoesItOmarchy.com's wiring for the Mac: the question starts on its port
 			macShotOf("h9-usb-a-stick-wired", "ports.usb-a", 2.5, &handson.Env{Ports: handson.DemoAirPorts(), Wiring: airWiring}, nil, nil),
 			wiredPhoneShot("h9-imac-usb-a-iphone-wired", iPhone, 2, answer),
 			playShot("h9-bt-listening", "network.bluetooth", 2.5, nil),

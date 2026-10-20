@@ -1,5 +1,5 @@
-// Package command is the console's command registry (LIVE-PLAN §24, owner 2026-10-14, prototype
-// v52): a drop-down console in its own box above the hint bar, on every screen, in dev and
+// Package command is the console's command registry: a drop-down console in its own box above the
+// hint bar, on every screen, in dev and
 // release builds. Each command is one file that registers itself from init, like the hands-on
 // tests (internal/handson); the core here (parsing, completion, history, output, the run's
 // marks) never changes when a command is added. Commands reach the tool only through Env.
@@ -20,7 +20,7 @@ import (
 	"github.com/omaboot/boot-live/internal/i18n"
 )
 
-// Kind is what a command may do to the run (owner, 2026-10-14: three kinds; 2026-10-17: drive-write).
+// Kind is what a command may do to the run (three kinds; drive-write).
 type Kind int
 
 const (
@@ -61,7 +61,7 @@ type Cmd struct {
 	// name; a command that fails is neither recorded in the report nor marks the run.
 	Run func(env Env, args []string, out *Out) error
 	// Marks, if set, says whether a Change command with these arguments changes a result (the
-	// prototype's "fix list" looks, "fix off" changes); nil: every successful run does.
+	// "fix list" looks, "fix off" changes); nil: every successful run does.
 	Marks func(args []string) bool
 }
 
@@ -114,7 +114,7 @@ func (l Line) Text() string {
 	return b.String()
 }
 
-// Output colours (owner, 2026-10-14, v50): the command white (red when it's no command), its
+// Output colours: the command white (red when it's no command), its
 // arguments blue (test IDs, paths, values), labels and timestamps dim, text grey, values white,
 // results in their result colours (green only for a pass), the kernel log's driver blue with
 // warnings amber and errors red, JSON keys grey, strings blue, numbers white, anything that marks
@@ -141,7 +141,7 @@ type Out struct {
 	Clear bool // empty the box first (clear)
 	Close bool // close the console after (close, quit)
 	// Unlogged: the lines show in the box but stay out of the full log (L), which keeps the
-	// command line itself: the help list (owner, 0.8.0 review).
+	// command line itself: the help list.
 	Unlogged bool
 }
 

@@ -1,4 +1,4 @@
-// Package boot is the Boot layer: Boot the character (the prototype's "Sprite" design), his idle
+// Package boot is the Boot layer: Boot the character, his idle
 // life and expressions, his typed lines, and the band effects that play beside him while checks
 // run. The core screens work without it (--plain).
 package boot
@@ -28,7 +28,7 @@ const (
 	H = 7
 )
 
-// TypeCPS is how fast Boot types, in characters per second (the prototype's TYPE_CPS).
+// TypeCPS is how fast Boot types, in characters per second.
 const TypeCPS = 80
 
 // Life is Boot's idle motion at one moment.
@@ -37,7 +37,7 @@ type Life struct {
 	Blink  bool
 	Glance int // -1, 0, 1: eyes left, centre, right
 	Bob    bool
-	Down   bool // eyes down: a glance at the console as it opens (owner, 2026-10-14)
+	Down   bool // eyes down: a glance at the console as it opens
 	Gold   bool
 	Cross  bool // eyes as ×
 	Rise   int  // pixel rows up

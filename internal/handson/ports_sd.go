@@ -42,7 +42,7 @@ import (
 // The evidence keeps the timings from the test's start (the mmc host's card device, the card's
 // disk, the test file read) and, for an mmc reader, how its host learns of a card: polled
 // (MMC_CAP_NEEDS_POLL in debugfs' caps) or by interrupt (its /proc/interrupts count while the
-// test ran), its PCI function and its runtime PM state at the start. Owner, 0.8.9 dev: the
+// test ran), its PCI function and its runtime PM state at the start. 0.8.9 dev: the
 // iMac18,x's Broadcom reader (14e4:16bc) seemed slow to see a card next to the iMac10,1's USB
 // one, and nothing on record said where the time went.
 

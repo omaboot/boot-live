@@ -56,7 +56,7 @@ func init() {
 
 var jsonTok = regexp.MustCompile(`("(?:[^"\\]|\\.)*")(\s*:)?|(-?\d+(?:\.\d+)?(?:[eE][-+]?\d+)?)|([^"\d-]+|.)`)
 
-// JSONLine colours a line of indented JSON (owner, v50): keys grey, strings blue, numbers white,
+// JSONLine colours a line of indented JSON: keys grey, strings blue, numbers white,
 // punctuation dim.
 func JSONLine(l string) Line {
 	var out Line

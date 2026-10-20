@@ -23,7 +23,7 @@ var WifiChips = map[string]string{
 }
 
 // noLiveDriver are the Wi-Fi chips whose only driver (broadcom-wl) comes with the installed
-// system: a live boot can't decide them (LIVE-PLAN §13.6).
+// system: a live boot can't decide them.
 var noLiveDriver = map[string]bool{"14e4:4331": true, "14e4:43a0": true}
 
 // netIface is a network interface and the device under it.
@@ -90,8 +90,8 @@ func ethernetDevices(e *Env) []identify.PCIDev {
 	return out
 }
 
-// carry is what the boot.watch test over one interface showed (owner, 2026-10-13: data
-// verified both ways replaces "data moved").
+// carry is what the boot.watch test over one interface showed (data verified both ways replaces
+// "data moved").
 type carry int
 
 const (
@@ -228,7 +228,7 @@ func addr(e *Env, iface string) string {
 func kb(n uint64) string { return fmt.Sprintf("%d KB", n>>10) }
 
 // Wi-Fi and Ethernet are decided by their hands-on tests (internal/handson, net_wifi.go and
-// net_ethernet.go; owner, 2026-10-13): the person picks a network and types its password, or
+// net_ethernet.go): the person picks a network and types its password, or
 // plugs in a cable, whatever the Network screen did, and the test moves data over that
 // interface alone through boot.watch. The quick pass only reports what it sees (the card and
 // what it hears, the port and its link) and decides the cases no person can change: no
@@ -289,8 +289,8 @@ func FindWifi(e *Env) (WifiCard, bool) {
 
 // wifi looks at network.wifi, "Wi-Fi", in the quick pass: the card, its interface and what a
 // scan hears. Hearing networks is only the start: a scan works on many a card that can't join
-// or stay joined (older Broadcom chips), so it never passes (owner, 0.5.0: supported means
-// exercised end to end); the hands-on test joins and moves the data, and its result replaces
+// or stay joined (older Broadcom chips), so it never passes (supported means exercised end to end);
+// the hands-on test joins and moves the data, and its result replaces
 // this one.
 //
 //   - not_tested (uncertain): an interface; the scan heard networks, or none (nothing in range,
@@ -431,7 +431,7 @@ func FindEthernet(e *Env) (EthPort, bool) {
 }
 
 // ethernet looks at network.ethernet, "Ethernet", in the quick pass: the port's driver, its
-// interface and its link. A link alone isn't a working port (owner, 0.5.0): the hands-on test
+// interface and its link. A link alone isn't a working port: the hands-on test
 // waits for a cable, a link and an address and moves the data, and its result replaces this one.
 //
 //   - not_tested (uncertain): a link (a cable in): the hands-on test decides;

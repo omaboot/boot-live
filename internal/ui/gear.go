@@ -9,7 +9,7 @@ import (
 
 // ── What to have at hand ("Boot needs you") ────────────────────────────────────
 
-// gearTier is how much a test's gear matters (owner, 2026-10-13): 0 essential, 1 recommended;
+// gearTier is how much a test's gear matters: 0 essential, 1 recommended;
 // a test not listed here is optional.
 var gearTier = map[string]int{
 	"power.charging": 0, "network.wifi": 0, "ports.usb-a": 0,

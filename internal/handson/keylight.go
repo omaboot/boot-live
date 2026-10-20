@@ -13,7 +13,7 @@ import (
 	"github.com/omaboot/boot-live/internal/i18n"
 )
 
-// The key-light keys (prototype hoKeys, owner 2026-10-13), a second test for
+// The key-light keys, a second test for
 // input.keyboard-backlight, "Keyboard backlight": the blinks (backlight.go) show the light
 // answers the kernel; this shows the keys made for it work. Omarchy binds them
 // (XF86KbdBrightnessUp/Down, KEY_KBDILLUMUP/DOWN: F6 and F5 on most Macs, F10 and F9 on the 2006
@@ -330,7 +330,7 @@ func (k *keyLightKeys) View(c *Ctx) Screen {
 	return s
 }
 
-// keyLightArt is the key-light keys' animation (prototype hoKeys): the keys around the two, the
+// keyLightArt is the key-light keys' animation: the keys around the two, the
 // one pressed lit, and the light's level as a bar that follows the LED.
 func keyLightArt(gr *g.Grid, x, y, w, h int, up, down string, pressed, pressUp bool, lvl, mx int) {
 	var n int

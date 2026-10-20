@@ -8,7 +8,7 @@ import (
 	"github.com/omaboot/boot-live/internal/ui"
 )
 
-// consoleShots are the command console (LIVE-PLAN §24, prototype v52) over the demo's screens,
+// consoleShots are the command console over the demo's screens,
 // the console worked by typed keys (ui.ScriptConsole): "\t" Tab, "\n" Enter, "^up" Ctrl+↑. The
 // dev-only commands (force) need the omaboot_dev tag: go run -tags omaboot_dev ./tools/screens.
 func consoleShots() []shot {
@@ -77,7 +77,7 @@ func consoleShots() []shot {
 		testCon("console-5-test-backlight", playShot("", "input.keyboard-backlight", 4, nil), "report", "\n"),
 		// the keyboard test has the keyboard: the console's key dims, and ` types into the test
 		playShot("console-5-test-keyboard-takes-keys", "input.keyboard", 4, nil),
-		// tall is half the screen, empty or not (owner, 2026-10-15)
+		// tall is half the screen, empty or not
 		con("console-6-tall-empty", st(ui.Results, 10, online, done), full(), "^up"),
 		// boot say: in Boot's own box on the screen showing, the console only echoes it
 		said(con("console-7-say-hello", st(ui.Hello, 8), demo.Facts(), "boot say hello from the console", "\n")),

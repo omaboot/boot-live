@@ -9,11 +9,11 @@ import (
 	"github.com/omaboot/boot-live/internal/icons"
 )
 
-// ── Band animations where a test had none (owner-approved prototype v54, 2026-10-17) ──
+// ── Band animations where a test had none ─────────────────────────────────────────────
 
-// plugArt is a port test on a Mac with no port map: the port's slot, big (square corners, owner
-// 2026-10-17), and a plug that goes in and out every 3 s, the slot lighting while it's in; next to
-// it (or under it, when narrow) a box per port seen so far.
+// plugArt is a port test on a Mac with no port map: the port's slot, big (square corners), and a
+// plug that goes in and out every 3 s, the slot lighting while it's in; next to it (or under it,
+// when narrow) a box per port seen so far.
 func plugArt(kind string, seen int) Panel {
 	return func(gr *g.Grid, x, y, w, h int, t float64) {
 		const pw = 16

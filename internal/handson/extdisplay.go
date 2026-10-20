@@ -23,10 +23,10 @@ import (
 // itself, by KMS (extdisplay_kms.go): a dark card with a white border and a big three-digit
 // code, on a CRTC of its own, never the internal panel's. The person types the code the monitor
 // shows (method challenge; proof.go's typed codes): the code is on the monitor only, never on
-// the Mac's own screen (owner, 2026-10-13). A wrong code gets one more try with a new code;
+// the Mac's own screen. A wrong code gets one more try with a new code;
 // unplugging and plugging back in doesn't reset that count. The console mirroring itself to the
 // new output (fbcon) proves nothing on its own any more: a yes to "do you see this screen?"
-// can't be told from a guess (owner, 0.5.0 "no false passes"). The connector's name goes into
+// can't be told from a guess ("no false passes"). The connector's name goes into
 // the evidence, for the port that was tested.
 //
 //   - supported: a connector came up connected with an EDID and modes, the card went up on it,
@@ -486,7 +486,7 @@ func (x *extDisplay) View(c *Ctx) Screen {
 
 func (x *extDisplay) view(c *Ctx) Screen {
 	s := Screen{Face: boot.Idle, OutTitle: i18n.T("What I see"), Anim: x.anim()}
-	if x.gd != nil { // the Mac's video ports across the band, the picture beside the steps (owner, 2026-10-19)
+	if x.gd != nil { // the Mac's video ports across the band, the picture beside the steps
 		s.Anim, s.Map, s.SayRows = nil, x.portMap(), portSayRows
 		s.Side, s.SideH = x.small(), smallH
 	}

@@ -26,7 +26,7 @@ type Catalog struct {
 	Date    string                // the day the catalog's content last changed (YYYY-MM-DD), "" in older snapshots
 	Layouts map[string][]PortSide // configuration → its port map, when the snapshot has one
 	// Wiring is configuration → connector → the stable paths accepted reports agree on (the
-	// snapshot's "wiring", LIVE-PLAN §23), when the snapshot has any.
+	// snapshot's "wiring"), when the snapshot has any.
 	Wiring  map[string]map[string][]string
 	Fetched bool // refreshed from the site during this run
 	m       *match.Matcher
@@ -194,7 +194,7 @@ func AllInOne(identifier string) bool {
 	return f == "iMac" || f == "iMacPro"
 }
 
-// OneSpeaker reports whether a Mac has a single built-in speaker (owner's Macmini4,1, 0.8.5 dev:
+// OneSpeaker reports whether a Mac has a single built-in speaker (Macmini4,1, 0.8.5 dev:
 // the speakers test's right channel unheard): the Mac mini and Mac Pro, and the first two
 // MacBook Airs (2008); every other Intel Mac has a pair.
 func OneSpeaker(identifier string) bool {

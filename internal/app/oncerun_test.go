@@ -10,7 +10,7 @@ import (
 	"github.com/omaboot/boot-live/internal/ui"
 )
 
-// One run sends one report (LIVE-PLAN §19.3): once a code came back, Submit refuses before
+// One run sends one report: once a code came back, Submit refuses before
 // building a request, whatever the screens do.
 func TestOneReportPerRun(t *testing.T) {
 	r := New(Options{Root: sysroot.Root("../../testdata/macbookair5,2"), Edition: ui.Live,

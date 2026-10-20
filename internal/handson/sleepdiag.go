@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-// Sleep diagnostics (0.7.5; owner, 2026-10-15): the iMac10,1 hangs going to sleep, leaving an
+// Sleep diagnostics (0.7.5): the iMac10,1 hangs going to sleep, leaving an
 // empty screen with a blinking cursor and nothing on record. For every nap the tool now:
 //
 //   - turns on the kernel's suspend diagnostics for that nap and puts them back after

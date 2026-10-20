@@ -36,7 +36,7 @@ import (
 //
 // The connectors read "connected" after a wake even when the screen stays black, so once the
 // back phase is done (after the last nap) the screen shows a 3-digit code, large, and the tester
-// types it (a challenge, proof.go's typed codes; owner, 2026-10-13: no false passes):
+// types it (a challenge, proof.go's typed codes; no false passes):
 //
 //   - typed right: the naps' verdict stands (a supported one then rests on the challenge);
 //   - no answer within 60 s: the code stays up, and the screen adds "No code" (N): picked, a
@@ -132,7 +132,7 @@ type sleepWake struct {
 	late    bool    // codeWait passed with no answer: No code is offered, the code still taken
 	lateBy  float64 // a late code: how long after it showed it was typed
 	codeAt  float64 // when the current one did (or will: after a miss, once the red one goes)
-	// how the code in the band looks (owner, 0.6.2 review): green once typed right, red once
+	// how the code in the band looks: green once typed right, red once
 	// wrong twice; after a first miss the missed code shows red for codeRed, then the new one
 	right, failed bool
 	missed        int

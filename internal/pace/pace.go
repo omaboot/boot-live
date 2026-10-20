@@ -1,4 +1,4 @@
-// Package pace plays check results back at a readable pace (LIVE-PLAN §18, owner 2026-10-10).
+// Package pace plays check results back at a readable pace.
 //
 // Checks run as fast as they can and report when they really started and finished. The screen
 // shows each result's log line at the later of its arrival and the previous line plus a minimum
@@ -10,7 +10,7 @@
 // the worst result of the burst, once its last line is shown. The progress bar follows the
 // playback. Only the display is paced: finish times are never changed.
 //
-// Boot's lines (owner, 2026-10-11): each check opens with its cue, typed as its band starts, and
+// Boot's lines: each check opens with its cue, typed as its band starts, and
 // its slot lasts until the cue is typed and read. A check with something to say about its result
 // (Item.Say: the screen passes it for partial and failed results and fixes) says it when its line
 // shows, and the next check waits until that is typed and read. So no line is ever skipped or
@@ -79,7 +79,7 @@ type Rules struct {
 	Step    float64 // resolution of the face timeline
 }
 
-// Default is the prototype's pacing (PACE and TYPE_CPS in boot-live-proto v20).
+// Default is the pacing a run plays at.
 var Default = Rules{Start: 1.0, Line: 0.8, Band: 3.0, Face: 1.5, React: 1.2, Read: 0.9, CueRead: 1.4, SayRead: 2.5, TypeCPS: 80, Step: 0.05}
 
 // Item is one finished check.

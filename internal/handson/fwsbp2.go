@@ -12,13 +12,13 @@ import (
 	"github.com/omaboot/boot-live/internal/checks"
 )
 
-// sleepcheck's nosbp2 experiment (0.7.6; owner, 2026-10-15): the iMac10,1 hangs at pm_test's
+// sleepcheck's nosbp2 experiment (0.7.6): the iMac10,1 hangs at pm_test's
 // devices level with a FireWire disk attached. Taking firewire_sbp2 off the disk before the test
 // suspend (its SCSI disk goes with it) and giving it back after shows whether the disk's driver
 // is what hangs. The disk is never mounted or read; when it comes back it is made read-only again
 // (safety.Protect), as when it was plugged in.
 //
-// 0.7.7 (owner, 2026-10-15): unbinding avoided the devices-level hang, but a real light sleep
+// 0.7.7: unbinding avoided the devices-level hang, but a real light sleep
 // still hung: the suspend resets the FireWire bus, the drive comes back (as a new node, fw1 →
 // fw2) and the driver core binds firewire_sbp2 to it again, mid-suspend. So the driver is
 // unbound, then the module is unloaded (modprobe -r firewire_sbp2) for the step and loaded again

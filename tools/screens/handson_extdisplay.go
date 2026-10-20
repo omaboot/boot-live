@@ -7,7 +7,7 @@ import (
 )
 
 // The external display's screen when no code card could go up (no DRM master, no free CRTC):
-// a yes doesn't count then. And its video ports on other Macs' maps (owner, 2026-10-19): the
+// a yes doesn't count then. And its video ports on other Macs' maps: the
 // Mac mini's HDMI and Mini DisplayPort (one of each, so the monitor's port is known), the
 // iMac18,1's two Thunderbolt 3 ports (which one can't be told).
 func init() {

@@ -271,9 +271,9 @@ func (c *Console) Known(input string) bool {
 	return false
 }
 
-// Tag is a kind's tag in the help list (owner, v51/v52): read-only plain dim text, redo white on
+// Tag is a kind's tag in the help list: read-only plain dim text, redo white on
 // blue, modifies results (inadmissible) black on amber (amber marks the run), drive-write white on
-// violet (v55).
+// violet.
 func Tag(k Kind) Seg {
 	switch k {
 	case Write:

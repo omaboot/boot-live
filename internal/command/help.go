@@ -12,7 +12,7 @@ func init() {
 }
 
 // help lists the commands: name, arguments, what it does, "dev", and its kind as a tag in its
-// own column (owner, v51). No legend under the list: the tags say it themselves (owner, 0.8.3).
+// own column. No legend under the list: the tags say it themselves.
 func help(_ Env, _ []string, out *Out) error {
 	out.Unlogged = true
 	for _, c := range All() {

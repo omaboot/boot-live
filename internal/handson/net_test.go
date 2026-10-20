@@ -57,7 +57,7 @@ func playNet(t *testing.T, id string, until float64, script func(*Fake), steps .
 	return nil
 }
 
-// The network tests' verdicts (owner, 2026-10-13): supported only with the boot.watch transfer
+// The network tests' verdicts: supported only with the boot.watch transfer
 // verified over the interface under test; a join, a link or an address alone never pass, and
 // what the tester answers is observed, never supported.
 func TestNetworkRules(t *testing.T) {
@@ -123,7 +123,7 @@ func TestNetworkRules(t *testing.T) {
 }
 
 // Both network tests are offered whatever the Network screen did: an offline run (no
-// connection, nothing joined) still gets them (owner, 2026-10-13).
+// connection, nothing joined) still gets them.
 func TestNetworkTestsOffline(t *testing.T) {
 	env := fixtureEnv(t, "imac10,1")
 	env.Checks.Net = checks.NetFacts{} // "Skip, test offline"

@@ -24,7 +24,7 @@ const Serial = "/dev/ttyS0"
 // autoNet is how long --auto waits for a connection that comes up on its own.
 const autoNet = 20 * time.Second
 
-// Auto runs without any input (QEMU tests, LIVE-PLAN §18): identify (the exact or best match),
+// Auto runs without any input (QEMU tests): identify (the exact or best match),
 // use whatever network comes up on its own within ~20 s, run the quick pass, then submit if
 // there's a target, a key and a network, else save to the BOOTLIVE stick. It ends with one line,
 // "OMABOOT-AUTO: submitted <code>", "OMABOOT-AUTO: saved <path>" or "OMABOOT-AUTO: failed

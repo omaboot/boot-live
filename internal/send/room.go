@@ -22,7 +22,7 @@ import (
 	"github.com/omaboot/boot-live/internal/sysroot"
 )
 
-// Room for reports on the OmaBoot? stick itself (LIVE-PLAN §19, decision 2): the image is a
+// Room for reports on the OmaBoot? stick itself: the image is a
 // read-only ISO, so the first save with no BOOTLIVE drive around adds a small FAT partition
 // labelled OMABOOT at the stick's end, past the image (Plan). Not BOOTLIVE: with a BOOTLIVE
 // payload stick plugged in too, two drives of that name would leave the hook guessing.
@@ -35,7 +35,7 @@ import (
 const (
 	sector     = 512
 	align      = 2048              // 1 MiB
-	roomMax    = 64 << 20 / sector // 64 MiB: thousands of reports with the 32 MiB test file beside them, and the image with it still fits a 2 GB stick (owner, 2026-10-17; was 32)
+	roomMax    = 64 << 20 / sector // 64 MiB: thousands of reports with the 32 MiB test file beside them, and the image with it still fits a 2 GB stick (was 32)
 	roomMin    = 8 << 20 / sector  // below 8 MiB, don't bother
 	reserve    = align             // kept free at the stick's very end, past any GPT's backup (at most 1024 entries: 256 sectors)
 	fat16LBA   = 0x0e              // W95 FAT16 (LBA): FAT32 needs more room than 64 MiB
@@ -190,7 +190,7 @@ func layout(d io.ReaderAt, total uint64) (end, last uint64, g gpt, hasGPT bool, 
 
 // Plan works out the writes that add the OMABOOT partition to a disk of total sectors, and where
 // it goes. It goes at the stick's end, 1 MiB aligned, up to 64 MiB, with 1 MiB past it for any
-// GPT's backup (owner, 2026-10-19; it went right after the image before 0.8.6). Writing a new
+// GPT's backup (it went right after the image before 0.8.6). Writing a new
 // image only covers the stick's first gigabyte or so: its partition table leaves OMABOOT out,
 // but the partition itself is still there, and Plan finds it (Found) and only adds it back to
 // the table, keeping the reports and settings. Plan refuses unless the MBR is our image's.

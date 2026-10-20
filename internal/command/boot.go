@@ -17,7 +17,7 @@ func init() {
 			}
 			return nil
 		},
-		// his own box on the screen showing, not the console (owner, 2026-10-15): the command's
+		// his own box on the screen showing, not the console: the command's
 		// echo is all the console prints
 		Run: func(env Env, args []string, _ *Out) error {
 			if len(args) == 0 || args[0] != "say" {

@@ -11,7 +11,7 @@ import (
 	"github.com/omaboot/boot-live/internal/i18n"
 )
 
-// View is what Which Mac draws the match from (0.7.9, prototype v53 B): every release in the
+// View is what Which Mac draws the match from: every release in the
 // catalog for the search, the Mac's family and years for the line-up and the timeline, and what
 // the Mac reported next to what each of its configurations lists.
 type View struct {
@@ -260,7 +260,7 @@ func TidyCPU(name string) string {
 }
 
 // Labels name configurations for Which Mac's lists by their release ("MacBook Air (13-inch,
-// Early 2015)", owner 2026-10-17). Configurations in ids that share a release add the part of
+// Early 2015)"). Configurations in ids that share a release add the part of
 // their IDs that differs ("iMac (21.5-inch, Late 2009)  ·  a"); one without a release keeps its ID.
 func (c *Catalog) Labels(ids []string) []string {
 	group := map[string][]string{}

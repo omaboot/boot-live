@@ -13,7 +13,7 @@ import (
 	"github.com/omaboot/boot-live/internal/safety"
 )
 
-// ── Band animations for the screens that had none (owner-approved prototype v54, 2026-10-17) ──
+// ── Band animations for the screens that had none ─────────────────────────────────────────────
 
 // bandLeft is how wide the band's text stays on a screen with an animation on its right: the
 // headline's note wraps and Boot's box keeps to it.
@@ -518,7 +518,7 @@ func netPathOf(st *State, f *Facts) pathView {
 	return p
 }
 
-// netBand draws the Network screens' band right of Boot (prototype v54): the headline and its
+// netBand draws the Network screens' band right of Boot: the headline and its
 // note wrapped to the left part, Boot's lines in his box under them, the way out on the right.
 // Without room for the way out, it's the band as before. It returns the y of Boot's box.
 func netBand(gr *g.Grid, l Layout, head, note string, p pathView, t float64) (sayY, sayW int) {

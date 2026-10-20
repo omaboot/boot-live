@@ -11,7 +11,7 @@ import (
 	"github.com/omaboot/boot-live/internal/pace"
 )
 
-// ── Pieces of the hands-on layout (owner-approved prototype v46, 2026-10-13) ───────────────
+// ── Pieces of the hands-on layout ──────────────────────────────────────────────────────────
 
 // box draws a w×h box at x, y in col, with title set into its top edge ("┌ Result ──┐") in tcol.
 func box(gr *g.Grid, x, y, w, h int, col g.Color, title string, tcol g.Color) {
@@ -30,7 +30,7 @@ func box(gr *g.Grid, x, y, w, h int, col g.Color, title string, tcol g.Color) {
 }
 
 // bandSplit shares the band's field: 1/3 for Boot's line (sw wide from the field's left), 2/3
-// for the animation (aw wide from ax). Every test and the quick pass (owner, 2026-10-13).
+// for the animation (aw wide from ax). Every test and the quick pass.
 func bandSplit(l Layout) (sw, ax, aw int) {
 	sw = l.FieldW/3 - 2
 	ax = l.FieldX + sw + 3
@@ -146,7 +146,7 @@ func sayWidth(maxW int, lines []line) int {
 }
 
 // sayBox draws Boot's lines that have started by t in his violet box at x, y (the same box as
-// on the tests, owner 2026-10-13: every screen): sayWidth wide, as tall as their rows, at most
+// on the tests: every screen): sayWidth wide, as tall as their rows, at most
 // maxRows of text (the oldest lines make room). Each line types out from its start; the cursor
 // sits on the newest. tail ≥ 0 puts the ▲ in the top edge at that column (the box under Boot);
 // else ◀ on its left edge, at him. A line from the console (cs) stands in for his while it's
@@ -195,8 +195,8 @@ type answer struct {
 
 // answers draws the answers from x, y in maxW columns: ▶ on the selected one (sel < 0: none),
 // its key (dim; violet when selected), the label, and what it does, wrapped in its own column;
-// when that column would be narrower than 18 it goes under the label instead (owner, 2026-10-13:
-// nothing spills into the next section). It returns the row after them.
+// when that column would be narrower than 18 it goes under the label instead (nothing spills into
+// the next section). It returns the row after them.
 func answers(gr *g.Grid, x, y int, items []answer, sel, maxW int) int {
 	lw := 0
 	for _, a := range items {
@@ -264,8 +264,8 @@ func answers(gr *g.Grid, x, y int, items []answer, sel, maxW int) int {
 }
 
 // resultBox is the result under the Output box: three rows outlined in the status colour,
-// "Result" in its top edge, the mark, the word and the text inside; outline only (owner,
-// 2026-10-13). With no result yet it is dim and says what the test waits for.
+// "Result" in its top edge, the mark, the word and the text inside; outline only. With no result
+// yet it is dim and says what the test waits for.
 func resultBox(gr *g.Grid, x, y, w int, cs []Check, waiting string) {
 	if len(cs) == 0 {
 		box(gr, x, y, w, 3, g.DIM, i18n.T("Result"), g.DIM)
@@ -313,7 +313,7 @@ func rank(s pace.Status) int {
 	return 0
 }
 
-// codeField draws a typed code's field from x, y (prototype codeField): the label, three boxed
+// codeField draws a typed code's field from x, y: the label, three boxed
 // digits with the next one's box violet and a blinking _ in it, "type the 3 digits"
 // beside them, and the tries or the wrong try under them. It returns the row after it.
 func codeField(gr *g.Grid, x, y int, c *handson.CodeField, t float64) int {

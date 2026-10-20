@@ -16,7 +16,7 @@ import (
 	"github.com/omaboot/boot-live/internal/plan"
 )
 
-// The run plan (internal/plan, LIVE-PLAN §30) as the screens drive it: the frame clock answers
+// The run plan (internal/plan) as the screens drive it: the frame clock answers
 // each screen's question the way the plan says, once, and a person can still take over. Hello
 // counts down 10 s, and any key in that time ignores the plan for this boot. Which Mac takes the
 // plan's configuration (else the match; when several fit and nobody is there, the tool's best);
