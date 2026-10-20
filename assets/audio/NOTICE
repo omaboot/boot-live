@@ -1,0 +1,8 @@
+Spoken word clips for the speaker challenge (one short English word each, 16-bit mono 22,050 Hz WAV).
+
+Made once on 2026-10-11 with Piper TTS 1.8.0 (github.com/OHF-voice/piper1-gpl, GPL-3.0-or-later; used only as
+a generator, nothing of it ships) and the voice en_US-amy-medium from huggingface.co/rhasspy/piper-voices
+(repository licence MIT). Its model card gives the dataset as Mycroft's mimic3 voices
+(github.com/MycroftAI/mimic3-voices, "License: See URL"); the voice was fine-tuned from Piper's U.S. English
+lessac voice. Chosen by the project owner (2026-10-11). Regenerate with:
+  echo "WORD." | piper -m en_US-amy-medium.onnx -f WORD.wav

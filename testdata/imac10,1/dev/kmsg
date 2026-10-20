@@ -1,0 +1,7 @@
+6,1,580000,-;pci 0000:02:00.0: vgaarb: setting as boot VGA device
+6,2,3400000,-;firewire_ohci 0000:04:00.0: added OHCI v1.10 device as card 0, 4 IR + 8 IT contexts, quirks 0x2
+6,3,4099999,-;[drm] radeon kernel modesetting enabled.
+6,4,4960000,-;radeon 0000:02:00.0: [drm]   LVDS-1
+6,5,5900000,-;[drm] iMac LVDS test: ATOM panel clock 108000 -> 138500 kHz, RGB888/FPDI enabled
+6,6,6200000,-;[drm] Initialized radeon 2.51.0 for 0000:02:00.0 on minor 0
+6,7,19750000,-;input: HDA NVidia Headphone as /devices/pci0000:00/0000:00:08.0/sound/card0/input11

@@ -1,0 +1,7 @@
+card=card0
+connector=LVDS-1
+crtc=0
+mode=1920x1080
+mode_hz=59.9
+vblanks=60
+secs=1.002

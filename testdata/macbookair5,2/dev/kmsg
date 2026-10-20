@@ -1,0 +1,5 @@
+3,1,120000,-;DMAR-IR: [Firmware Bug]: ioapic 2 has no mapping iommu, interrupt remapping will be disabled
+6,2,3120000,-;i915 0000:00:02.0: [drm] Found ivybridge (device ID 0166) integrated display version 7.00 stepping N/A
+6,3,3250000,-;[drm] Initialized i915 1.6.0 for 0000:00:02.0 on minor 1
+6,4,9100000,-;applesmc: key=424 fan=1 temp=31 index=30 acc=0 lux=2 kbd=1
+6,5,12590000,-;snd_hda_intel 0000:00:1b.0: bound 0000:00:02.0 (ops intel_audio_component_bind_ops [i915])

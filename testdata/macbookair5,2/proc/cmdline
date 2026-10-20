@@ -1,0 +1,1 @@
+BOOT_IMAGE=/arch/boot/x86_64/vmlinuz-linux-t2 archisobasedir=arch archisosearchuuid=2026-10-10-03-12-40-00 quiet splash

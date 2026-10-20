@@ -1,0 +1,3 @@
+DEVTYPE=partition
+DEVNAME=sdc1
+PARTN=1

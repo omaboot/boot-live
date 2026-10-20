@@ -1,0 +1,5 @@
+/dist/
+/screens/
+*.test
+*.out
+__pycache__/

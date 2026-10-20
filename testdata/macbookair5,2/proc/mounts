@@ -1,0 +1,5 @@
+airootfs / overlay rw,relatime,lowerdir=/run/archiso/sfs/airootfs 0 0
+proc /proc proc rw,nosuid,nodev,noexec,relatime 0 0
+sysfs /sys sysfs rw,nosuid,nodev,noexec,relatime 0 0
+/dev/sdb1 /run/archiso/bootmnt iso9660 ro,relatime 0 0
+/dev/loop0 /run/archiso/airootfs squashfs ro,relatime 0 0

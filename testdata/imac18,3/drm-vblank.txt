@@ -1,0 +1,7 @@
+card=card1
+connector=eDP-1
+crtc=0
+mode=3840x2160
+mode_hz=60.0
+vblanks=60
+secs=1.0

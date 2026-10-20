@@ -1,0 +1,1662 @@
+{
+  "macs": [
+    {
+      "identifier": "MacBook1,1",
+      "name": "MacBook (13-inch)",
+      "line": "macbook",
+      "years": "2006",
+      "verdicts": [
+        "not-compatible"
+      ],
+      "configs": [
+        "macbook1-1-mid-2006-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBook1-1"
+    },
+    {
+      "identifier": "MacBook2,1",
+      "name": "MacBook (13-inch, Mid 2007)",
+      "line": "macbook",
+      "years": "2006–2007",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbook2-1-late-2006-a",
+        "macbook2-1-mid-2007-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBook2-1"
+    },
+    {
+      "identifier": "MacBook3,1",
+      "name": "MacBook (13-inch, Late 2007)",
+      "line": "macbook",
+      "years": "2007",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbook3-1-late-2007-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBook3-1"
+    },
+    {
+      "identifier": "MacBook4,1",
+      "name": "MacBook (13-inch, Early 2008)",
+      "line": "macbook",
+      "years": "2008",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbook4-1-early-2008-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBook4-1"
+    },
+    {
+      "identifier": "MacBook5,1",
+      "name": "MacBook (13-inch, Aluminum, Late 2008)",
+      "line": "macbook",
+      "years": "2008",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbook5-1-late-2008-a",
+        "macbook5-1-late-2008-b"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBook5-1"
+    },
+    {
+      "identifier": "MacBook5,2",
+      "name": "MacBook (13-inch, Mid 2009)",
+      "line": "macbook",
+      "years": "2009",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbook5-2-early-2009-a",
+        "macbook5-2-mid-2009-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBook5-2"
+    },
+    {
+      "identifier": "MacBook6,1",
+      "name": "MacBook (13-inch, Late 2009)",
+      "line": "macbook",
+      "years": "2009",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbook6-1-late-2009-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBook6-1"
+    },
+    {
+      "identifier": "MacBook7,1",
+      "name": "MacBook (13-inch, Mid 2010)",
+      "line": "macbook",
+      "years": "2010",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbook7-1-mid-2010-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBook7-1"
+    },
+    {
+      "identifier": "MacBook8,1",
+      "name": "MacBook (Retina, 12-inch, Early 2015)",
+      "line": "macbook",
+      "years": "2015",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbook8-1-early-2015-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBook8-1"
+    },
+    {
+      "identifier": "MacBook9,1",
+      "name": "MacBook (Retina, 12-inch, Early 2016)",
+      "line": "macbook",
+      "years": "2016",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbook9-1-early-2016-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBook9-1"
+    },
+    {
+      "identifier": "MacBook10,1",
+      "name": "MacBook (Retina, 12-inch, 2017)",
+      "line": "macbook",
+      "years": "2017",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbook10-1-2017-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBook10-1"
+    },
+    {
+      "identifier": "MacBookAir1,1",
+      "name": "MacBook Air (Early 2008)",
+      "line": "macbook-air",
+      "years": "2008",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookair1-1-early-2008-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookAir1-1"
+    },
+    {
+      "identifier": "MacBookAir2,1",
+      "name": "MacBook Air (Mid 2009)",
+      "line": "macbook-air",
+      "years": "2008–2009",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookair2-1-late-2008-a",
+        "macbookair2-1-mid-2009-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookAir2-1"
+    },
+    {
+      "identifier": "MacBookAir3,1",
+      "name": "MacBook Air (11-inch, Late 2010)",
+      "line": "macbook-air",
+      "years": "2010",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookair3-1-late-2010-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookAir3-1"
+    },
+    {
+      "identifier": "MacBookAir3,2",
+      "name": "MacBook Air (13-inch, Late 2010)",
+      "line": "macbook-air",
+      "years": "2010",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookair3-2-late-2010-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookAir3-2"
+    },
+    {
+      "identifier": "MacBookAir4,1",
+      "name": "MacBook Air (11-inch, Mid 2011)",
+      "line": "macbook-air",
+      "years": "2011",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookair4-1-mid-2011-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookAir4-1"
+    },
+    {
+      "identifier": "MacBookAir4,2",
+      "name": "MacBook Air (13-inch, Mid 2011)",
+      "line": "macbook-air",
+      "years": "2011",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookair4-2-mid-2011-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookAir4-2"
+    },
+    {
+      "identifier": "MacBookAir5,1",
+      "name": "MacBook Air (11-inch, Mid 2012)",
+      "line": "macbook-air",
+      "years": "2012",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookair5-1-mid-2012-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookAir5-1"
+    },
+    {
+      "identifier": "MacBookAir5,2",
+      "name": "MacBook Air (13-inch, Mid 2012)",
+      "line": "macbook-air",
+      "years": "2012",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookair5-2-mid-2012-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookAir5-2"
+    },
+    {
+      "identifier": "MacBookAir6,1",
+      "name": "MacBook Air (11-inch, Early 2014)",
+      "line": "macbook-air",
+      "years": "2013–2014",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookair6-1-mid-2013-a",
+        "macbookair6-1-early-2014-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookAir6-1"
+    },
+    {
+      "identifier": "MacBookAir6,2",
+      "name": "MacBook Air (13-inch, Early 2014)",
+      "line": "macbook-air",
+      "years": "2013–2014",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookair6-2-mid-2013-a",
+        "macbookair6-2-early-2014-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookAir6-2"
+    },
+    {
+      "identifier": "MacBookAir7,1",
+      "name": "MacBook Air (11-inch, Early 2015)",
+      "line": "macbook-air",
+      "years": "2015",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookair7-1-early-2015-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookAir7-1"
+    },
+    {
+      "identifier": "MacBookAir7,2",
+      "name": "MacBook Air (13-inch, 2017)",
+      "line": "macbook-air",
+      "years": "2015–2017",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookair7-2-early-2015-a",
+        "macbookair7-2-2017-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookAir7-2"
+    },
+    {
+      "identifier": "MacBookAir8,1",
+      "name": "MacBook Air (Retina, 13-inch, 2018)",
+      "line": "macbook-air",
+      "years": "2018",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookair8-1-2018-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookAir8-1"
+    },
+    {
+      "identifier": "MacBookAir8,2",
+      "name": "MacBook Air (Retina, 13-inch, 2019)",
+      "line": "macbook-air",
+      "years": "2019",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookair8-2-2019-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookAir8-2"
+    },
+    {
+      "identifier": "MacBookAir9,1",
+      "name": "MacBook Air (Retina, 13-inch, 2020)",
+      "line": "macbook-air",
+      "years": "2020",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookair9-1-2020-a",
+        "macbookair9-1-2020-b"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookAir9-1"
+    },
+    {
+      "identifier": "MacBookPro1,1",
+      "name": "MacBook Pro (15-inch, Early 2006)",
+      "line": "macbook-pro",
+      "years": "2006",
+      "verdicts": [
+        "not-compatible"
+      ],
+      "configs": [
+        "macbookpro1-1-15-early-2006-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro1-1"
+    },
+    {
+      "identifier": "MacBookPro1,2",
+      "name": "MacBook Pro (17-inch, Early 2006)",
+      "line": "macbook-pro",
+      "years": "2006",
+      "verdicts": [
+        "not-compatible"
+      ],
+      "configs": [
+        "macbookpro1-2-17-early-2006-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro1-2"
+    },
+    {
+      "identifier": "MacBookPro2,1",
+      "name": "MacBook Pro (17-inch, Late 2006)",
+      "line": "macbook-pro",
+      "years": "2006",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookpro2-1-17-late-2006-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro2-1"
+    },
+    {
+      "identifier": "MacBookPro2,2",
+      "name": "MacBook Pro (15-inch, Late 2006)",
+      "line": "macbook-pro",
+      "years": "2006",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookpro2-2-15-late-2006-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro2-2"
+    },
+    {
+      "identifier": "MacBookPro3,1",
+      "name": "MacBook Pro (17-inch, Mid 2007)",
+      "line": "macbook-pro",
+      "years": "2007",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookpro3-1-15-mid-2007-a",
+        "macbookpro3-1-17-mid-2007-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro3-1"
+    },
+    {
+      "identifier": "MacBookPro4,1",
+      "name": "MacBook Pro (17-inch, Early 2008)",
+      "line": "macbook-pro",
+      "years": "2008",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookpro4-1-15-early-2008-a",
+        "macbookpro4-1-17-early-2008-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro4-1"
+    },
+    {
+      "identifier": "MacBookPro5,1",
+      "name": "MacBook Pro (15-inch, Late 2008)",
+      "line": "macbook-pro",
+      "years": "2008",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookpro5-1-15-late-2008-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro5-1"
+    },
+    {
+      "identifier": "MacBookPro5,2",
+      "name": "MacBook Pro (17-inch, Mid 2009)",
+      "line": "macbook-pro",
+      "years": "2009",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookpro5-2-17-early-2009-a",
+        "macbookpro5-2-17-mid-2009-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro5-2"
+    },
+    {
+      "identifier": "MacBookPro5,3",
+      "name": "MacBook Pro (15-inch, Mid 2009)",
+      "line": "macbook-pro",
+      "years": "2009",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookpro5-3-15-mid-2009-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro5-3"
+    },
+    {
+      "identifier": "MacBookPro5,4",
+      "name": "MacBook Pro (15-inch, 2.53GHz, Mid 2009)",
+      "line": "macbook-pro",
+      "years": "2009",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookpro5-4-15-2-53ghz-mid-2009-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro5-4"
+    },
+    {
+      "identifier": "MacBookPro5,5",
+      "name": "MacBook Pro (13-inch, Mid 2009)",
+      "line": "macbook-pro",
+      "years": "2009",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookpro5-5-13-mid-2009-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro5-5"
+    },
+    {
+      "identifier": "MacBookPro6,1",
+      "name": "MacBook Pro (17-inch, Mid 2010)",
+      "line": "macbook-pro",
+      "years": "2010",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookpro6-1-17-mid-2010-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro6-1"
+    },
+    {
+      "identifier": "MacBookPro6,2",
+      "name": "MacBook Pro (15-inch, Mid 2010)",
+      "line": "macbook-pro",
+      "years": "2010",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookpro6-2-15-mid-2010-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro6-2"
+    },
+    {
+      "identifier": "MacBookPro7,1",
+      "name": "MacBook Pro (13-inch, Mid 2010)",
+      "line": "macbook-pro",
+      "years": "2010",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookpro7-1-13-mid-2010-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro7-1"
+    },
+    {
+      "identifier": "MacBookPro8,1",
+      "name": "MacBook Pro (13-inch, Late 2011)",
+      "line": "macbook-pro",
+      "years": "2011",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookpro8-1-13-early-2011-a",
+        "macbookpro8-1-13-late-2011-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro8-1"
+    },
+    {
+      "identifier": "MacBookPro8,2",
+      "name": "MacBook Pro (15-inch, Late 2011)",
+      "line": "macbook-pro",
+      "years": "2011",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookpro8-2-15-early-2011-a",
+        "macbookpro8-2-15-early-2011-b",
+        "macbookpro8-2-15-late-2011-a",
+        "macbookpro8-2-15-late-2011-b"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro8-2"
+    },
+    {
+      "identifier": "MacBookPro8,3",
+      "name": "MacBook Pro (17-inch, Late 2011)",
+      "line": "macbook-pro",
+      "years": "2011",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookpro8-3-17-early-2011-a",
+        "macbookpro8-3-17-late-2011-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro8-3"
+    },
+    {
+      "identifier": "MacBookPro9,1",
+      "name": "MacBook Pro (15-inch, Mid 2012)",
+      "line": "macbook-pro",
+      "years": "2012",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookpro9-1-15-mid-2012-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro9-1"
+    },
+    {
+      "identifier": "MacBookPro9,2",
+      "name": "MacBook Pro (13-inch, Mid 2012)",
+      "line": "macbook-pro",
+      "years": "2012",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookpro9-2-13-mid-2012-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro9-2"
+    },
+    {
+      "identifier": "MacBookPro10,1",
+      "name": "MacBook Pro (Retina, 15-inch, Early 2013)",
+      "line": "macbook-pro",
+      "years": "2012–2013",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookpro10-1-15-mid-2012-a",
+        "macbookpro10-1-15-early-2013-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro10-1"
+    },
+    {
+      "identifier": "MacBookPro10,2",
+      "name": "MacBook Pro (Retina, 13-inch, Early 2013)",
+      "line": "macbook-pro",
+      "years": "2012–2013",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookpro10-2-13-late-2012-a",
+        "macbookpro10-2-13-early-2013-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro10-2"
+    },
+    {
+      "identifier": "MacBookPro11,1",
+      "name": "MacBook Pro (Retina, 13-inch, Mid 2014)",
+      "line": "macbook-pro",
+      "years": "2013–2014",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookpro11-1-13-late-2013-a",
+        "macbookpro11-1-13-mid-2014-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro11-1"
+    },
+    {
+      "identifier": "MacBookPro11,2",
+      "name": "MacBook Pro (Retina, 15-inch, Mid 2014)",
+      "line": "macbook-pro",
+      "years": "2013–2014",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookpro11-2-15-late-2013-a",
+        "macbookpro11-2-15-mid-2014-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro11-2"
+    },
+    {
+      "identifier": "MacBookPro11,3",
+      "name": "MacBook Pro (Retina, 15-inch, Mid 2014)",
+      "line": "macbook-pro",
+      "years": "2013–2014",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookpro11-3-15-late-2013-a",
+        "macbookpro11-3-15-mid-2014-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro11-3"
+    },
+    {
+      "identifier": "MacBookPro11,4",
+      "name": "MacBook Pro (Retina, 15-inch, Mid 2015)",
+      "line": "macbook-pro",
+      "years": "2015",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookpro11-4-15-mid-2015-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro11-4"
+    },
+    {
+      "identifier": "MacBookPro11,5",
+      "name": "MacBook Pro (Retina, 15-inch, Mid 2015)",
+      "line": "macbook-pro",
+      "years": "2015",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookpro11-5-15-mid-2015-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro11-5"
+    },
+    {
+      "identifier": "MacBookPro12,1",
+      "name": "MacBook Pro (Retina, 13-inch, Early 2015)",
+      "line": "macbook-pro",
+      "years": "2015",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookpro12-1-13-early-2015-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro12-1"
+    },
+    {
+      "identifier": "MacBookPro13,1",
+      "name": "MacBook Pro (13-inch, 2016, Two Thunderbolt 3 ports)",
+      "line": "macbook-pro",
+      "years": "2016",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookpro13-1-13-2016-2tb3-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro13-1"
+    },
+    {
+      "identifier": "MacBookPro13,2",
+      "name": "MacBook Pro (13-inch, 2016, Four Thunderbolt 3 ports)",
+      "line": "macbook-pro",
+      "years": "2016",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookpro13-2-13-2016-4tb3-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro13-2"
+    },
+    {
+      "identifier": "MacBookPro13,3",
+      "name": "MacBook Pro (15-inch, 2016)",
+      "line": "macbook-pro",
+      "years": "2016",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookpro13-3-15-2016-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro13-3"
+    },
+    {
+      "identifier": "MacBookPro14,1",
+      "name": "MacBook Pro (13-inch, 2017, Two Thunderbolt 3 ports)",
+      "line": "macbook-pro",
+      "years": "2017",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookpro14-1-13-2017-2tb3-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro14-1"
+    },
+    {
+      "identifier": "MacBookPro14,2",
+      "name": "MacBook Pro (13-inch, 2017, Four Thunderbolt 3 ports)",
+      "line": "macbook-pro",
+      "years": "2017",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookpro14-2-13-2017-4tb3-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro14-2"
+    },
+    {
+      "identifier": "MacBookPro14,3",
+      "name": "MacBook Pro (15-inch, 2017)",
+      "line": "macbook-pro",
+      "years": "2017",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookpro14-3-15-2017-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro14-3"
+    },
+    {
+      "identifier": "MacBookPro15,1",
+      "name": "MacBook Pro (15-inch, 2019)",
+      "line": "macbook-pro",
+      "years": "2018–2019",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookpro15-1-15-2018-a",
+        "macbookpro15-1-15-2019-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro15-1"
+    },
+    {
+      "identifier": "MacBookPro15,2",
+      "name": "MacBook Pro (13-inch, 2019, Four Thunderbolt 3 ports)",
+      "line": "macbook-pro",
+      "years": "2018–2019",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookpro15-2-13-2018-4tb3-a",
+        "macbookpro15-2-13-2019-4tb3-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro15-2"
+    },
+    {
+      "identifier": "MacBookPro15,3",
+      "name": "MacBook Pro (15-inch, 2019)",
+      "line": "macbook-pro",
+      "years": "2018–2019",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookpro15-3-15-2018-vega-a",
+        "macbookpro15-3-15-2019-vega-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro15-3"
+    },
+    {
+      "identifier": "MacBookPro15,4",
+      "name": "MacBook Pro (13-inch, 2019, Two Thunderbolt 3 ports)",
+      "line": "macbook-pro",
+      "years": "2019",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookpro15-4-13-2019-2tb3-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro15-4"
+    },
+    {
+      "identifier": "MacBookPro16,1",
+      "name": "MacBook Pro (16-inch, 2019)",
+      "line": "macbook-pro",
+      "years": "2019",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookpro16-1-16-2019-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro16-1"
+    },
+    {
+      "identifier": "MacBookPro16,2",
+      "name": "MacBook Pro (13-inch, 2020, Four Thunderbolt 3 ports)",
+      "line": "macbook-pro",
+      "years": "2020",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookpro16-2-13-2020-4tb3-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro16-2"
+    },
+    {
+      "identifier": "MacBookPro16,3",
+      "name": "MacBook Pro (13-inch, 2020, Two Thunderbolt 3 ports)",
+      "line": "macbook-pro",
+      "years": "2020",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookpro16-3-13-2020-2tb3-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro16-3"
+    },
+    {
+      "identifier": "MacBookPro16,4",
+      "name": "MacBook Pro (16-inch, 2019)",
+      "line": "macbook-pro",
+      "years": "2020",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macbookpro16-4-16-2019-5600m-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacBookPro16-4"
+    },
+    {
+      "identifier": "iMac4,1",
+      "name": "iMac (20-inch, Early 2006)",
+      "line": "imac",
+      "years": "2006",
+      "verdicts": [
+        "not-compatible"
+      ],
+      "configs": [
+        "imac4-1-17-early-2006-a",
+        "imac4-1-20-early-2006-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/iMac4-1"
+    },
+    {
+      "identifier": "iMac4,2",
+      "name": "iMac (17-inch, Mid 2006)",
+      "line": "imac",
+      "years": "2006",
+      "verdicts": [
+        "not-compatible"
+      ],
+      "configs": [
+        "imac4-2-17-mid-2006-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/iMac4-2"
+    },
+    {
+      "identifier": "iMac5,1",
+      "name": "iMac (20-inch, Late 2006)",
+      "line": "imac",
+      "years": "2006",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "imac5-1-17-late-2006-a",
+        "imac5-1-20-late-2006-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/iMac5-1"
+    },
+    {
+      "identifier": "iMac5,2",
+      "name": "iMac (17-inch, Late 2006 CD)",
+      "line": "imac",
+      "years": "2006",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "imac5-2-17-late-2006-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/iMac5-2"
+    },
+    {
+      "identifier": "iMac6,1",
+      "name": "iMac (24-inch, Late 2006)",
+      "line": "imac",
+      "years": "2006",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "imac6-1-24-late-2006-a",
+        "imac6-1-24-late-2006-7600gt"
+      ],
+      "url": "https://doesitomarchy.com/mac/iMac6-1"
+    },
+    {
+      "identifier": "iMac7,1",
+      "name": "iMac (24-inch, Mid 2007)",
+      "line": "imac",
+      "years": "2007",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "imac7-1-20-mid-2007-a",
+        "imac7-1-20-mid-2007-b",
+        "imac7-1-24-mid-2007-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/iMac7-1"
+    },
+    {
+      "identifier": "iMac8,1",
+      "name": "iMac (24-inch, Early 2008)",
+      "line": "imac",
+      "years": "2008",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "imac8-1-20-early-2008-a",
+        "imac8-1-20-early-2008-b",
+        "imac8-1-24-early-2008-a",
+        "imac8-1-24-early-2008-b"
+      ],
+      "url": "https://doesitomarchy.com/mac/iMac8-1"
+    },
+    {
+      "identifier": "iMac9,1",
+      "name": "iMac (20-inch, Mid 2009)",
+      "line": "imac",
+      "years": "2009",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "imac9-1-20-early-2009-a",
+        "imac9-1-24-early-2009-a",
+        "imac9-1-24-early-2009-b",
+        "imac9-1-24-early-2009-c",
+        "imac9-1-24-early-2009-4850",
+        "imac9-1-20-mid-2009-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/iMac9-1"
+    },
+    {
+      "identifier": "iMac10,1",
+      "name": "iMac (27-inch, Late 2009)",
+      "line": "imac",
+      "years": "2009",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "imac10-1-21-late-2009-a",
+        "imac10-1-21-late-2009-b",
+        "imac10-1-27-late-2009-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/iMac10-1"
+    },
+    {
+      "identifier": "iMac11,1",
+      "name": "iMac (27-inch, Late 2009)",
+      "line": "imac",
+      "years": "2009",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "imac11-1-27-late-2009-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/iMac11-1"
+    },
+    {
+      "identifier": "iMac11,2",
+      "name": "iMac (21.5-inch, Mid 2010)",
+      "line": "imac",
+      "years": "2010",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "imac11-2-21-mid-2010-a",
+        "imac11-2-21-mid-2010-b"
+      ],
+      "url": "https://doesitomarchy.com/mac/iMac11-2"
+    },
+    {
+      "identifier": "iMac11,3",
+      "name": "iMac (27-inch, Mid 2010)",
+      "line": "imac",
+      "years": "2010",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "imac11-3-27-mid-2010-a",
+        "imac11-3-27-mid-2010-b"
+      ],
+      "url": "https://doesitomarchy.com/mac/iMac11-3"
+    },
+    {
+      "identifier": "iMac12,1",
+      "name": "iMac (21.5-inch, Late 2011)",
+      "line": "imac",
+      "years": "2011",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "imac12-1-21-mid-2011-a",
+        "imac12-1-21-mid-2011-b",
+        "imac12-1-21-late-2011-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/iMac12-1"
+    },
+    {
+      "identifier": "iMac12,2",
+      "name": "iMac (27-inch, Mid 2011)",
+      "line": "imac",
+      "years": "2011",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "imac12-2-27-mid-2011-a",
+        "imac12-2-27-mid-2011-b"
+      ],
+      "url": "https://doesitomarchy.com/mac/iMac12-2"
+    },
+    {
+      "identifier": "iMac13,1",
+      "name": "iMac (21.5-inch, Late 2012)",
+      "line": "imac",
+      "years": "2012",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "imac13-1-21-late-2012-a",
+        "imac13-1-21-late-2012-b"
+      ],
+      "url": "https://doesitomarchy.com/mac/iMac13-1"
+    },
+    {
+      "identifier": "iMac13,2",
+      "name": "iMac (27-inch, Late 2012)",
+      "line": "imac",
+      "years": "2012",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "imac13-2-27-late-2012-a",
+        "imac13-2-27-late-2012-b",
+        "imac13-2-27-late-2012-680mx"
+      ],
+      "url": "https://doesitomarchy.com/mac/iMac13-2"
+    },
+    {
+      "identifier": "iMac13,3",
+      "name": "iMac (21.5-inch, Early 2013)",
+      "line": "imac",
+      "years": "2013",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "imac13-3-21-early-2013-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/iMac13-3"
+    },
+    {
+      "identifier": "iMac14,1",
+      "name": "iMac (21.5-inch, Late 2013)",
+      "line": "imac",
+      "years": "2013",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "imac14-1-21-late-2013-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/iMac14-1"
+    },
+    {
+      "identifier": "iMac14,2",
+      "name": "iMac (27-inch, Late 2013)",
+      "line": "imac",
+      "years": "2013",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "imac14-2-27-late-2013-a",
+        "imac14-2-27-late-2013-b",
+        "imac14-2-27-late-2013-780m"
+      ],
+      "url": "https://doesitomarchy.com/mac/iMac14-2"
+    },
+    {
+      "identifier": "iMac14,3",
+      "name": "iMac (21.5-inch, Late 2013)",
+      "line": "imac",
+      "years": "2013",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "imac14-3-21-late-2013-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/iMac14-3"
+    },
+    {
+      "identifier": "iMac14,4",
+      "name": "iMac (21.5-inch, Mid 2014)",
+      "line": "imac",
+      "years": "2014",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "imac14-4-21-mid-2014-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/iMac14-4"
+    },
+    {
+      "identifier": "iMac15,1",
+      "name": "iMac (Retina 5K, 27-inch, Mid 2015)",
+      "line": "imac",
+      "years": "2014–2015",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "imac15-1-5k-late-2014-a",
+        "imac15-1-5k-late-2014-m295x",
+        "imac15-1-5k-mid-2015-a",
+        "imac15-1-5k-mid-2015-m295x"
+      ],
+      "url": "https://doesitomarchy.com/mac/iMac15-1"
+    },
+    {
+      "identifier": "iMac16,1",
+      "name": "iMac (21.5-inch, Late 2015)",
+      "line": "imac",
+      "years": "2015",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "imac16-1-21-late-2015-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/iMac16-1"
+    },
+    {
+      "identifier": "iMac16,2",
+      "name": "iMac (Retina 4K, 21.5-inch, Late 2015)",
+      "line": "imac",
+      "years": "2015",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "imac16-2-21-late-2015-a",
+        "imac16-2-4k-late-2015-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/iMac16-2"
+    },
+    {
+      "identifier": "iMac17,1",
+      "name": "iMac (Retina 5K, 27-inch, Late 2015)",
+      "line": "imac",
+      "years": "2015",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "imac17-1-5k-late-2015-a",
+        "imac17-1-5k-late-2015-b",
+        "imac17-1-5k-late-2015-c"
+      ],
+      "url": "https://doesitomarchy.com/mac/iMac17-1"
+    },
+    {
+      "identifier": "iMac18,1",
+      "name": "iMac (21.5-inch, 2017)",
+      "line": "imac",
+      "years": "2017",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "imac18-1-21-2017-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/iMac18-1"
+    },
+    {
+      "identifier": "iMac18,2",
+      "name": "iMac (Retina 4K, 21.5-inch, 2017)",
+      "line": "imac",
+      "years": "2017",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "imac18-2-4k-2017-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/iMac18-2"
+    },
+    {
+      "identifier": "iMac18,3",
+      "name": "iMac (Retina 5K, 27-inch, 2017)",
+      "line": "imac",
+      "years": "2017",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "imac18-3-5k-2017-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/iMac18-3"
+    },
+    {
+      "identifier": "iMac19,1",
+      "name": "iMac (Retina 5K, 27-inch, 2019)",
+      "line": "imac",
+      "years": "2019",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "imac19-1-5k-2019-a",
+        "imac19-1-5k-2019-vega48"
+      ],
+      "url": "https://doesitomarchy.com/mac/iMac19-1"
+    },
+    {
+      "identifier": "iMac19,2",
+      "name": "iMac (Retina 4K, 21.5-inch, 2019)",
+      "line": "imac",
+      "years": "2019",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "imac19-2-4k-2019-a",
+        "imac19-2-4k-2019-vega20"
+      ],
+      "url": "https://doesitomarchy.com/mac/iMac19-2"
+    },
+    {
+      "identifier": "iMac20,1",
+      "name": "iMac (Retina 5K, 27-inch, 2020)",
+      "line": "imac",
+      "years": "2020",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "imac20-1-5k-2020-a",
+        "imac20-1-5k-2020-10gbe"
+      ],
+      "url": "https://doesitomarchy.com/mac/iMac20-1"
+    },
+    {
+      "identifier": "iMac20,2",
+      "name": "iMac (Retina 5K, 27-inch, 2020)",
+      "line": "imac",
+      "years": "2020",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "imac20-2-5k-2020-a",
+        "imac20-2-5k-2020-10gbe"
+      ],
+      "url": "https://doesitomarchy.com/mac/iMac20-2"
+    },
+    {
+      "identifier": "iMacPro1,1",
+      "name": "iMac Pro (2017)",
+      "line": "imac-pro",
+      "years": "2017",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "imacpro1-1-2017-a",
+        "imacpro1-1-2017-vega64",
+        "imacpro1-1-2017-vega64x"
+      ],
+      "url": "https://doesitomarchy.com/mac/iMacPro1-1"
+    },
+    {
+      "identifier": "Macmini1,1",
+      "name": "Mac mini (Late 2006)",
+      "line": "mac-mini",
+      "years": "2006",
+      "verdicts": [
+        "not-compatible"
+      ],
+      "configs": [
+        "macmini1-1-early-2006-a",
+        "macmini1-1-late-2006-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/Macmini1-1"
+    },
+    {
+      "identifier": "Macmini2,1",
+      "name": "Mac mini (Mid 2007)",
+      "line": "mac-mini",
+      "years": "2007",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macmini2-1-mid-2007-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/Macmini2-1"
+    },
+    {
+      "identifier": "Macmini3,1",
+      "name": "Mac mini (Late 2009)",
+      "line": "mac-mini",
+      "years": "2009",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macmini3-1-early-2009-a",
+        "macmini3-1-late-2009-a",
+        "macmini3-1-late-2009-server"
+      ],
+      "url": "https://doesitomarchy.com/mac/Macmini3-1"
+    },
+    {
+      "identifier": "Macmini4,1",
+      "name": "Mac mini (Mid 2010)",
+      "line": "mac-mini",
+      "years": "2010",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macmini4-1-mid-2010-a",
+        "macmini4-1-mid-2010-server"
+      ],
+      "url": "https://doesitomarchy.com/mac/Macmini4-1"
+    },
+    {
+      "identifier": "Macmini5,1",
+      "name": "Mac mini (Mid 2011)",
+      "line": "mac-mini",
+      "years": "2011",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macmini5-1-mid-2011-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/Macmini5-1"
+    },
+    {
+      "identifier": "Macmini5,2",
+      "name": "Mac mini (Mid 2011)",
+      "line": "mac-mini",
+      "years": "2011",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macmini5-2-mid-2011-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/Macmini5-2"
+    },
+    {
+      "identifier": "Macmini5,3",
+      "name": "Mac mini Server (Mid 2011)",
+      "line": "mac-mini",
+      "years": "2011",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macmini5-3-mid-2011-server"
+      ],
+      "url": "https://doesitomarchy.com/mac/Macmini5-3"
+    },
+    {
+      "identifier": "Macmini6,1",
+      "name": "Mac mini (Late 2012)",
+      "line": "mac-mini",
+      "years": "2012",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macmini6-1-late-2012-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/Macmini6-1"
+    },
+    {
+      "identifier": "Macmini6,2",
+      "name": "Mac mini (Late 2012)",
+      "line": "mac-mini",
+      "years": "2012",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macmini6-2-late-2012-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/Macmini6-2"
+    },
+    {
+      "identifier": "Macmini7,1",
+      "name": "Mac mini (Late 2014)",
+      "line": "mac-mini",
+      "years": "2014",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macmini7-1-late-2014-a",
+        "macmini7-1-late-2014-b"
+      ],
+      "url": "https://doesitomarchy.com/mac/Macmini7-1"
+    },
+    {
+      "identifier": "Macmini8,1",
+      "name": "Mac mini (2018)",
+      "line": "mac-mini",
+      "years": "2018",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macmini8-1-2018-a",
+        "macmini8-1-2018-10gbe"
+      ],
+      "url": "https://doesitomarchy.com/mac/Macmini8-1"
+    },
+    {
+      "identifier": "MacPro1,1",
+      "name": "Mac Pro (2006)",
+      "line": "mac-pro",
+      "years": "2006",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macpro1-1-2006-a",
+        "macpro1-1-2006-x1900xt",
+        "macpro1-1-2006-fx4500"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacPro1-1"
+    },
+    {
+      "identifier": "MacPro2,1",
+      "name": "Mac Pro (8-core, 2007)",
+      "line": "mac-pro",
+      "years": "2007",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macpro2-1-2007-a",
+        "macpro2-1-2007-x1900xt",
+        "macpro2-1-2007-fx4500"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacPro2-1"
+    },
+    {
+      "identifier": "MacPro3,1",
+      "name": "Mac Pro (Early 2008)",
+      "line": "mac-pro",
+      "years": "2008",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macpro3-1-early-2008-a",
+        "macpro3-1-early-2008-8800gt",
+        "macpro3-1-early-2008-fx5600"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacPro3-1"
+    },
+    {
+      "identifier": "MacPro4,1",
+      "name": "Mac Pro (Early 2009)",
+      "line": "mac-pro",
+      "years": "2009",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macpro4-1-early-2009-a",
+        "macpro4-1-early-2009-hd4870"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacPro4-1"
+    },
+    {
+      "identifier": "MacPro5,1",
+      "name": "Mac Pro (Mid 2012)",
+      "line": "mac-pro",
+      "years": "2010–2012",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macpro5-1-mid-2010-a",
+        "macpro5-1-mid-2010-hd5870",
+        "macpro5-1-mid-2012-a",
+        "macpro5-1-mid-2012-hd5870"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacPro5-1"
+    },
+    {
+      "identifier": "MacPro6,1",
+      "name": "Mac Pro (Late 2013)",
+      "line": "mac-pro",
+      "years": "2013",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macpro6-1-late-2013-d300",
+        "macpro6-1-late-2013-d500",
+        "macpro6-1-late-2013-d700"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacPro6-1"
+    },
+    {
+      "identifier": "MacPro7,1",
+      "name": "Mac Pro (2019) and Mac Pro (Rack, 2019)",
+      "line": "mac-pro",
+      "years": "2019",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "macpro7-1-2019-580x",
+        "macpro7-1-2019-w5500x",
+        "macpro7-1-2019-w5700x",
+        "macpro7-1-2019-vega-ii",
+        "macpro7-1-2019-w6600x",
+        "macpro7-1-2019-w6800x",
+        "macpro7-1-2019-w6900x"
+      ],
+      "url": "https://doesitomarchy.com/mac/MacPro7-1"
+    },
+    {
+      "identifier": "Xserve1,1",
+      "name": "Xserve (Late 2006)",
+      "line": "xserve",
+      "years": "2006",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "xserve1-1-late-2006-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/Xserve1-1"
+    },
+    {
+      "identifier": "Xserve2,1",
+      "name": "Xserve (Early 2008)",
+      "line": "xserve",
+      "years": "2008",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "xserve2-1-early-2008-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/Xserve2-1"
+    },
+    {
+      "identifier": "Xserve3,1",
+      "name": "Xserve (Early 2009)",
+      "line": "xserve",
+      "years": "2009",
+      "verdicts": [
+        "untested"
+      ],
+      "configs": [
+        "xserve3-1-early-2009-a"
+      ],
+      "url": "https://doesitomarchy.com/mac/Xserve3-1"
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+kernel/drivers/gpu/drm/i915/i915.ko.zst: kernel/drivers/gpu/drm/display/drm_display_helper.ko.zst
+updates/applesmc.ko.zst:
+updates/radeon.ko.zst: kernel/drivers/gpu/drm/ttm/ttm.ko.zst

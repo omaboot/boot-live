@@ -1,0 +1,3 @@
+DEVTYPE=partition
+DEVNAME=sdb2
+PARTN=2

@@ -1,0 +1,2 @@
+kernel/drivers/hwmon/applesmc.ko.zst:
+updates/radeon.ko.zst: kernel/drivers/gpu/drm/ttm/ttm.ko.zst

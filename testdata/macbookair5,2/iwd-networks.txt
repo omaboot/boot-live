@@ -1,0 +1,6 @@
+maple-house|-52|psk
+maple-house-5G|-55|psk
+TELUS2381|-67|psk
+BELL442|-74|psk
+DIRECT-4F-HP M227|-81|psk
+Cafe-Guest|-83|open

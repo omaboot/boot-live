@@ -1,0 +1,17 @@
+node=/dev/dri/renderD128
+ok=1
+gbm_backend=drm
+egl=1.5
+egl_vendor=Mesa Project
+api=gles3
+vendor=Intel
+renderer=Mesa Intel(R) HD Graphics 4000 (IVB GT2)
+version=OpenGL ES 3.0 Mesa 26.2.2-arch1.1
+llvmpipe=0
+draw_ok=1
+draw_pixel=64,128,191,255
+bench_fps=206.4
+bench_min_fps=188.3
+bench_windows=10
+bench_s=10.0
+end=1

@@ -1,0 +1,52 @@
+omaboot-v: the console font of OmaBoot? Live
+=============================================
+
+omaboot-v16n, omaboot-v24n and omaboot-v32n (PSF2, 512 glyphs, 8×16, 12×24 and 16×32 px) are
+our modified build of Terminus Font by Dimitar Toshkov Zhekov, made from its 'v' (512-glyph
+Unicode) console set:
+
+  - added from Terminus's CP437 'u' set: the half and shade blocks ▀ ▄ ▌ ▐ ▓, double box
+    lines and a few arrows (Boot is drawn in half-block pixels);
+  - added, drawn by hand in Terminus's stroke weight: a check mark ✓ (U+2713) and a filled
+    triangle ▲ (U+25B2), which Terminus lacks;
+  - added, drawn by the OmaBoot? authors: port symbols two cells wide (USB-A, USB-C and
+    Thunderbolt 3, Thunderbolt and Mini DisplayPort, MagSafe, headphone, SD, Ethernet,
+    FireWire) at private-use code points U+E200 to U+E20F, the partial mark ◐ (U+25D0,
+    a circle with its left half filled) and the console key's ` drawn larger and centred
+    (U+E210);
+  - added, rasterised from JetBrains Mono Nerd Font (Nerd Fonts 3.5.1): 32 icons, two cells
+    each, at private-use code points U+E000 to U+E03F (not the Nerd Fonts code points, which the
+    Linux console can't map; see below for where they come from);
+  - dropped, to stay within the console's 512-glyph limit: the rarely used Cyrillic letters
+    from U+0492 up (Russian, Ukrainian, Serbian and Belarusian stay) and all of Greek
+    (U+0370 to U+03FF; glyphs Greek shares with Latin, Cyrillic or symbols stay under those),
+    and symbols OmaBoot? never draws: the double-line box drawing and CP437 leftovers
+    (╬╪║╒╔╗╘╙╚╛╝╞╟╠╡╣╦╧╨╩ ⌐⌠⌡₧ⁿ≡∩ ♦○↕↔ ‡ ¤);
+  - merged: glyphs Terminus draws identically (g and д, u and и, ù and ѝ, ɛ and ∈).
+
+tools/font/build.py makes the current files from the previous ones.
+
+Terminus Font is licensed under the SIL Open Font License 1.1 (OFL.txt) with the Reserved Font
+Name "Terminus Font". A modified version may not use a reserved name, so ours is called
+omaboot-v. omaboot-v is licensed under the same SIL Open Font License 1.1; the port symbols are
+ours, under the same licence, as is the ◐ mark.
+
+The icons come from icon sets that Nerd Fonts patches into fonts, which keep their own licences:
+
+  - Font Awesome (Fonticons, Inc.), U+F000 to U+F2E0: wifi, power, display, keyboard, battery,
+    speaker, microphone, camera, Bluetooth, disk, thermometer, sleep, check, warning, USB.
+    Licensed under CC BY 4.0, as Nerd Fonts' licence notes state for Font Awesome's icons.
+  - Material Design Icons (Pictogrammers), U+F0001 up: Thunderbolt, MagSafe, headphones,
+    line-in (a microphone), optical, SD, Ethernet, FireWire, HDMI, video out, ExpressCard, IR,
+    lock, GPU, fan, trackpad. Licensed under the Apache License 2.0.
+
+Nerd Fonts' patched JetBrains Mono, which we rasterised them from, is itself under the SIL Open
+Font License 1.1.
+
+Copyright (C) 2020 Dimitar Toshkov Zhekov (Terminus Font).
+Font Awesome icons: Copyright Fonticons, Inc.
+Material Design Icons: Copyright Pictogrammers and contributors.
+Modifications and port symbols copyright (C) 2026 The OmaBoot? authors.
+
+The images install these files to /usr/share/omaboot/fonts/; boot-live picks the size from the
+screen's physical size and loads it with setfont.

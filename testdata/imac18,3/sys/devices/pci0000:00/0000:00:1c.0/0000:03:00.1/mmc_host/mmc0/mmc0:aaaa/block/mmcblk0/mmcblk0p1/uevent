@@ -1,0 +1,3 @@
+DEVTYPE=partition
+DEVNAME=mmcblk0p1
+PARTN=1

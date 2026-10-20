@@ -1,0 +1,3 @@
+DEVTYPE=partition
+DEVNAME=nvme0n1p2
+PARTN=2

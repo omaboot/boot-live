@@ -1,0 +1,3 @@
+6,1,280000,-;pci 0000:01:00.0: vgaarb: setting as boot VGA device
+6,2,6200000,-;amdgpu 0000:01:00.0: initializing kernel modesetting (POLARIS10 0x1002:0x67DF 0x106B:0x0163 0xC5).
+3,3,9800000,-;brcmfmac: brcmf_c_process_clm_blob: no clm_blob available (err=-2), device may have limited channels available

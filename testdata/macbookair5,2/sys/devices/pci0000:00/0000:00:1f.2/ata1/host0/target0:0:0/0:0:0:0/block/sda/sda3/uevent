@@ -1,0 +1,3 @@
+DEVTYPE=partition
+DEVNAME=sda3
+PARTN=3
