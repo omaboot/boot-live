@@ -75,6 +75,8 @@ func handsOnShots() []shot {
 				h.Play(i, 4, ui.Pick{At: 1.5, Action: 3}, ui.Pick{At: 3, Action: 5})
 			case "display.brightness": // every step seen
 				h.Play(i, 8, ui.Pick{At: 7.5, Action: 0})
+			case "display.brightness.keys": // F2 three times, F1 twice; the screen followed
+				h.Play(i, 9, ui.Pick{At: 8, Action: 0})
 			case "input.keyboard-backlight": // the demo blinks 3 times
 				h.Play(i, 10, ui.Pick{At: 9.6, Action: 2})
 			case "input.keyboard-backlight.keys": // F6 four times, F5 twice; the light followed
@@ -85,12 +87,15 @@ func handsOnShots() []shot {
 				h.Play(i, 14, ui.Pick{At: 3, Action: 0}, ui.Pick{At: 12.6, Code: demoCode})
 			case "input.keyboard":
 				h.Play(i, 36, ui.Pick{At: 32.6, Action: 0})
-			case "audio.speakers":
-				h.Play(i, 13, ui.Pick{At: 4.4, Action: 4}, ui.Pick{At: 7, Action: 1}, ui.Pick{At: 11.3, Action: 0})
-			case "audio.headphone":
-				h.Play(i, 12, ui.Pick{At: 4, Action: 0}, ui.Pick{At: 7.4, Action: 4}, ui.Pick{At: 10.4, Action: 1})
+			case "audio.speakers": // Play at 1 s, the beeps after its countdown
+				h.Play(i, 16, ui.Pick{At: 1, Action: 0}, ui.Pick{At: 7.2, Action: 4}, ui.Pick{At: 9.8, Action: 1}, ui.Pick{At: 14.1, Action: 0})
+			case "audio.headphone": // Ready, both ears, then Play with the headphones off
+				h.Play(i, 20, ui.Pick{At: 4, Action: 0}, ui.Pick{At: 9.6, Action: 4}, ui.Pick{At: 12.6, Action: 1},
+					ui.Pick{At: 13.5, Action: 0}, ui.Pick{At: 19, Action: 0})
 			case "audio.display-out":
-				h.Play(i, 8, ui.Pick{At: 7, Action: 4})
+				h.Play(i, 12, ui.Pick{At: 2.5, Action: 0}, ui.Pick{At: 10.2, Action: 4})
+			case "audio.microphone": // Start at 1 s
+				h.Play(i, 24, ui.Pick{At: 1, Action: 0})
 			case "ports.usb-a": // which port the stick is in; the rest decides itself
 				h.Play(i, 12, ui.Pick{At: 1, Action: 0})
 			case "ports.usb-c":
@@ -124,6 +129,12 @@ func handsOnShots() []shot {
 	add("h2-brightness-pass", s, f)
 	s, f = test("display.brightness", 7.8, nil, ui.Pick{At: 6.4, Action: 1}, ui.Pick{At: 7.3, Action: 0})
 	add("h2-brightness-partial", s, f)
+	s, f = test("display.brightness.keys", 4, nil)
+	add("h2-brightkeys-pressing", s, f)
+	s, f = test("display.brightness.keys", 7.5, nil)
+	add("h2-brightkeys-ask", s, f)
+	s, f = test("display.brightness.keys", 9, nil, ui.Pick{At: 8, Action: 0})
+	add("h2-brightkeys-pass", s, f)
 
 	s, f = test("input.keyboard-backlight", 2.6, nil)
 	add("h3-kbdlight-stepping", s, f)

@@ -108,10 +108,11 @@ func (b *Backend) Console(cmd, kind string) {
 	r.console = append(r.console, report.ConsoleEntry{Command: cmd, Kind: kind})
 }
 
-// Target is where Submit sends.
+// Target is where reports, bug reports and the network tests go.
 func (b *Backend) Target() command.Target {
 	t := b.R.Opt.Target
-	return command.Target{URL: t.URL, Shown: b.R.Site(), Production: t.Production(), CanSubmit: t.CanSubmit()}
+	return command.Target{URL: t.URL, Shown: b.R.Site(), Production: t.Production(), CanSubmit: t.CanSubmit(),
+		Bugs: t.Bugs, CanSendBug: t.CanSendBug(), Watch: t.Watch}
 }
 
 // Rerun runs the quick-pass check that decides id again, without the GPU notice (whoever types

@@ -822,6 +822,10 @@ func (b *Backend) Submit(handle, notice string) {
 		}
 		b.post(ui.SentMsg{Code: rc.Code, Page: b.R.Site() + "/report/" + rc.Code})
 		b.R.noteOp(b.R.noteTicket(), b.R.dropNote) // sent: the copy kept before a test that sleeps isn't offered to pick up
+		// a copy saved before sending now carries the code
+		if p, ok, err := b.R.Resave(f); ok && err == nil {
+			b.post(ui.SavedMsg{Path: p})
+		}
 	}()
 }
 

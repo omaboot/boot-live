@@ -2,6 +2,7 @@ package handson
 
 import (
 	"fmt"
+	"math"
 	"math/rand/v2"
 	"strings"
 	"time"
@@ -12,7 +13,10 @@ import (
 	"github.com/omaboot/boot-live/internal/i18n"
 )
 
-// audio.microphone, "Built-in microphone": the tool records the built-in codec's capture device
+// audio.microphone, "Built-in microphone": nothing is recorded until the person presses Start,
+// on a screen that asks for quiet and says for how long (listenFor: the room and the notes,
+// about 18 s); then a countdown (startCount), and the quiet call stays up in the band through
+// the room and the notes. The tool records the built-in codec's capture device
 // (16 kHz mono, capture switched on) and measures the room for a moment (the noise floor: the
 // median level of 50 ms windows, and the room's own level at each note's frequency). A level
 // rising is no proof: a key click, a bump or the fan lifts it with the microphone hearing only
@@ -33,7 +37,11 @@ import (
 //     refused), a note isn't found, or the control round hears one: a clap challenge, "Clap N
 //     times" (N random, 2 to 4), the claps counted as distinct peaks of the 10 ms envelope
 //     (countClaps: clapOver dB over the room's peaks, clapGap apart). A wrong count gets one more
-//     try with a new N.
+//     try with a new N. While the claps are counted the band shows the microphone's level, big,
+//     with the room's level and the line a clap must cross marked (clapMeter), and says to watch
+//     it. After the second miss, unless the level settles it (micFallback), one question about
+//     that bar: "Did the bar jump when you clapped?" "Yes: clap again" is a new count (as often as
+//     it takes); "No, it stayed put" is the failed observation below.
 //
 //   - supported: every note found and the control round silent (method automatic), or the claps
 //     counted right (challenge). The low C4 (262 Hz) alone may be missed: laptop speakers are
@@ -44,7 +52,7 @@ import (
 //     hears something, not the notes or the claps (automatic);
 //   - failed: no capture device on the built-in codec; the device stopped with an error; only
 //     digital silence (every sample the same) the whole time (automatic); or the level didn't
-//     rise and the person says they clapped and nothing moved (observed);
+//     rise and the person says the bar stayed put when they clapped (observed);
 //   - not_tested (other): a fixture run, or no arecord on the image.
 //
 // The notes sit close to mains hum harmonics (E5 659 Hz is 11 × 60 Hz; G4 392 Hz, D5 587 Hz and
@@ -61,7 +69,7 @@ import (
 
 func init() {
 	Register(Spec{ID: "audio.microphone", Group: NoPlug, Order: 70, Title: i18n.M("Microphone"),
-		Brief: i18n.M("stay quiet for five notes; clap if asked"), Expect: 30 * time.Second,
+		Brief: i18n.M("stay quiet for five notes; clap if asked"), Expect: 35 * time.Second,
 		New: func(*Env) Run { return &mic{best: -100} }, Demo: func(f *Fake) {
 			demoSound(f)
 			f.Set("alsa:loop", "-24") // the speakers reach the microphone
@@ -69,12 +77,13 @@ func init() {
 }
 
 const (
-	micSettle   = 0.3 // seconds of the recording thrown away (the converter's start-up pop)
+	micSettle   = 0.3 // seconds of the room's recording thrown away (the converter's start-up pop)
 	micFloor    = 1.8 // seconds measuring the room (settle included)
 	micListen   = 8.0 // seconds to clap
 	micFaint    = 6.0 // dB over the room: something heard
 	toneTail    = 0.6 // seconds still listening after a note has played (the devices' buffers)
 	clapQuiet   = 1.5 // seconds of quiet after the count is reached: the claps are over
+	clapHold    = 1.0 // seconds the clap meter keeps its highest peak marked
 	controlHits = toneHits / 2
 )
 
@@ -108,7 +117,8 @@ func micFallback(floor, best float64, sound bool) string {
 type micPhase int
 
 const (
-	micRoom   micPhase = iota // measuring the room
+	micStart  micPhase = iota // waiting for Start, then the countdown (recording, nothing measured)
+	micRoom                   // measuring the room
 	micUnplug                 // headphones in: the notes would go to them
 	micTone                   // a note through the speakers (or the control round), listening
 	micClap                   // clap N times
@@ -171,9 +181,15 @@ func (tn *tone) evidence(spk string) string {
 type mic struct {
 	snd  soundIO
 	rng  *rand.Rand
+	ok   bool // there is a capture device to record
+	over bool // decided: the call for quiet is down
 	pcm  PCM
 	desc string
-	rec  Recorder
+	rec  Recorder // from Start on
+	goAt float64  // when Start was pressed: the countdown runs from it (-1: not yet)
+	// noteLen is how long a note's round lasts (its WAV and the tail listened to after it), for
+	// how long the Mac listens (listenFor) and how long it has to go (toGo)
+	noteLen float64
 
 	spk     PCM // the speakers' device, for the notes
 	spkOK   bool
@@ -204,7 +220,10 @@ type mic struct {
 	roomPeak float64
 	best     float64 // loudest window since the room was measured
 	now      float64 // the latest window
-	sound    bool    // anything but digital silence
+	pk       float64 // the latest window's peak, dBFS (the clap meter: what the claps are counted on)
+	hold     float64 // the highest peak in the last clapHold seconds, and when it came
+	holdAt   float64
+	sound    bool // anything but digital silence
 
 	claps int       // claps asked for this try
 	env   []float64 // this try's 10 ms peaks
@@ -240,10 +259,49 @@ func (m *mic) Start(c *Ctx) {
 	} else {
 		m.jackRead = true // no notes, so no jack to mind
 	}
-	m.rec = snd.Record(p)
-	m.now, m.doneAt, m.face = -100, -1, boot.Work
-	m.say, m.sayAt = i18n.T("shh. measuring the room…"), 0.2
-	c.Select(-1) // hands off: a stray Enter mustn't skip
+	m.noteLen = wavSeconds(toneWAV(micNotes[0].hz, leadAnalog)) + toneTail
+	m.ok, m.goAt = true, -1
+	m.now, m.pk, m.hold, m.doneAt, m.face = -100, -100, -100, -1, boot.Idle
+	m.say, m.sayAt = i18n.T("the microphone. this one needs a quiet room."), 0.2
+	c.Select(0) // Start
+}
+
+// listenFor is about how long the Mac listens for the room and the notes, in seconds: what the
+// start screen asks quiet for.
+func (m *mic) listenFor() float64 {
+	sec := micFloor
+	if m.spkOK {
+		for _, tn := range m.tones {
+			sec += m.roundLen(tn)
+		}
+	}
+	return sec
+}
+
+// roundLen is how long a round of the loopback lasts: a note's WAV and the tail after it, or the
+// control round (as long as a note sounds, and the tail).
+func (m *mic) roundLen(tn *tone) float64 {
+	if tn.control() {
+		return leadAnalog + toneLen + toneTail
+	}
+	return m.noteLen
+}
+
+// toGo is about how many seconds of listening for the room and the notes are left at t.
+func (m *mic) toGo(t float64) float64 {
+	switch m.phase {
+	case micStart:
+		return m.listenFor()
+	case micRoom:
+		return m.listenFor() - (t - m.from)
+	case micTone:
+		left := max(0, m.roundLen(m.tones[m.cur])-(t-m.from))
+		for _, tn := range m.tones[m.cur+1:] {
+			left += m.roundLen(tn)
+		}
+		return left
+	}
+	return 0
 }
 
 // micRounds are the loopback's rounds: the notes in the motif's order, then the control round
@@ -306,12 +364,14 @@ func (m *mic) lowMissed() *tone {
 }
 
 func (m *mic) Step(c *Ctx) {
-	if m.rec == nil {
+	if !m.ok {
 		return
 	}
-	if err := m.rec.Err(); err != nil {
-		m.failed(c, err)
-		return
+	if m.rec != nil {
+		if err := m.rec.Err(); err != nil {
+			m.failed(c, err)
+			return
+		}
 	}
 	if m.jacks != nil {
 		if js, ok := m.jacks.Ready(); ok {
@@ -321,10 +381,17 @@ func (m *mic) Step(c *Ctx) {
 		}
 	}
 	t := c.T
-	for _, w := range m.rec.Windows() {
-		m.window(t, w)
+	if m.rec != nil {
+		for _, w := range m.rec.Windows() {
+			m.window(t, w)
+		}
 	}
 	switch m.phase {
+	case micStart:
+		if m.goAt >= 0 && t-m.goAt >= startCount {
+			m.phase, m.from = micRoom, t
+			m.say, m.sayAt, m.face = i18n.T("shh. measuring the room…"), t, boot.Work
+		}
 	case micRoom:
 		if t-m.from >= micFloor && len(m.room) > 0 && m.jackRead {
 			m.floor, m.roomPeak = medianOf(m.room), medianOf(m.roomPk)
@@ -375,17 +442,23 @@ func (m *mic) Step(c *Ctx) {
 
 // window takes in one recorded window.
 func (m *mic) window(t float64, w Window) {
-	d := dB(w.RMS)
+	d, pk := dB(w.RMS), dB(w.Peak)
 	if w.Flat {
-		d = -100
-	} else {
+		d, pk = -100, -100
+	} else if m.phase != micStart {
 		m.sound = true
 	}
-	m.now = d
+	m.now, m.pk = d, pk
+	if pk >= m.hold || t-m.holdAt >= clapHold {
+		m.hold, m.holdAt = pk, t
+	}
+	if m.phase == micStart { // the countdown: the level shows, nothing is measured
+		return
+	}
 	var at, around [micN]float64
 	for i, n := range micNotes {
 		at[i], around[i] = toneLevel(w.S, n.hz)
-		if m.phase != micRoom {
+		if m.phase > micRoom {
 			m.margin[i] = min(at[i]-around[i], at[i]-m.roomAt[i])
 		}
 	}
@@ -528,8 +601,8 @@ func (m *mic) clapsOver(c *Ctx) {
 			Say: i18n.T("something came through, but not the notes or the claps. partial.")})
 	default:
 		m.phase, m.from = micAsk, c.T
-		m.say, m.sayAt, m.face = i18n.T("hmm. the level barely moved."), c.T, boot.Hmm
-		c.Select(0) // Clap again
+		m.say, m.sayAt, m.face = i18n.T("hmm. I couldn't count those."), c.T, boot.Hmm
+		c.Select(0) // Yes: clap again
 	}
 }
 
@@ -562,6 +635,7 @@ func (m *mic) evidence() string {
 
 func (m *mic) end(c *Ctx, o Outcome) {
 	m.stop()
+	m.over = true
 	c.Decide(o)
 }
 
@@ -592,14 +666,19 @@ func (m *mic) failed(c *Ctx, err error) {
 
 func (m *mic) Act(c *Ctx, i int) {
 	switch {
+	case m.phase == micStart && i == 0 && m.goAt < 0: // Start: recording from now, measuring after the countdown
+		m.goAt, m.rec = c.T, m.snd.Record(m.pcm)
+		m.say, m.sayAt, m.face = i18n.T("shh. starting…"), c.T, boot.Idle
+		c.Select(-1) // hands off: a stray Enter mustn't skip
 	case m.phase == micUnplug && i == 0: // "They're out": the jack control may be stuck
 		m.out = true
-	case m.phase == micAsk && i == 0:
+	case m.phase == micAsk && i == 0: // Yes: the bar jumped
+		m.trail = append(m.trail, "the tester said the level bar jumped when they clapped")
 		m.startClaps(c, "", "")
 	case m.phase == micAsk && i == 1:
 		m.end(c, Outcome{Results: []checks.Result{Result("audio.microphone", checks.Failed, Observed,
-			m.evidence()+"; the tester clapped and the level didn't rise", i18n.T("the level didn't rise"))},
-			Say: i18n.T("you clapped and the level didn't move. that's a fail.")})
+			m.evidence()+"; the tester clapped and said the level bar stayed put", i18n.T("the level didn't rise"))},
+			Say: i18n.T("you clapped and the bar stayed put. that's a fail.")})
 	}
 }
 
@@ -645,7 +724,7 @@ func (m *mic) steps() ([]string, int) {
 		}
 	}
 	if m.tries > 0 {
-		s = append(s, i18n.N("Clap %d time, near the keyboard.", "Clap %d times, near the keyboard.", m.claps, m.claps))
+		s = append(s, i18n.N("Clap %d time near the keyboard, and watch the level bar.", "Clap %d times near the keyboard, and watch the level bar.", m.claps, m.claps))
 		cur = len(s) - 1
 	}
 	return s, cur
@@ -653,7 +732,7 @@ func (m *mic) steps() ([]string, int) {
 
 func (m *mic) View(c *Ctx) Screen {
 	s := Screen{Face: m.face, OutTitle: i18n.T("What I hear"), Say: m.say, SayAt: m.sayAt}
-	if m.rec == nil {
+	if !m.ok {
 		return s
 	}
 	s.Steps, s.Step = m.steps()
@@ -663,6 +742,17 @@ func (m *mic) View(c *Ctx) Screen {
 	}
 	s.Live = []Line{Fact(i18n.T("%s: %s, 16 kHz", m.pcm.HW(), m.pcm.Name))}
 	switch m.phase {
+	case micStart:
+		does := i18n.T("quiet from then on, for about %d s", int(math.Ceil(m.listenFor())))
+		if m.goAt < 0 {
+			s.Waiting = "·  " + i18n.T("waiting for you to press %s", i18n.T("Start"))
+			s.Live = append(s.Live, Gone(i18n.T("not recording yet: nothing is heard until Start")))
+			s.Actions = []Action{{Label: i18n.T("Start"), Does: does}}
+			break
+		}
+		s.Waiting = "·  " + i18n.T("starting in %d s", int(math.Ceil(startCount-(c.T-m.goAt))))
+		s.Live = append(s.Live, Wait(i18n.T("recording; the room is next")))
+		s.Actions = []Action{{Label: i18n.T("Start"), Does: does, Off: true}}
 	case micRoom:
 		s.Waiting = "·  " + i18n.T("measuring the room")
 		s.Live = append(s.Live, Wait(i18n.T("measuring the room")))
@@ -689,10 +779,11 @@ func (m *mic) View(c *Ctx) Screen {
 		s.Live = append(s.Live, m.roomLine())
 		s.Live = append(s.Live, m.toneLines(m.cur+1)...)
 		s.Live = append(s.Live, Fact(i18n.T("loudest: %.0f dB (%+.0f dB)", m.best, m.best-m.floor)))
-		s.Actions = []Action{{Label: i18n.T("Clap again"), Does: i18n.T("a new count, %.0f more seconds", micListen)},
-			{Label: i18n.T("Nothing moved"), Does: i18n.T("I clapped, and the level stayed put")}}
+		s.Ask = i18n.T("Did the bar jump when you clapped?")
+		s.Actions = []Action{{Label: i18n.T("Yes: clap again"), Does: i18n.T("a new count, %.0f more seconds", micListen)},
+			{Label: i18n.T("No, it stayed put"), Does: i18n.T("the bar didn't move when I clapped")}}
 	}
-	s.Anim = m.anim()
+	s.Anim = m.anim(c.T)
 	if m.phase == micUnplug { // take the headphones out: the plug coming out
 		s.Anim = headphonesArt(sideBoth, false, "in", false, hpUnplug)
 	}
@@ -701,7 +792,7 @@ func (m *mic) View(c *Ctx) Screen {
 
 // toneLines are the first n rounds under "What I hear" (none before the notes began).
 func (m *mic) toneLines(n int) []Line {
-	if !m.spkOK || m.phase == micRoom || m.phase == micUnplug || len(m.tones) == 0 {
+	if !m.spkOK || m.phase <= micUnplug || len(m.tones) == 0 {
 		if !m.spkOK {
 			return []Line{Gone(i18n.T("no speakers for the notes"))}
 		}
@@ -764,12 +855,16 @@ func phantomJack(js map[string]bool) string {
 // micBarStep is a note bar's step in the animation: 4 wide, 2 apart.
 const micBarStep = 6
 
-// anim is the band's picture: the microphone, its level now on a −70…0 dB bar with the room
+// anim is the band's picture at t: the microphone, its level now on a −70…0 dB bar with the room
 // marked, and one bar per note for how clearly it's heard (the line across them is where a
-// window counts), the note playing in violet; in the pause, the bars should stay down.
-func (m *mic) anim() Panel {
+// window counts), the note playing in violet; in the pause, the bars should stay down. Beside
+// them, from Start to the last note, the call for quiet (quietBox). The claps get the clap meter.
+func (m *mic) anim(t0 float64) Panel {
+	if m.phase == micClap || m.phase == micAsk {
+		return m.clapMeter()
+	}
 	now, floor, margin := m.now, m.floor, m.margin
-	phase, measured := m.phase, m.phase != micRoom
+	phase, measured, recording := m.phase, m.phase > micRoom, m.rec != nil
 	playing, control := -1, false
 	var found [micN]bool
 	for i, tn := range m.tones {
@@ -785,6 +880,24 @@ func (m *mic) anim() Panel {
 		}
 	}
 	notes := m.spkOK
+	// the quiet call: how long for, the countdown after Start, and what it listens for now
+	var what string
+	switch {
+	case phase == micRoom:
+		what = i18n.T("the room first")
+	case control:
+		what = i18n.T("nothing plays: no bar may cross the line")
+	case playing >= 0:
+		what = i18n.T("playing %s", micNotes[playing].name)
+	case phase == micTone:
+		what = i18n.T("listening")
+	}
+	long := i18n.T("the Mac listens for about %d s", int(math.Ceil(m.listenFor())))
+	if phase > micStart {
+		long = i18n.T("about %d s to go", int(math.Ceil(max(1, m.toGo(t0)))))
+	}
+	quiet := phase <= micTone && phase != micUnplug && !m.over
+	goAt := m.goAt
 	return func(gr *g.Grid, x, y, w, h int, t float64) {
 		top := y + max(0, (h-10)/2)
 		micArt(gr, x+2, top+1, now > floor+micFaint && measured)
@@ -806,61 +919,154 @@ func (m *mic) anim() Panel {
 				gr.SetBG(bx+i, top, '░', g.DIM, g.K)
 			}
 		}
-		gr.Put(bx+bw+1, top, i18n.T("%.0f dB", now), g.GRY)
+		if recording {
+			gr.Put(bx+bw+1, top, i18n.T("%.0f dB", now), g.GRY)
+		}
 		if measured {
 			if f := at(floor); f < bw {
 				gr.Put(bx+f, top+1, "└ "+i18n.T("room"), g.DIM)
 			}
 		}
-		if !notes {
+		qx := lx // the quiet call: beside the note bars, or under the level without them
+		if notes {
+			// the notes: one bar each, in the order they play, labelled with their octave, 0 to 30 dB
+			// clearer than the frequencies around them and the room; a window counts over the line
+			// (10 dB). Under the level bar, from its label, so the five fit at 120 columns.
+			bt, bh := top+3, 5
+			thr := bh - int(float64(bh)*toneOverAround/30+0.5)
+			for i, n := range micNotes {
+				cx := lx + i*micBarStep
+				v := 0.0
+				if measured {
+					v = max(0, min(30, margin[i]))
+				}
+				fill := int(v/30*float64(bh) + 0.5)
+				c := g.VIO
+				if i == playing {
+					c = g.BVIO
+				}
+				for j := 0; j < bh; j++ {
+					switch {
+					case bh-j <= fill:
+						gr.Put(cx, bt+j, "████", c)
+					case j == thr:
+						gr.Put(cx, bt+j, "────", g.DIM)
+					}
+				}
+				lc := g.DIM
+				switch {
+				case i == playing:
+					lc = g.BVIO
+				case found[i]:
+					lc = g.WHT
+				}
+				gr.Put(cx+1, bt+bh, n.name, lc)
+			}
+			qx = lx + micN*micBarStep + 1
+		}
+		if !quiet {
+			sndText(gr, qx, top+3, x+w-qx-1, 5, what, g.GRY)
 			return
 		}
-		// the notes: one bar each, in the order they play, labelled with their octave, 0 to 30 dB
-		// clearer than the frequencies around them and the room; a window counts over the line
-		// (10 dB). Under the level bar, from its label, so the five fit at 120 columns.
-		bt, bh := top+3, 5
-		thr := bh - int(float64(bh)*toneOverAround/30+0.5)
-		for i, n := range micNotes {
-			cx := lx + i*micBarStep
-			v := 0.0
-			if measured {
-				v = max(0, min(30, margin[i]))
-			}
-			fill := int(v/30*float64(bh) + 0.5)
-			c := g.VIO
-			if i == playing {
-				c = g.BVIO
-			}
-			for j := 0; j < bh; j++ {
+		quietBox(gr, qx, top+2, min(46, x+w-qx-1), y+h-top-2, long, what, goAt, t)
+	}
+}
+
+// quietBox is the microphone's call for quiet, in an amber box like the GPU notice: "quiet,
+// please", for how long (or how long to go), the countdown once Start is pressed (goAt ≥ 0)
+// until the room is measured, and what it listens for now. w and h are the room it has; with
+// too little for the box (the smallest consoles), the lines go in without it.
+func quietBox(gr *g.Grid, x, y, w, h int, long, what string, goAt, t float64) {
+	boxed := w >= 24 && h >= 5
+	iw, ox, oy, rh := w-4, x+2, y+1, h-2
+	if !boxed {
+		iw, ox, oy, rh = w, x, y+1, h-1
+	}
+	if iw < 10 || rh < 1 {
+		return
+	}
+	type row struct {
+		s     string
+		c     g.Color
+		count bool
+	}
+	rows := []row{{i18n.T("quiet, please"), g.YEL, false}}
+	for _, l := range sndWrap(long, iw) {
+		rows = append(rows, row{l, g.GRY, false})
+	}
+	switch {
+	case goAt >= 0 && t-goAt < startCount:
+		rows = append(rows, row{count: true})
+	case what != "":
+		for _, l := range sndWrap(what, iw) {
+			rows = append(rows, row{l, g.DIM, false})
+		}
+	}
+	rows = rows[:min(len(rows), rh)]
+	if boxed {
+		box(gr, x, y, w, len(rows)+2, g.AMB)
+	}
+	for i, r := range rows {
+		if r.count {
+			countdown(gr, ox, oy+i, iw, startCount-(t-goAt))
+			continue
+		}
+		gr.Put(ox, oy+i, r.s, r.c)
+	}
+}
+
+// clapMeter is the band's picture while the claps are counted and at the question after: the
+// microphone's level, big, jumping with each clap, under "watch this bar while you clap", with
+// the room's level and the line a clap must cross marked, and the claps heard so far. The level
+// is each 50 ms window's peak, what the claps are counted on; the highest in the last clapHold
+// seconds stays marked, so a clap's jump can't be missed.
+func (m *mic) clapMeter() Panel {
+	pk, hold, holdAt, roomPk, thr := m.pk, m.hold, m.holdAt, m.roomPeak, clapThreshold(m.roomPeak)
+	heard, asked := m.heard, m.claps
+	return func(gr *g.Grid, x, y, w, h int, t float64) {
+		top := y + max(0, (h-10)/2)
+		micArt(gr, x+2, top+1, pk >= thr)
+		gr.Put(x+3, top+8, i18n.T("mic"), g.DIM)
+		lx := x + 13
+		bw := min(56, x+w-lx-10)
+		if bw < 12 {
+			return
+		}
+		gr.Put(lx, top, i18n.T("watch this bar while you clap"), g.WHT)
+		at := func(d float64) int { return int((min(0, max(-70, d)) + 70) / 70 * float64(bw)) }
+		k, tk, hk := at(pk), min(bw-1, at(thr)), -1
+		if t-holdAt < clapHold {
+			hk = min(bw-1, at(hold))
+		}
+		for _, row := range []int{top + 2, top + 3} {
+			for i := 0; i < bw; i++ {
 				switch {
-				case bh-j <= fill:
-					gr.Put(cx, bt+j, "████", c)
-				case j == thr:
-					gr.Put(cx, bt+j, "────", g.DIM)
+				case i < k && i >= tk: // over the line: a clap
+					gr.SetBG(lx+i, row, '█', g.WHT, g.K)
+				case i < k:
+					gr.SetBG(lx+i, row, '█', g.BVIO, g.K)
+				case i == hk: // the jump just now
+					gr.SetBG(lx+i, row, '▌', g.WHT, g.K)
+				case i == tk:
+					gr.SetBG(lx+i, row, '│', g.GRY, g.K)
+				default:
+					gr.SetBG(lx+i, row, '░', g.DIM, g.K)
 				}
 			}
-			lc := g.DIM
-			switch {
-			case i == playing:
-				lc = g.BVIO
-			case found[i]:
-				lc = g.WHT
+		}
+		gr.Put(lx+bw+2, top+2, i18n.T("%.0f dB", pk), g.GRY)
+		if r := at(roomPk); r < tk-1 {
+			gr.Put(lx+r, top+4, "└ "+i18n.T("room"), g.DIM)
+		}
+		gr.Put(lx+tk, top+5, "└ "+i18n.T("a clap reaches this line"), g.GRY)
+		// the claps heard: a violet square each, a dim one for each still to come
+		cx := gr.Put(lx, top+7, i18n.T("claps heard"), g.DIM) + 2
+		for i := 0; i < max(asked, heard); i++ {
+			if i < heard {
+				gr.Put(cx+2*i, top+7, "■", g.BVIO)
+			} else {
+				gr.Put(cx+2*i, top+7, "■", g.DIM)
 			}
-			gr.Put(cx+1, bt+bh, n.name, lc)
 		}
-		// what it listens for now, beside the bars
-		sx := lx + micN*micBarStep + 1
-		var what string
-		switch {
-		case phase == micRoom:
-			what = i18n.T("the room first")
-		case control:
-			what = i18n.T("nothing plays: no bar may cross the line")
-		case playing >= 0:
-			what = i18n.T("playing %s", micNotes[playing].name)
-		case phase == micClap || phase == micAsk:
-			what = i18n.T("counting claps")
-		}
-		sndText(gr, sx, bt, x+w-sx-1, bh, what, g.GRY)
 	}
 }

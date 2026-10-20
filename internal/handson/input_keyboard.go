@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 
@@ -15,7 +16,8 @@ import (
 
 // input.keyboard, "Built-in keyboard and function keys" (laptops only: the criterion's `when` is
 // feature:builtin-keyboard, so desktops never get this test). The screen draws the Mac's
-// keyboard (US ANSI for now) and lights each key as the built-in keyboard
+// keyboard in its physical shape (US ANSI, ISO or JIS, when the keyboard tells: keyboardShape;
+// the legends are US ones whatever the shape) and lights each key as the built-in keyboard
 // reports it through evdev. The keyboard is grabbed for the test, so no key reaches the console:
 // no VT switch, no Ctrl+Alt+Del, nothing the screen would act on.
 //
@@ -58,6 +60,8 @@ type kbKey struct {
 	w     float64  // width in key units: a letter key is 1
 	codes []uint16 // the codes that light it
 	off   string   // drawn, not part of the test: why (English, for the evidence)
+	tall  bool     // its cap goes on down into the next row (the ISO and JIS return)
+	part  bool     // the lower part of the tall key above: drawn with it, not a key of its own
 }
 
 func (k kbKey) id() string {
@@ -70,6 +74,7 @@ func (k kbKey) id() string {
 // kbLayout is the drawn keyboard.
 type kbLayout struct {
 	name  string // for the evidence
+	how   string // how the shape was told, for the evidence (keyboardShape)
 	table string // the kernel's fn table for the top row (fnTables)
 	exit  string // msgid: the key held to stop (esc, or delete without a physical esc)
 	rows  [][]kbKey
@@ -105,12 +110,126 @@ func fnTable(id devID) string {
 	return "modern"
 }
 
-// keyboardLayout is the US ANSI keyboard of a Mac laptop: identifier and chip from the
-// catalog ("" in the demo: a MacBook Air's), id the keyboard device's (for the fn table), fn
-// whether it reports the fn key.
-func keyboardLayout(ident, chip string, id devID, fn bool) kbLayout {
+// kbShape is the keyboard's physical shape.
+type kbShape int
+
+const (
+	shapeANSI kbShape = iota // US
+	shapeISO                 // UK and most of Europe: a key between the left shift and Z, a tall return
+	shapeJIS                 // Japan: eisu, kana, yen and ro, a tall return, control left of A
+)
+
+var shapeNames = [...]string{"US ANSI laptop", "UK/ISO laptop", "JIS laptop"}
+
+// kbShapes are the product IDs (vendor 05ac, USB) of the built-in keyboards, ANSI, ISO and JIS,
+// one keyboard generation to a line: the USB_DEVICE_ID_APPLE_GEYSER3_ANSI … WELLSPRING9_JIS
+// IDs of the Linux kernel's drivers/hid/hid-ids.h, whose names say the shape. The T2 keyboards
+// (WELLSPRINGT2_*) have one ID for every shape and aren't here.
+var kbShapes = [][3]int{
+	{0x0217, 0x0218, 0x0219}, // GEYSER3
+	{0x021a, 0x021b, 0x021c}, // GEYSER4
+	{0x0229, 0x022a, 0x022b}, // GEYSER4_HF
+	{0x0223, 0x0224, 0x0225}, // WELLSPRING
+	{0x0230, 0x0231, 0x0232}, // WELLSPRING2
+	{0x0236, 0x0237, 0x0238}, // WELLSPRING3
+	{0x023f, 0x0240, 0x0241}, // WELLSPRING4
+	{0x0242, 0x0243, 0x0244}, // WELLSPRING4A
+	{0x0245, 0x0246, 0x0247}, // WELLSPRING5
+	{0x0252, 0x0253, 0x0254}, // WELLSPRING5A
+	{0x024c, 0x024d, 0x024e}, // WELLSPRING6
+	{0x0249, 0x024a, 0x024b}, // WELLSPRING6A
+	{0x0262, 0x0263, 0x0264}, // WELLSPRING7
+	{0x0259, 0x025a, 0x025b}, // WELLSPRING7A
+	{0x0290, 0x0291, 0x0292}, // WELLSPRING8
+	{0x0272, 0x0273, 0x0274}, // WELLSPRING9
+}
+
+// HID country codes (the HID spec's bCountryCode) that tell a shape.
+const (
+	countryISO = 13 // "International (ISO)": what hid_apple takes for an ISO keyboard
+	countryJIS = 15 // "Japan (Katakana)"
+	countryUS  = 33
+)
+
+// kbBoard is what the built-in keyboard tells of itself.
+type kbBoard struct {
+	id      devID
+	fn      bool // it reports the fn key
+	country int  // its HID country code (sysfs country); -1 without one (applespi isn't HID)
+	iso     int  // hid_apple's iso_layout parameter: -1 auto (the default, and when unread), 0 off, 1 on
+}
+
+// readBoard reads what keyboardLayout needs from the built-in keyboard's input devices.
+func readBoard(io IO, ds []Device) kbBoard {
+	b := kbBoard{country: -1, iso: -1}
+	for i, d := range ds {
+		if i == 0 {
+			b.id = readID(io, d)
+			if n, err := strconv.ParseUint(io.Read("/sys/class/input/"+d.Event+"/device/device/country"), 16, 8); err == nil {
+				b.country = int(n)
+			}
+		}
+		b.fn = b.fn || d.Has("key", keyFn)
+	}
+	if n, err := strconv.Atoi(io.Read("/sys/module/hid_apple/parameters/iso_layout")); err == nil {
+		b.iso = n
+	}
+	return b
+}
+
+// keyboardShape tells the built-in keyboard's shape, and how it was told (for the evidence).
+//
+//   - A USB keyboard (2006–2015 MacBooks, MacBook Pros, MacBook Airs) by its product ID
+//     (kbShapes).
+//   - One not in the table (the T2 keyboards: one product ID for every shape) by the HID country
+//     code in its descriptor, which usbhid keeps and /sys/class/input/eventN/device/device/country
+//     shows: 13 is what hid_apple itself goes by for an ISO keyboard (hid-apple.c checks
+//     hid->country against it before its ISO swap, and lists every T2 keyboard with that quirk),
+//     15 the spec's Japan, 33 its US. Whether a T2 keyboard fills the code in isn't confirmed on
+//     a Mac yet; one that leaves it 0 is drawn ANSI, as not detected.
+//   - applespi's SPI keyboards (MacBook8,1–10,1, MacBookPro13,x–14,x) aren't HID devices: no
+//     country code, nothing in /sys that tells the shape. Drawn ANSI, as not detected.
+func keyboardShape(id devID, country int) (kbShape, string) {
+	if id.vendor == 0x05ac && id.bus == busUSB {
+		for _, ids := range kbShapes {
+			for s, p := range ids {
+				if p == id.product {
+					return kbShape(s), fmt.Sprintf("shape from the product ID %04x:%04x", id.vendor, id.product)
+				}
+			}
+		}
+	}
+	how := fmt.Sprintf("shape from the HID country code %d", country)
+	switch country {
+	case countryISO:
+		return shapeISO, how
+	case countryJIS:
+		return shapeJIS, how
+	case countryUS:
+		return shapeANSI, how
+	}
+	return shapeANSI, "drawn as US ANSI: layout not detected"
+}
+
+// isoSwapped: whether hid_apple swaps KEY_GRAVE and KEY_102ND on this ISO keyboard: its
+// iso_layout parameter on, or auto (the default) and the keyboard reporting country code 13
+// (hid-apple.c, apple_event's apple_iso_keyboard translation; every built-in ISO keyboard in
+// kbShapes and every T2 one has APPLE_ISO_TILDE_QUIRK). Apple's ISO keyboards send the key left
+// of 1 (§) as the usage Linux reads as KEY_102ND and the key beside the left shift as
+// KEY_GRAVE, the other way round from a PC's: the swap puts them back, § as KEY_GRAVE. Both
+// codes are on the ISO drawing either way, so every key can register; a wrong guess here only
+// lights the other one of the two.
+func isoSwapped(b kbBoard) bool {
+	return b.iso > 0 || b.iso < 0 && b.country == countryISO
+}
+
+// keyboardLayout is the keyboard of a Mac laptop in its shape: identifier and chip from the
+// catalog ("" in the demo: a MacBook Air's), b what the keyboard tells (product ID for the shape
+// and the fn table, country code, whether it reports the fn key).
+func keyboardLayout(ident, chip string, b kbBoard) kbLayout {
 	fam, major, minor := model(ident)
-	l := kbLayout{name: "US ANSI laptop", table: fnTable(id), exit: i18n.M("esc")}
+	shape, how := keyboardShape(b.id, b.country)
+	l := kbLayout{name: shapeNames[shape], how: how, table: fnTable(b.id), exit: i18n.M("esc")}
 	esc := kbKey{label: i18n.M("esc"), word: true, w: 1.5, codes: []uint16{keyEsc}}
 	var top []kbKey
 	switch {
@@ -168,31 +287,82 @@ func keyboardLayout(ident, chip string, id devID, fn bool) kbLayout {
 		}
 		return out
 	}
+	wide := func(k kbKey, w float64) kbKey { k.w = w; return k }
 	legacy := fam == "MacBook" && (major <= 4 || major == 5 && minor == 2) || fam == "MacBookPro" && major <= 4
 	ropt := kbKey{label: i18n.M("option"), short: i18n.M("opt"), word: true, name: "right option", w: 1, codes: []uint16{100, 96}}
 	if legacy { // the small enter key right of command, before the unibody keyboards
 		ropt = kbKey{label: i18n.M("enter"), short: i18n.M("ent"), word: true, w: 1, codes: []uint16{96, 100}}
 	}
 	fnKey := kbKey{label: i18n.M("fn"), word: true, w: 1, codes: []uint16{keyFn}}
-	if !fn {
+	if !b.fn {
 		fnKey.codes, fnKey.off = nil, "fn (the keyboard doesn't report it as a key)"
 	}
-	l.rows = [][]kbKey{
-		top,
-		cat(one("`", 41), keys("1234567890", 2), one("-", 12), one("=", 13),
-			kbKey{label: i18n.M("delete"), short: i18n.M("del"), word: true, w: 1.5, codes: []uint16{keyBackspace, keyDelete}}),
-		cat(kbKey{label: i18n.M("tab"), word: true, w: 1.5, codes: []uint16{15}}, keys("qwertyuiop", 16), one("[", 26), one("]", 27), one("\\", 43)),
-		cat(kbKey{label: i18n.M("caps lock"), short: i18n.M("caps"), word: true, w: 1.75, codes: []uint16{58}}, keys("asdfghjkl", 30), one(";", 39), one("'", 40),
-			kbKey{label: i18n.M("return"), short: i18n.M("ret"), word: true, w: 1.75, codes: []uint16{28, 110}}),
-		cat(kbKey{label: i18n.M("shift"), word: true, name: "left shift", w: 2.25, codes: []uint16{42}}, keys("zxcvbnm", 44), one(",", 51), one(".", 52), one("/", 53),
-			kbKey{label: i18n.M("shift"), word: true, name: "right shift", w: 1.25, codes: []uint16{54}}, kbKey{label: "▲", name: "up", w: 1, codes: []uint16{103, 104}}),
-		{fnKey, kbKey{label: i18n.M("control"), short: i18n.M("ctrl"), word: true, w: 1, codes: []uint16{29}},
-			kbKey{label: i18n.M("option"), short: i18n.M("opt"), word: true, name: "left option", w: 1, codes: []uint16{56}},
-			kbKey{label: i18n.M("command"), short: i18n.M("cmd"), word: true, name: "left command", w: 1.25, codes: []uint16{125}},
-			kbKey{name: "space", w: 5, codes: []uint16{keySpace}},
-			kbKey{label: i18n.M("command"), short: i18n.M("cmd"), word: true, name: "right command", w: 1.25, codes: []uint16{126}}, ropt,
-			kbKey{label: "◄", name: "left", w: 1, codes: []uint16{105, 102}}, kbKey{label: "▼", name: "down", w: 1, codes: []uint16{108, 109}},
-			kbKey{label: "►", name: "right", w: 1, codes: []uint16{106, 107}}},
+	del := kbKey{label: i18n.M("delete"), short: i18n.M("del"), word: true, w: 1.5, codes: []uint16{keyBackspace, keyDelete}}
+	tab := kbKey{label: i18n.M("tab"), word: true, w: 1.5, codes: []uint16{15}}
+	caps := kbKey{label: i18n.M("caps lock"), short: i18n.M("caps"), word: true, w: 1.75, codes: []uint16{58}}
+	ret := kbKey{label: i18n.M("return"), short: i18n.M("ret"), word: true, w: 1.75, codes: []uint16{28, 110}}
+	lshift := kbKey{label: i18n.M("shift"), word: true, name: "left shift", w: 2.25, codes: []uint16{42}}
+	rshift := kbKey{label: i18n.M("shift"), short: i18n.M("sh"), word: true, name: "right shift", w: 1.25, codes: []uint16{54}}
+	up := kbKey{label: "▲", name: "up", w: 1, codes: []uint16{103, 104}}
+	ctrl := kbKey{label: i18n.M("control"), short: i18n.M("ctrl"), word: true, w: 1, codes: []uint16{29}}
+	lopt := kbKey{label: i18n.M("option"), short: i18n.M("opt"), word: true, name: "left option", w: 1, codes: []uint16{56}}
+	lcmd := kbKey{label: i18n.M("command"), short: i18n.M("cmd"), word: true, name: "left command", w: 1.25, codes: []uint16{125}}
+	space := kbKey{name: "space", w: 5, codes: []uint16{keySpace}}
+	rcmd := kbKey{label: i18n.M("command"), short: i18n.M("cmd"), word: true, name: "right command", w: 1.25, codes: []uint16{126}}
+	arrows := []kbKey{{label: "◄", name: "left", w: 1, codes: []uint16{105, 102}}, {label: "▼", name: "down", w: 1, codes: []uint16{108, 109}},
+		{label: "►", name: "right", w: 1, codes: []uint16{106, 107}}}
+	letters := cat(keys("qwertyuiop", 16), one("[", 26), one("]", 27)) // with the two keys after p
+	home := cat(keys("asdfghjkl", 30), one(";", 39), one("'", 40))
+	lower := cat(keys("zxcvbnm", 44), one(",", 51), one(".", 52), one("/", 53))
+	switch shape {
+	case shapeISO:
+		// The UK keyboard's shape (xkeyboard-config's applealu_iso geometry has the same rows):
+		// § left of 1, the return two rows tall with \ left of its lower part, the left shift
+		// short to make room for the key beside it (` on Apple's UK keyboards).
+		sect, beside := uint16(86), uint16(41) // KEY_102ND, KEY_GRAVE as sent (isoSwapped)
+		if isoSwapped(b) {
+			sect, beside = beside, sect
+		}
+		l.how += fmt.Sprintf(", § counted as code %d and ` as %d", sect, beside)
+		l.rows = [][]kbKey{
+			top,
+			cat(one("§", sect), keys("1234567890", 2), one("-", 12), one("=", 13), del),
+			cat(tab, letters, kbKey{label: ret.label, short: ret.short, word: true, w: 1, codes: ret.codes, tall: true}),
+			cat(caps, home, one("\\", 43), kbKey{part: true, w: 0.75}),
+			cat(wide(lshift, 1.25), one("`", beside), lower, rshift, up),
+			cat(fnKey, ctrl, lopt, lcmd, space, rcmd, ropt, arrows),
+		}
+	case shapeJIS:
+		// Apple's JIS shape, after xkeyboard-config's applealu_jis geometry: no key left of 1 (a
+		// wide 1 instead) and ¥ before a short delete; a short tab and the tall return; control
+		// left of A; _ (ro) before a short right shift; eisu and kana beside a short space, caps
+		// lock moved down. The JIS keys come through hid_apple's JIS report descriptor fix
+		// (APPLE_RDESC_JIS) as the HID usages International3 (KEY_YEN), International1 (KEY_RO),
+		// LANG2 (eisu, KEY_HANJA) and LANG1 (kana, KEY_HANGEUL). The legends are US ones (=, [,
+		// ], ', \ where JIS has ^, @, [, :, ]); the console font has no kana, so eisu and kana
+		// are written out. On the bottom row the place of fn and the right option isn't
+		// confirmed on a Mac: the right option is left out (a key drawn but missing would keep
+		// the test from passing; one there but not drawn only shows as a code not on the
+		// drawing).
+		l.rows = [][]kbKey{
+			top,
+			cat(kbKey{label: "1", w: 1.5, codes: []uint16{2}}, keys("234567890", 3), one("-", 12), one("=", 13),
+				kbKey{label: "¥", name: "yen", w: 1, codes: []uint16{124}}, wide(del, 1)),
+			cat(wide(tab, 1), letters, kbKey{label: ret.label, short: ret.short, word: true, w: 1.5, codes: ret.codes, tall: true}),
+			cat(wide(ctrl, 1.25), home, one("\\", 43), kbKey{part: true, w: 1.25}),
+			cat(wide(lshift, 1.75), lower, kbKey{label: "_", name: "ro", w: 1, codes: []uint16{89}}, wide(rshift, 0.75), up),
+			cat(wide(caps, 1), lopt, lcmd, kbKey{label: i18n.M("eisu"), word: true, w: 1, codes: []uint16{123}}, wide(space, 4),
+				kbKey{label: i18n.M("kana"), word: true, w: 1, codes: []uint16{122}}, rcmd, fnKey, arrows),
+		}
+	default:
+		l.rows = [][]kbKey{
+			top,
+			cat(one("`", 41), keys("1234567890", 2), one("-", 12), one("=", 13), del),
+			cat(tab, letters, one("\\", 43)),
+			cat(caps, home, ret),
+			cat(lshift, lower, rshift, up),
+			cat(fnKey, ctrl, lopt, lcmd, space, rcmd, ropt, arrows),
+		}
 	}
 	// the arrows: drawn as an inverted T (up beside the right shift), where Apple's laptops have
 	// half-height up and down keys in the bottom row
@@ -293,19 +463,11 @@ func (k *keyboard) Start(c *Ctx) {
 			k.others = append(k.others, d)
 		}
 	}
-	var id devID
-	fn := false
-	for i, d := range k.builtin {
-		if i == 0 {
-			id = readID(c.IO, d)
-		}
-		fn = fn || d.Has("key", keyFn)
-	}
 	chip := ""
 	if c.Env != nil && c.Env.Checks != nil {
 		chip = c.Env.Checks.Ident.Chip
 	}
-	k.lay = keyboardLayout(identifier(c.Env), chip, id, fn)
+	k.lay = keyboardLayout(identifier(c.Env), chip, readBoard(c.IO, k.builtin))
 	k.keys, k.row = k.lay.keys()
 	k.code, k.alt = k.lay.lookup()
 	k.seen = make([]bool, len(k.keys))
@@ -348,9 +510,12 @@ func (k *keyboard) release(c *Ctx) {
 	k.phase, k.at, k.down = kbAnswers, c.T, map[uint16]float64{}
 }
 
+// counted: a key to press (not one left out, not the lower part of a tall key).
+func (x kbKey) counted() bool { return x.off == "" && !x.part }
+
 func (k *keyboard) total() (n int) {
 	for _, x := range k.keys {
-		if x.off == "" {
+		if x.counted() {
 			n++
 		}
 	}
@@ -359,7 +524,7 @@ func (k *keyboard) total() (n int) {
 
 func (k *keyboard) count() (n int) {
 	for i, x := range k.keys {
-		if x.off == "" && k.seen[i] {
+		if x.counted() && k.seen[i] {
 			n++
 		}
 	}
@@ -370,7 +535,7 @@ func (k *keyboard) count() (n int) {
 func (k *keyboard) missing(show bool) []string {
 	var out []string
 	for i, x := range k.keys {
-		if x.off != "" || k.seen[i] {
+		if !x.counted() || k.seen[i] {
 			continue
 		}
 		if show {
@@ -530,8 +695,8 @@ func (k *keyboard) decide(c *Ctx, told bool) {
 }
 
 func (k *keyboard) evidence(c *Ctx, tail string) string {
-	ev := fmt.Sprintf("built-in keyboard: %s; layout drawn: %s (top row as F-keys or the %s fn table's media keys); %d of %d keys registered",
-		devNames(c.IO, k.builtin), k.lay.name, k.lay.table, k.count(), k.total())
+	ev := fmt.Sprintf("built-in keyboard: %s; layout drawn: %s (%s; top row as F-keys or the %s fn table's media keys); %d of %d keys registered",
+		devNames(c.IO, k.builtin), k.lay.name, k.lay.how, k.lay.table, k.count(), k.total())
 	if k.media+k.fkeys > 0 {
 		ev += fmt.Sprintf(" (top row: %d as media keys, %d as F-keys)", k.media, k.fkeys)
 	}
@@ -666,7 +831,8 @@ func legend(k kbKey, room int) string {
 // answers): one row of caps per row of keys, each
 // key's legend over its cap where there's room. A cap is dim until the key is seen, violet once
 // seen, white while held, red when it stayed dark in a decided partial or fail; the keys not part
-// of the test are shaded.
+// of the test are shaded. A tall key (the ISO and JIS return) is one cap down through the gap
+// between its two rows.
 func (k *keyboard) draw(gr *g.Grid, x, y, w, h int, _ float64) {
 	rows := k.lay.rows
 	n := len(rows)
@@ -684,7 +850,7 @@ func (k *keyboard) draw(gr *g.Grid, x, y, w, h int, _ float64) {
 	wc := int(math.Round(14.5 * u))
 	x0 := x + max(0, (w-wc)/2)
 	y0 := y + max(0, (h-(pitch*n-pitch+1)-btoi(legends))/2)
-	i := 0
+	i, tall, tcy := 0, -1, 0 // the tall key and its row of caps
 	for r, row := range rows {
 		cy := y0 + r*pitch + btoi(legends)
 		cum := 0.0
@@ -692,6 +858,27 @@ func (k *keyboard) draw(gr *g.Grid, x, y, w, h int, _ float64) {
 			a := x0 + int(math.Round(cum*u))
 			cum += key.w
 			b := x0 + int(math.Round(cum*u)) - 1 // a blank cell between keys
+			if key.part && tall >= 0 {           // the tall key's lower part, joined to its cap above
+				cap, _ := k.capColors(tall)
+				end := '█' // its last row reaches as far down as the row's other caps
+				if legends {
+					end = '▀'
+				}
+				for cx := a; cx < b; cx++ {
+					if legends {
+						gr.Set(cx, tcy, '█', cap)
+					}
+					for jy := tcy + 1; jy < cy; jy++ {
+						gr.Set(cx, jy, '█', cap)
+					}
+					gr.Set(cx, cy, end, cap)
+				}
+				i++
+				continue
+			}
+			if key.tall {
+				tall, tcy = i, cy
+			}
 			cap, lc := k.capColors(i)
 			r := '▄'
 			if legends { // the cap under its legend, apart from the row below
@@ -748,7 +935,7 @@ func (k *keyboard) held(x kbKey) bool {
 // media keys (hid_apple's default) with two pressed with fn, all but the right option; then esc
 // is held to stop (the answers show), and the right option comes last, for "Keep typing".
 func demoKeyboard(f *Fake) {
-	l := keyboardLayout("", "", devID{busUSB, 0x05ac, 0x024c}, true)
+	l := keyboardLayout("", "", kbBoard{id: devID{busUSB, 0x05ac, 0x024c}, fn: true, country: -1, iso: -1})
 	ks, row := l.keys()
 	all := []int{keyFn}
 	for _, k := range ks {

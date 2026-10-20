@@ -12,8 +12,67 @@ import (
 // The sound tests' band pictures (the test's animation takes 2/3 of the band's field): the Mac's
 // two speakers with sound waves on the side playing,
 // headphones with their plug and the ear playing, the monitor with its speakers, and the
-// microphone's meter. The waves run the whole time a sound plays, never in step with the beeps,
-// so the picture can't give a count away.
+// microphone's meters. The waves run the whole time a sound plays, never in step with the beeps,
+// so the picture can't give a count away. Before the first sound, the countdown.
+
+// startCount is the seconds counted down between Play (Ready, Play anyway, Start) and the first
+// sound, so the tester is listening when it begins: the beeps used to start 0.4 s after the
+// screen opened, easy to miss (0.9.4 review).
+const startCount = 3.0
+
+// countCells is the countdown bar's cells per second.
+const countCells = 6
+
+// countdown draws the countdown before a test's first sound the way the GPU notice draws its
+// own: a bar that empties as the seconds pass, and "starting in 3 s" beside it, from x, y in
+// at most w columns. left is the seconds left.
+func countdown(gr *g.Grid, x, y, w int, left float64) {
+	label, lc := i18n.T("starting in %d s", int(math.Ceil(left))), g.GRY
+	if left <= 0 {
+		label, lc = i18n.T("starting now…"), g.WHT
+	}
+	bw := min(int(startCount*countCells), w-2-width(label))
+	if bw < 6 && left > 0 { // narrow: the bar and the seconds alone
+		label = i18n.T("%d s", int(math.Ceil(left)))
+		bw = min(int(startCount*countCells), w-2-width(label))
+	}
+	if bw < 3 {
+		gr.Put(x, y, cut(label, max(0, w)), lc)
+		return
+	}
+	k := int(math.Ceil(max(0, left) * float64(bw) / startCount))
+	for i := 0; i < bw; i++ {
+		if i < k {
+			gr.SetBG(x+i, y, '█', g.BVIO, g.K)
+		} else {
+			gr.SetBG(x+i, y, '░', g.DIM, g.K)
+		}
+	}
+	gr.Put(x+bw+2, y, label, lc)
+}
+
+// countdownW is how wide countdown draws when it has the room.
+func countdownW() int { return int(startCount*countCells) + 2 + width(i18n.T("starting in %d s", 3)) }
+
+// counting is a band picture with the countdown under it, centred: from goAt (the run's time
+// Play was pressed) to startCount after.
+func counting(p Panel, goAt float64) Panel {
+	return func(gr *g.Grid, x, y, w, h int, t float64) {
+		p(gr, x, y, w, h-2, t)
+		cw := min(w, countdownW())
+		countdown(gr, x+max(0, (w-cw)/2), y+h-1, cw, startCount-(t-goAt))
+	}
+}
+
+// hpCounting is the headphones' picture (headphonesArt) with the countdown beside it, right of
+// the jack and under the Mac's speakers: the picture takes the band's whole height.
+func hpCounting(p Panel, goAt float64) Panel {
+	return func(gr *g.Grid, x, y, w, h int, t float64) {
+		p(gr, x, y, w, h, t)
+		cx, cy := x+hpJackX+2, y+max(0, (h-hpRows)/2)+8
+		countdown(gr, cx, cy, min(countdownW(), x+w-cx-1), startCount-(t-goAt))
+	}
+}
 
 // sndWrap breaks s into lines of at most w runes, at spaces.
 func sndWrap(s string, w int) []string {
@@ -223,6 +282,12 @@ func speakersArt(side int, playing, muted bool) Panel {
 	}
 }
 
+// The headphones' picture: the jack's column from its left, and its rows.
+const (
+	hpJackX = 3 + 30 + 4 // the canvas is 30 pixels wide, from 3 in
+	hpRows  = 12
+)
+
 // How the headphones' plug moves.
 const (
 	hpStill  = iota // where the jack says it is
@@ -237,7 +302,7 @@ const (
 // plug (hpReach, hpUnplug), and the colours follow where it is.
 func headphonesArt(side int, playing bool, jack string, quiet bool, motion int) Panel {
 	return func(gr *g.Grid, x, y, w, h int, t float64) {
-		jx := x + 3 + 30 + 4 // the jack (the canvas is 30 pixels wide)
+		jx := x + hpJackX // the jack
 		plugX, in := jx-3, jack == "in"
 		switch motion {
 		case hpReach: // toward the jack and back, stopping two cells short
@@ -266,7 +331,7 @@ func headphonesArt(side int, playing bool, jack string, quiet bool, motion int) 
 			pix, cc = 'w', g.GRY
 		}
 		const pw, ph = 30, 17 // the headphones' canvas, pixels
-		hx, top := x+3, y+max(0, (h-12)/2)
+		hx, top := x+3, y+max(0, (h-hpRows)/2)
 		p := newSndPix(pw, ph)
 		p.arc(pw/2, 12.5, 12.5, -90, 90, pix) // the band
 		p.arc(pw/2, 12.5, 11.5, -90, 90, 'K')
@@ -325,7 +390,7 @@ func headphonesArt(side int, playing bool, jack string, quiet bool, motion int) 
 			gr.Put(bx, top+3, "│▀█▀│", g.DIM)
 			gr.Put(bx, top+4, "└───┘", g.DIM)
 		}
-		sndText(gr, mx, top+5, x+w-mx-1, 2, i18n.T("Mac speakers: quiet?"), g.GRY)
+		sndText(gr, mx, top+5, x+w-mx-1, 2, i18n.T("Mac speakers: beeping too?"), g.GRY)
 	}
 }
 
