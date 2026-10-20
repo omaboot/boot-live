@@ -966,6 +966,26 @@ msgstr ""
 
 #: internal/checks/power.go
 #, c-format
+msgid "%s %.0f%%, health %d%%, %d cycles"
+msgstr ""
+
+#: internal/checks/power.go
+#, c-format
+msgid "battery reports in. %d%% of what it held new, %d cycles."
+msgstr ""
+
+#: internal/checks/power.go
+#, c-format
+msgid "%s %.0f%%, health %d%%"
+msgstr ""
+
+#: internal/checks/power.go
+#, c-format
+msgid "battery reports in. %d%% of what it held new."
+msgstr ""
+
+#: internal/checks/power.go
+#, c-format
 msgid "%s %.0f%%, %d cycles"
 msgstr ""
 
@@ -1370,15 +1390,15 @@ msgid "goto <screen> (Tab lists them)"
 msgstr ""
 
 #: internal/command/dev_target.go
-msgid "where Submit sends"
+msgid "where reports, bug reports and the network tests go"
 msgstr ""
 
 #: internal/command/dev_target.go
-msgid "no target in this image: external storage only"
+msgid "Diagnostic report:"
 msgstr ""
 
 #: internal/command/dev_target.go
-msgid "staging: it takes a run changed in the console"
+msgid "none in this image: external storage only"
 msgstr ""
 
 #: internal/command/dev_target.go
@@ -1386,7 +1406,31 @@ msgid "DoesItOmarchy.com itself: a run changed in the console goes to external s
 msgstr ""
 
 #: internal/command/dev_target.go
-msgid "sending to"
+msgid "staging: it takes a run changed in the console"
+msgstr ""
+
+#: internal/command/dev_target.go
+msgid "Bug report:"
+msgstr ""
+
+#: internal/command/dev_target.go
+msgid "none in this image: kept on external storage"
+msgstr ""
+
+#: internal/command/dev_target.go
+msgid "upload key in the image"
+msgstr ""
+
+#: internal/command/dev_target.go
+msgid "no upload key in this image: kept on external storage"
+msgstr ""
+
+#: internal/command/dev_target.go
+msgid "Network tests:"
+msgstr ""
+
+#: internal/command/dev_target.go
+msgid "the Wi-Fi and Ethernet tests measure against it"
 msgstr ""
 
 #: internal/command/help.go
@@ -1841,6 +1885,18 @@ msgid "the sound card has no playback device. nothing to play through."
 msgstr ""
 
 #: internal/handson/audio.go
+msgid "the speakers. ready when you are."
+msgstr ""
+
+#: internal/handson/audio.go
+msgid "the monitor takes sound. ready when you are."
+msgstr ""
+
+#: internal/handson/audio.go
+msgid "here goes. ears open…"
+msgstr ""
+
+#: internal/handson/audio.go
 msgid "nothing played (not on a Mac)"
 msgstr ""
 
@@ -1913,7 +1969,7 @@ msgid "on the monitor"
 msgstr ""
 
 #: internal/handson/audio.go
-msgid "beeps in both ears. and the speakers?"
+msgid "3 beeps in the headphones. and the Mac?"
 msgstr ""
 
 #: internal/handson/audio.go
@@ -1939,7 +1995,7 @@ msgid "beeps %s…"
 msgstr ""
 
 #: internal/handson/audio.go
-msgid "did the speakers stay quiet?"
+msgid "where did you hear the beeps?"
 msgstr ""
 
 #: internal/handson/audio.go
@@ -1951,19 +2007,28 @@ msgid "how many beeps?"
 msgstr ""
 
 #: internal/handson/audio.go
-msgid "Yes, quiet"
+msgid "Play"
 msgstr ""
 
 #: internal/handson/audio.go
-msgid "only the headphones"
+#, c-format
+msgid "3 beeps, after a %d s countdown"
 msgstr ""
 
 #: internal/handson/audio.go
-msgid "No, they played too"
+msgid "Only in the headphones"
 msgstr ""
 
 #: internal/handson/audio.go
-msgid "speakers beeped too"
+msgid "the Mac's speakers stayed quiet"
+msgstr ""
+
+#: internal/handson/audio.go
+msgid "From the Mac's speakers too"
+msgstr ""
+
+#: internal/handson/audio.go
+msgid "they beeped as well"
 msgstr ""
 
 #: internal/handson/audio.go
@@ -1971,7 +2036,7 @@ msgid "Play it again"
 msgstr ""
 
 #: internal/handson/audio.go
-msgid "3 beeps in both ears"
+msgid "the same 3 beeps once more"
 msgstr ""
 
 #: internal/handson/audio.go
@@ -2018,7 +2083,7 @@ msgid "both sides check out. one last thing: a word."
 msgstr ""
 
 #: internal/handson/audio.go
-msgid "both ears check out. one question about the speakers."
+msgid "both ears check out. now the Mac's own speakers."
 msgstr ""
 
 #: internal/handson/audio.go
@@ -2161,7 +2226,7 @@ msgid "Count the beeps in your right ear."
 msgstr ""
 
 #: internal/handson/audio.go
-msgid "Listen to the Mac's speakers while the headphones beep."
+msgid "Take the headphones off, keep them close to your ears, and listen to the Mac's speakers."
 msgstr ""
 
 #: internal/handson/audio.go
@@ -2177,27 +2242,41 @@ msgid "What I play"
 msgstr ""
 
 #: internal/handson/audio.go
-msgid "Beeps on one side at a time, then a word."
+msgid "2 to 5 beeps from the speaker, sent left, then right: count them. Then a word, said twice: pick it out of four."
 msgstr ""
 
 #: internal/handson/audio.go
-msgid "Quiet beeps, one ear at a time, then a question."
+msgid "2 to 5 beeps from the left speaker, then from the right: count them. Then a word, said twice: pick it out of four."
 msgstr ""
 
 #: internal/handson/audio.go
-msgid "Once the monitor says it takes sound (its ELD), beeps go over the cable."
+msgid "Quiet beeps, one ear at a time: count them. Then 3 beeps with the headphones off, held near your ears: where did you hear them?"
+msgstr ""
+
+#: internal/handson/audio.go
+msgid "Once the monitor says it takes sound (its ELD), 2 to 5 beeps go over the cable: count them."
+msgstr ""
+
+#: internal/handson/audio.go internal/handson/audio_art.go internal/handson/audio_mic.go internal/ui/quick.go
+#, c-format
+msgid "starting in %d s"
+msgstr ""
+
+#: internal/handson/audio.go internal/handson/audio_mic.go
+#, c-format
+msgid "waiting for you to press %s"
 msgstr ""
 
 #: internal/handson/audio.go
 msgid "playing"
 msgstr ""
 
-#: internal/handson/audio.go internal/handson/audio_mic.go internal/handson/backlight.go internal/handson/bluetooth.go internal/handson/camera.go internal/handson/input_keyboard.go internal/handson/keylight.go
+#: internal/handson/audio.go internal/handson/audio_mic.go internal/handson/backlight.go internal/handson/bluetooth.go internal/handson/brightkeys.go internal/handson/camera.go internal/handson/input_keyboard.go internal/handson/keylight.go
 msgid "waiting for your answer"
 msgstr ""
 
 #: internal/handson/audio.go
-msgid "not sure? take the headphones off, Play it again, and listen to the Mac itself."
+msgid "not sure? Play it again, and listen close to the Mac itself."
 msgstr ""
 
 #: internal/handson/audio.go
@@ -2216,13 +2295,18 @@ msgstr ""
 msgid "lost count? Play it again plays the same beeps."
 msgstr ""
 
-#: internal/handson/audio.go internal/handson/audio_mic.go
-#, c-format
-msgid "playing %s"
+#: internal/handson/audio.go
+msgid "about to play"
 msgstr ""
 
 #: internal/handson/audio.go
-msgid "about to play"
+#, c-format
+msgid "ready: nothing plays until you press %s"
+msgstr ""
+
+#: internal/handson/audio.go internal/handson/audio_mic.go
+#, c-format
+msgid "playing %s"
 msgstr ""
 
 #: internal/handson/audio.go
@@ -2323,6 +2407,11 @@ msgid "getting ready"
 msgstr ""
 
 #: internal/handson/audio.go
+#, c-format
+msgid "the beeps start after a %d s countdown"
+msgstr ""
+
+#: internal/handson/audio.go
 msgid "waiting for the jack to notice some headphones."
 msgstr ""
 
@@ -2335,7 +2424,8 @@ msgid "still waiting? push the plug all the way in: the jack has to notice it."
 msgstr ""
 
 #: internal/handson/audio.go
-msgid "they're on: play the beeps"
+#, c-format
+msgid "they're on: beeps after a %d s countdown"
 msgstr ""
 
 #: internal/handson/audio.go
@@ -2347,11 +2437,11 @@ msgid "waiting for the jack to notice the headphones"
 msgstr ""
 
 #: internal/handson/audio.go
-msgid "waiting for the headphones"
+msgid "Ready"
 msgstr ""
 
 #: internal/handson/audio.go
-msgid "Ready"
+msgid "waiting for the headphones"
 msgstr ""
 
 #: internal/handson/audio.go
@@ -2362,6 +2452,16 @@ msgstr ""
 msgid "the jack doesn't notice them: record that, play nothing"
 msgstr ""
 
+#: internal/handson/audio.go internal/handson/extdisplay.go
+#, c-format
+msgid "%s (%s): connected"
+msgstr ""
+
+#: internal/handson/audio.go
+#, c-format
+msgid "beeps from the monitor after a %d s countdown"
+msgstr ""
+
 #: internal/handson/audio.go
 msgid "the monitor's speakers next. waiting for it to say it takes sound."
 msgstr ""
@@ -2370,14 +2470,17 @@ msgstr ""
 msgid "some monitors only describe their sound once their speakers are on. Play anyway tries regardless."
 msgstr ""
 
-#: internal/handson/audio.go internal/handson/extdisplay.go
-#, c-format
-msgid "%s (%s): connected"
-msgstr ""
-
 #: internal/handson/audio.go
 #, c-format
 msgid "%s: a monitor, but no audio description yet"
+msgstr ""
+
+#: internal/handson/audio.go
+msgid "it has speakers; send the beeps to every HDMI/DP output"
+msgstr ""
+
+#: internal/handson/audio.go
+msgid "Play anyway"
 msgstr ""
 
 #: internal/handson/audio.go
@@ -2388,12 +2491,13 @@ msgstr ""
 msgid "waiting for the monitor"
 msgstr ""
 
-#: internal/handson/audio.go
-msgid "Play anyway"
+#: internal/handson/audio_art.go internal/ui/quick.go
+msgid "starting now…"
 msgstr ""
 
-#: internal/handson/audio.go
-msgid "it has speakers; send the beeps to every HDMI/DP output"
+#: internal/handson/audio_art.go internal/ui/data.go internal/ui/handson.go
+#, c-format
+msgid "%d s"
 msgstr ""
 
 #: internal/handson/audio_art.go
@@ -2421,7 +2525,7 @@ msgid "jack: no sensor"
 msgstr ""
 
 #: internal/handson/audio_art.go
-msgid "Mac speakers: quiet?"
+msgid "Mac speakers: beeping too?"
 msgstr ""
 
 #: internal/handson/audio_art.go
@@ -2446,6 +2550,10 @@ msgstr ""
 
 #: internal/handson/audio_mic.go
 msgid "the sound card has no way in. no microphone to hear."
+msgstr ""
+
+#: internal/handson/audio_mic.go
+msgid "the microphone. this one needs a quiet room."
 msgstr ""
 
 #: internal/handson/audio_mic.go
@@ -2533,7 +2641,7 @@ msgid "something came through, but not the notes or the claps. partial."
 msgstr ""
 
 #: internal/handson/audio_mic.go
-msgid "hmm. the level barely moved."
+msgid "hmm. I couldn't count those."
 msgstr ""
 
 #: internal/handson/audio_mic.go
@@ -2561,11 +2669,15 @@ msgid "the sound card wouldn't record. that's a fail."
 msgstr ""
 
 #: internal/handson/audio_mic.go
+msgid "shh. starting…"
+msgstr ""
+
+#: internal/handson/audio_mic.go
 msgid "the level didn't rise"
 msgstr ""
 
 #: internal/handson/audio_mic.go
-msgid "you clapped and the level didn't move. that's a fail."
+msgid "you clapped and the bar stayed put. that's a fail."
 msgstr ""
 
 #: internal/handson/audio_mic.go
@@ -2578,8 +2690,8 @@ msgstr ""
 
 #: internal/handson/audio_mic.go
 #, c-format
-msgid "Clap %d time, near the keyboard."
-msgid_plural "Clap %d times, near the keyboard."
+msgid "Clap %d time near the keyboard, and watch the level bar."
+msgid_plural "Clap %d times near the keyboard, and watch the level bar."
 msgstr[0] ""
 msgstr[1] ""
 
@@ -2598,6 +2710,23 @@ msgstr ""
 #: internal/handson/audio_mic.go
 #, c-format
 msgid "%s: %s, 16 kHz"
+msgstr ""
+
+#: internal/handson/audio_mic.go
+#, c-format
+msgid "quiet from then on, for about %d s"
+msgstr ""
+
+#: internal/handson/audio_mic.go internal/handson/sleep.go internal/ui/screens.go
+msgid "Start"
+msgstr ""
+
+#: internal/handson/audio_mic.go
+msgid "not recording yet: nothing is heard until Start"
+msgstr ""
+
+#: internal/handson/audio_mic.go
+msgid "recording; the room is next"
 msgstr ""
 
 #: internal/handson/audio_mic.go
@@ -2642,7 +2771,11 @@ msgid "loudest: %.0f dB (%+.0f dB)"
 msgstr ""
 
 #: internal/handson/audio_mic.go
-msgid "Clap again"
+msgid "Did the bar jump when you clapped?"
+msgstr ""
+
+#: internal/handson/audio_mic.go
+msgid "Yes: clap again"
 msgstr ""
 
 #: internal/handson/audio_mic.go
@@ -2651,11 +2784,11 @@ msgid "a new count, %.0f more seconds"
 msgstr ""
 
 #: internal/handson/audio_mic.go
-msgid "Nothing moved"
+msgid "No, it stayed put"
 msgstr ""
 
 #: internal/handson/audio_mic.go
-msgid "I clapped, and the level stayed put"
+msgid "the bar didn't move when I clapped"
 msgstr ""
 
 #: internal/handson/audio_mic.go
@@ -2699,6 +2832,24 @@ msgid "room: %.0f dB"
 msgstr ""
 
 #: internal/handson/audio_mic.go
+msgid "the room first"
+msgstr ""
+
+#: internal/handson/audio_mic.go
+msgid "nothing plays: no bar may cross the line"
+msgstr ""
+
+#: internal/handson/audio_mic.go
+#, c-format
+msgid "the Mac listens for about %d s"
+msgstr ""
+
+#: internal/handson/audio_mic.go
+#, c-format
+msgid "about %d s to go"
+msgstr ""
+
+#: internal/handson/audio_mic.go
 msgid "mic"
 msgstr ""
 
@@ -2716,18 +2867,22 @@ msgid "room"
 msgstr ""
 
 #: internal/handson/audio_mic.go
-msgid "the room first"
+msgid "quiet, please"
 msgstr ""
 
 #: internal/handson/audio_mic.go
-msgid "nothing plays: no bar may cross the line"
+msgid "watch this bar while you clap"
 msgstr ""
 
 #: internal/handson/audio_mic.go
-msgid "counting claps"
+msgid "a clap reaches this line"
 msgstr ""
 
-#: internal/handson/backlight.go
+#: internal/handson/audio_mic.go
+msgid "claps heard"
+msgstr ""
+
+#: internal/handson/backlight.go internal/handson/brightkeys.go
 msgid "Display brightness"
 msgstr ""
 
@@ -2747,7 +2902,7 @@ msgstr ""
 msgid "nothing to dim here: the kernel has no light device for it."
 msgstr ""
 
-#: internal/handson/backlight.go internal/handson/keylight.go
+#: internal/handson/backlight.go internal/handson/brightkeys.go internal/handson/keylight.go
 msgid "no brightness range"
 msgstr ""
 
@@ -2755,11 +2910,11 @@ msgstr ""
 msgid "the light has no brightness range. nothing to step through."
 msgstr ""
 
-#: internal/handson/backlight.go internal/handson/keylight.go
+#: internal/handson/backlight.go internal/handson/brightkeys.go internal/handson/keylight.go
 msgid "the kernel refused the change"
 msgstr ""
 
-#: internal/handson/backlight.go internal/handson/keylight.go
+#: internal/handson/backlight.go internal/handson/brightkeys.go internal/handson/keylight.go
 msgid "the kernel said no to the change. that's a fail."
 msgstr ""
 
@@ -2845,7 +3000,7 @@ msgstr ""
 msgid "%s: levels 0 to %d, now at %d"
 msgstr ""
 
-#: internal/handson/backlight.go internal/handson/charging.go internal/handson/display_native.go internal/handson/extdisplay.go internal/handson/firewire.go internal/handson/input_force.go internal/handson/input_keyboard.go internal/handson/input_trackpad.go internal/handson/keylight.go internal/handson/lid.go internal/handson/lightsensor.go internal/handson/optical.go internal/handson/ports.go internal/handson/ports_sd.go internal/handson/ports_tb.go internal/handson/sleep.go internal/ui/handson.go
+#: internal/handson/backlight.go internal/handson/brightkeys.go internal/handson/charging.go internal/handson/display_native.go internal/handson/extdisplay.go internal/handson/firewire.go internal/handson/input_force.go internal/handson/input_keyboard.go internal/handson/input_trackpad.go internal/handson/keylight.go internal/handson/lid.go internal/handson/lightsensor.go internal/handson/optical.go internal/handson/ports.go internal/handson/ports_sd.go internal/handson/ports_tb.go internal/handson/sleep.go internal/ui/handson.go
 msgid "What I see"
 msgstr ""
 
@@ -3328,6 +3483,226 @@ msgstr ""
 msgid "scanning…"
 msgstr ""
 
+#: internal/handson/brightkeys.go
+msgid "Brightness keys"
+msgstr ""
+
+#: internal/handson/brightkeys.go
+msgid "dim and brighten the screen with its own keys"
+msgstr ""
+
+#: internal/handson/brightkeys.go internal/handson/input_keyboard.go internal/handson/keylight.go
+msgid "a fixture tree has no keys to press."
+msgstr ""
+
+#: internal/handson/brightkeys.go
+msgid "no backlight device"
+msgstr ""
+
+#: internal/handson/brightkeys.go
+msgid "nothing to dim here: the kernel has no backlight for the screen."
+msgstr ""
+
+#: internal/handson/brightkeys.go
+msgid "the backlight has no brightness range. nothing to step through."
+msgstr ""
+
+#: internal/handson/brightkeys.go internal/handson/input_keyboard.go internal/handson/keylight.go
+msgid "couldn't open the keyboard"
+msgstr ""
+
+#: internal/handson/brightkeys.go internal/handson/input_keyboard.go internal/handson/keylight.go
+msgid "I couldn't open the keyboard to listen to it. not tested."
+msgstr ""
+
+#: internal/handson/brightkeys.go internal/handson/keylight.go
+#, c-format
+msgid "%s came as an F-key: hold fn and press it again"
+msgstr ""
+
+#: internal/handson/brightkeys.go internal/handson/keylight.go
+msgid "dimmer"
+msgstr ""
+
+#: internal/handson/brightkeys.go internal/handson/keylight.go
+msgid "brighter"
+msgstr ""
+
+#: internal/handson/brightkeys.go
+msgid "already at the lowest step"
+msgstr ""
+
+#: internal/handson/brightkeys.go internal/handson/keylight.go
+msgid "already at the top"
+msgstr ""
+
+#: internal/handson/brightkeys.go internal/handson/extdisplay.go internal/handson/keylight.go
+#, c-format
+msgid "%s (%s): %s"
+msgstr ""
+
+#: internal/handson/brightkeys.go
+#, c-format
+msgid "%s (%s): the backlight stayed at %d"
+msgstr ""
+
+#: internal/handson/brightkeys.go internal/handson/keylight.go
+#, c-format
+msgid "%s (%s): %d of %d"
+msgstr ""
+
+#: internal/handson/brightkeys.go
+msgid "you saw the screen follow"
+msgstr ""
+
+#: internal/handson/brightkeys.go
+msgid "both keys work; the screen followed"
+msgstr ""
+
+#: internal/handson/brightkeys.go
+msgid "keys and screen agree."
+msgstr ""
+
+#: internal/handson/brightkeys.go
+msgid "you saw the screen stay the same"
+msgstr ""
+
+#: internal/handson/brightkeys.go
+msgid "the backlight moved, the screen didn't"
+msgstr ""
+
+#: internal/handson/brightkeys.go
+msgid "the numbers moved, the screen didn't. that's a fail."
+msgstr ""
+
+#: internal/handson/brightkeys.go internal/handson/keylight.go
+msgid "you said the other key does nothing"
+msgstr ""
+
+#: internal/handson/brightkeys.go internal/handson/keylight.go
+msgid "only one of the keys works"
+msgstr ""
+
+#: internal/handson/brightkeys.go internal/handson/keylight.go
+msgid "one key works, the other doesn't. partial."
+msgstr ""
+
+#: internal/handson/brightkeys.go internal/handson/keylight.go
+msgid "you said the keys do nothing"
+msgstr ""
+
+#: internal/handson/brightkeys.go
+msgid "the keys don't move the backlight"
+msgstr ""
+
+#: internal/handson/brightkeys.go
+msgid "no key reached the backlight. that's a fail."
+msgstr ""
+
+#: internal/handson/brightkeys.go
+msgid "Press F2 a few times (on a Mac set to F-keys first, hold fn)."
+msgstr ""
+
+#: internal/handson/brightkeys.go
+msgid "Now press F1 a few times."
+msgstr ""
+
+#: internal/handson/brightkeys.go
+msgid "Pick what the screen did."
+msgstr ""
+
+#: internal/handson/brightkeys.go
+msgid "Each press moves the backlight a tenth of the way; it never goes dark. It goes back to where it was after."
+msgstr ""
+
+#: internal/handson/brightkeys.go internal/handson/keylight.go
+msgid "brighter, please."
+msgstr ""
+
+#: internal/handson/brightkeys.go
+msgid "nothing moving? F1 and F2, the keys with the little sun on them. some Macs need fn held."
+msgstr ""
+
+#: internal/handson/brightkeys.go internal/handson/keylight.go
+msgid "Nothing to press here."
+msgstr ""
+
+#: internal/handson/brightkeys.go
+msgid "no backlight device found"
+msgstr ""
+
+#: internal/handson/brightkeys.go
+msgid "did the screen follow along?"
+msgstr ""
+
+#: internal/handson/brightkeys.go internal/handson/keylight.go
+msgid "good. now take it down."
+msgstr ""
+
+#: internal/handson/brightkeys.go internal/handson/keylight.go
+msgid "down works. now up."
+msgstr ""
+
+#: internal/handson/brightkeys.go
+#, c-format
+msgid "%s: 0 to %d, now %d; steps of a tenth"
+msgstr ""
+
+#: internal/handson/brightkeys.go
+#, c-format
+msgid "keyboard: %s"
+msgstr ""
+
+#: internal/handson/brightkeys.go
+msgid "both keys arrived and moved the backlight"
+msgstr ""
+
+#: internal/handson/brightkeys.go internal/handson/keylight.go
+#, c-format
+msgid "%s; back to %d, as it was"
+msgstr ""
+
+#: internal/handson/brightkeys.go
+msgid "The screen followed the keys"
+msgstr ""
+
+#: internal/handson/brightkeys.go
+msgid "brighter with F2, dimmer with F1"
+msgstr ""
+
+#: internal/handson/brightkeys.go
+msgid "The keys did nothing to the screen"
+msgstr ""
+
+#: internal/handson/brightkeys.go internal/handson/keylight.go
+msgid "it stayed the same"
+msgstr ""
+
+#: internal/handson/brightkeys.go internal/handson/keylight.go
+msgid "The keys do nothing"
+msgstr ""
+
+#: internal/handson/brightkeys.go
+msgid "I pressed them, with fn too, and the screen didn't change"
+msgstr ""
+
+#: internal/handson/brightkeys.go internal/handson/keylight.go
+msgid "The other key does nothing"
+msgstr ""
+
+#: internal/handson/brightkeys.go
+msgid "I pressed it, with fn too, and the screen didn't change"
+msgstr ""
+
+#: internal/handson/brightkeys.go internal/handson/keylight.go
+#, c-format
+msgid "waiting for %s"
+msgstr ""
+
+#: internal/handson/brightkeys.go
+msgid "backlight"
+msgstr ""
+
 #: internal/handson/camera.go
 msgid "wave at the camera"
 msgstr ""
@@ -3794,7 +4169,7 @@ msgid "name two black-and-white pictures"
 msgstr ""
 
 #: internal/handson/display_native.go
-msgid "A checkerboard"
+msgid "Checkerboard"
 msgstr ""
 
 #: internal/handson/display_native.go
@@ -3806,7 +4181,7 @@ msgid "Horizontal stripes"
 msgstr ""
 
 #: internal/handson/display_native.go
-msgid "A box with an X"
+msgid "Box with an X"
 msgstr ""
 
 #: internal/handson/display_native.go
@@ -4065,11 +4440,6 @@ msgstr ""
 
 #: internal/handson/extdisplay.go
 msgid "any video port counts: Mini DisplayPort, Thunderbolt, HDMI, USB-C. is the monitor on?"
-msgstr ""
-
-#: internal/handson/extdisplay.go internal/handson/keylight.go
-#, c-format
-msgid "%s (%s): %s"
 msgstr ""
 
 #: internal/handson/extdisplay.go
@@ -4732,6 +5102,10 @@ msgid "shift"
 msgstr ""
 
 #: internal/handson/input_keyboard.go
+msgid "sh"
+msgstr ""
+
+#: internal/handson/input_keyboard.go
 msgid "control"
 msgstr ""
 
@@ -4747,8 +5121,12 @@ msgstr ""
 msgid "cmd"
 msgstr ""
 
-#: internal/handson/input_keyboard.go internal/handson/keylight.go
-msgid "a fixture tree has no keys to press."
+#: internal/handson/input_keyboard.go
+msgid "eisu"
+msgstr ""
+
+#: internal/handson/input_keyboard.go
+msgid "kana"
 msgstr ""
 
 #: internal/handson/input_keyboard.go
@@ -4757,14 +5135,6 @@ msgstr ""
 
 #: internal/handson/input_keyboard.go
 msgid "the kernel shows no built-in keyboard at all. that's a fail."
-msgstr ""
-
-#: internal/handson/input_keyboard.go internal/handson/keylight.go
-msgid "couldn't open the keyboard"
-msgstr ""
-
-#: internal/handson/input_keyboard.go internal/handson/keylight.go
-msgid "I couldn't open the keyboard to listen to it. not tested."
 msgstr ""
 
 #: internal/handson/input_keyboard.go
@@ -5144,34 +5514,12 @@ msgid "brighten and dim the keys with their own keys"
 msgstr ""
 
 #: internal/handson/keylight.go
-#, c-format
-msgid "%s came as an F-key: hold fn and press it again"
-msgstr ""
-
-#: internal/handson/keylight.go
-msgid "dimmer"
-msgstr ""
-
-#: internal/handson/keylight.go
-msgid "brighter"
-msgstr ""
-
-#: internal/handson/keylight.go
 msgid "already at the bottom"
-msgstr ""
-
-#: internal/handson/keylight.go
-msgid "already at the top"
 msgstr ""
 
 #: internal/handson/keylight.go
 #, c-format
 msgid "%s (%s): the light stayed at %d"
-msgstr ""
-
-#: internal/handson/keylight.go
-#, c-format
-msgid "%s (%s): %d of %d"
 msgstr ""
 
 #: internal/handson/keylight.go
@@ -5196,22 +5544,6 @@ msgstr ""
 
 #: internal/handson/keylight.go
 msgid "the numbers moved, the light didn't. that's a fail."
-msgstr ""
-
-#: internal/handson/keylight.go
-msgid "you said the other key does nothing"
-msgstr ""
-
-#: internal/handson/keylight.go
-msgid "only one of the keys works"
-msgstr ""
-
-#: internal/handson/keylight.go
-msgid "one key works, the other doesn't. partial."
-msgstr ""
-
-#: internal/handson/keylight.go
-msgid "you said the keys do nothing"
 msgstr ""
 
 #: internal/handson/keylight.go
@@ -5241,27 +5573,11 @@ msgid "Each press moves the light a tenth of the way, as Omarchy does. The light
 msgstr ""
 
 #: internal/handson/keylight.go
-msgid "brighter, please."
-msgstr ""
-
-#: internal/handson/keylight.go
 msgid "nothing moving? the keys with the little light on them. some Macs need fn held."
 msgstr ""
 
 #: internal/handson/keylight.go
-msgid "Nothing to press here."
-msgstr ""
-
-#: internal/handson/keylight.go
 msgid "did the keys glow along?"
-msgstr ""
-
-#: internal/handson/keylight.go
-msgid "good. now take it down."
-msgstr ""
-
-#: internal/handson/keylight.go
-msgid "down works. now up."
 msgstr ""
 
 #: internal/handson/keylight.go
@@ -5271,11 +5587,6 @@ msgstr ""
 
 #: internal/handson/keylight.go
 msgid "both keys arrived and moved the light"
-msgstr ""
-
-#: internal/handson/keylight.go
-#, c-format
-msgid "%s; back to %d, as it was"
 msgstr ""
 
 #: internal/handson/keylight.go
@@ -5292,28 +5603,11 @@ msgid "The keys did nothing to the light"
 msgstr ""
 
 #: internal/handson/keylight.go
-msgid "it stayed the same"
-msgstr ""
-
-#: internal/handson/keylight.go
-msgid "The keys do nothing"
-msgstr ""
-
-#: internal/handson/keylight.go
 msgid "I pressed them, with fn too, and the light didn't move"
 msgstr ""
 
 #: internal/handson/keylight.go
-msgid "The other key does nothing"
-msgstr ""
-
-#: internal/handson/keylight.go
 msgid "I pressed it, with fn too, and the light didn't move"
-msgstr ""
-
-#: internal/handson/keylight.go
-#, c-format
-msgid "waiting for %s"
 msgstr ""
 
 #: internal/handson/keylight.go
@@ -7958,10 +8252,6 @@ msgstr ""
 msgid "·  waiting for Start"
 msgstr ""
 
-#: internal/handson/sleep.go internal/ui/screens.go
-msgid "Start"
-msgstr ""
-
 #: internal/handson/sleep.go
 msgid "sleep now, wake in 20 s"
 msgstr ""
@@ -8853,11 +9143,6 @@ msgstr ""
 #: internal/ui/data.go
 #, c-format
 msgid "%d min %d s"
-msgstr ""
-
-#: internal/ui/data.go internal/ui/handson.go
-#, c-format
-msgid "%d s"
 msgstr ""
 
 #: internal/ui/doze.go
@@ -10057,15 +10342,6 @@ msgstr ""
 
 #: internal/ui/quick.go
 msgid "Dark screen ahead?"
-msgstr ""
-
-#: internal/ui/quick.go
-msgid "starting now…"
-msgstr ""
-
-#: internal/ui/quick.go
-#, c-format
-msgid "starting in %d s"
 msgstr ""
 
 #: internal/ui/quick.go

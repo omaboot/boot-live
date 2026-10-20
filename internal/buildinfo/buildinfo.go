@@ -14,7 +14,7 @@ var Commit = ""
 
 // Omarchy is the Omarchy release the images are built from, reported when the image itself
 // doesn't say (/usr/share/omaboot/omarchy-version, /etc/os-release). Set with -ldflags.
-var Omarchy = "4.0.5"
+var Omarchy = "4.0.6"
 
 // String is the version as shown at the bottom right of every screen, e.g. "0.1.0 dev 4e1c9a2".
 func String() string {

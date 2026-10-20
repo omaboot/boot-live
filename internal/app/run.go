@@ -75,6 +75,7 @@ type Run struct {
 	passEnd   time.Time
 	code      string            // the report's code once sent
 	keep      string            // the copy kept on the stick before a test that sleeps (Keep), "" before one
+	saved     string            // the copy saved to the stick (Save), "" before one
 	offer     *resumeNote       // an unfinished run's copy from this Mac to pick up (findResume), until answered
 	older     []resumeNote      // this Mac's other unsent copies: set aside with the answer
 	other     *resumeNote       // the newest unsent copy of this Mac's from another version: named, never offered
@@ -561,21 +562,42 @@ func (r *Run) Save(f *report.File) (string, error) {
 		return "", fmt.Errorf("the report failed its own check: %w", err)
 	}
 	r.mu.Lock()
-	code, keep := r.code, r.keep
+	code, keep, saved := r.code, r.keep, r.saved
 	r.mu.Unlock()
 	ctx, cancel := context.WithTimeout(r.ctx, 60*time.Second)
 	defer cancel()
-	// the copy kept before a test that sleeps is replaced: overwritten under its own name, or
-	// removed once the report has its code's name
-	name, drop := send.FileName(r.Ident.Identifier, code, time.Now()), keep
-	if code == "" && keep != "" {
-		name = keep
+	// an earlier copy is replaced (the last one saved, else the one kept before a test that
+	// sleeps): overwritten under its own name, or removed once the report has its code's name
+	last := keep
+	if saved != "" {
+		last = saved
+	}
+	name, drop := send.FileName(r.Ident.Identifier, code, time.Now()), last
+	if code == "" && last != "" {
+		name = last
 	}
 	p, err := send.Save(ctx, r.Opt.Root, r.Opt.StickDir, f, name, drop)
 	if err == nil { // the final report: the copy's note goes, so it isn't offered to pick up
+		r.mu.Lock()
+		r.saved = name
+		r.mu.Unlock()
 		r.noteOp(r.noteTicket(), r.dropNote)
 	}
 	return p, err
+}
+
+// Resave writes the report again over a copy saved before it was sent, now under its code's
+// name and as sent (the tester's handle in it), so the stick never holds a sent report that
+// looks unsent. ok is false when no copy was saved.
+func (r *Run) Resave(f *report.File) (p string, ok bool, err error) {
+	r.mu.Lock()
+	saved := r.saved
+	r.mu.Unlock()
+	if saved == "" {
+		return "", false, nil
+	}
+	p, err = r.Save(f)
+	return p, true, err
 }
 
 // Keep saves a copy of the report as it stands before a test that may not wake the Mac, with

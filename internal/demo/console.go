@@ -95,7 +95,8 @@ func (b *Backend) Console(cmd, kind string) {
 
 // Target: the demo pretends to send to DoesItOmarchy.com.
 func (b *Backend) Target() command.Target {
-	return command.Target{URL: "https://doesitomarchy.com", Shown: Site, Production: true, CanSubmit: true}
+	return command.Target{URL: "https://doesitomarchy.com", Shown: Site, Production: true, CanSubmit: true,
+		Bugs: "https://boot.watch", CanSendBug: true, Watch: "https://boot.watch"}
 }
 
 // SendBug pretends to send to OmaBoot?.

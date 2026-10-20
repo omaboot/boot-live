@@ -57,8 +57,8 @@ const (
 
 // patternName is the pattern's name, as the choices offer it (translated).
 func patternName(p int) string {
-	return i18n.S([...]string{i18n.M("A checkerboard"), i18n.M("Vertical stripes"), i18n.M("Horizontal stripes"),
-		i18n.M("A box with an X"), i18n.M("One diagonal line"), i18n.M("Nested boxes")}[p])
+	return i18n.S([...]string{i18n.M("Checkerboard"), i18n.M("Vertical stripes"), i18n.M("Horizontal stripes"),
+		i18n.M("Box with an X"), i18n.M("One diagonal line"), i18n.M("Nested boxes")}[p])
 }
 
 // patternID is the pattern's name in the report (English).

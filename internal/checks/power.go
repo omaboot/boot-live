@@ -109,10 +109,19 @@ func battery(_ context.Context, e *Env) []Result {
 	default:
 		r = part(ev + "; no readable charge level")
 	}
-	if hasCycles && cycles > 0 {
+	// the health (what it holds when full, of what it held new) goes on screen too
+	health, _, hasHealth := Health(e.Root.Int, dir)
+	switch {
+	case hasHealth && hasCycles && cycles > 0:
+		r.Detail = i18n.T("%s %.0f%%, health %d%%, %d cycles", name, level, health, cycles)
+		r.Say = i18n.T("battery reports in. %d%% of what it held new, %d cycles.", health, cycles)
+	case hasHealth:
+		r.Detail = i18n.T("%s %.0f%%, health %d%%", name, level, health)
+		r.Say = i18n.T("battery reports in. %d%% of what it held new.", health)
+	case hasCycles && cycles > 0:
 		r.Detail = i18n.T("%s %.0f%%, %d cycles", name, level, cycles)
 		r.Say = i18n.T("battery reports in. %d cycles and counting.", cycles)
-	} else {
+	default:
 		r.Detail = i18n.T("%s %.0f%%, %s", name, level, strings.ToLower(status))
 		r.Say = i18n.T("battery reports in: %.0f%%.", level)
 	}

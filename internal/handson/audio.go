@@ -2,6 +2,7 @@ package handson
 
 import (
 	"fmt"
+	"math"
 	"math/rand/v2"
 	"slices"
 	"strings"
@@ -22,7 +23,9 @@ import (
 // new count or word; a second miss is a missed challenge. "I hear nothing" is the person's
 // observation that a side is silent. The beeps are a 700 Hz tone (the usual Morse practice pitch);
 // the ▶ cursor goes to "Play it again" each time a sound starts, and the current step says which
-// side they're about.
+// side they're about. Nothing plays by itself: once the output is ready, a screen says what will
+// play and waits for Play (Ready for the headphones, Play anyway for a monitor that never
+// describes itself), then counts down startCount seconds, and the first round plays.
 //
 // audio.speakers, "Built-in speakers" (one result):
 //
@@ -42,18 +45,21 @@ import (
 // them on; Ready comes once the jack control ("Headphone Jack", which is what PipeWire switches
 // outputs by) reports them, as otherwise the beeps would come out of the speakers. A card with no
 // jack control gets Ready straight away. Then the same two counts in
-// the headphones, quieter. With both counted right, 3 beeps play in both ears (by themselves) and
-// one question follows: did the speakers stay quiet while it beeped in the headphones? Macs' Cirrus
-// codecs are known to keep the speakers playing with headphones in (criteria review, 0.5.0). The
-// counts stay the proof that the headphones play; the answer only keeps a pass from hiding the
-// speakers playing too. While the headphones play, the speaker pin's state and the speaker switches
-// are read for the evidence (speakerState).
+// the headphones, quieter. With both counted right, a pause: the person takes the headphones off,
+// keeps them close to the ears and listens to the Mac's speakers, then presses Play; 3 beeps
+// play in both ears of the headphones and one question follows: where did you hear the beeps,
+// only in the headphones or from the Mac's speakers too? (Played straight after the counts, with
+// the headphones still on, it confused testers: 0.9.4 review.) Macs' Cirrus codecs are known to
+// keep the speakers playing with headphones in (criteria review, 0.5.0). The counts stay the
+// proof that the headphones play; the answer only keeps a pass from hiding the speakers playing
+// too. While the headphones play, the speaker pin's state and the speaker switches are read for
+// the evidence (speakerState).
 //
 //   - supported: the jack reported the headphones, both sides were counted right, and the
-//     speakers stayed quiet;
-//   - partial: the speakers played too (observed); one side silent; or both sides right but
-//     the jack never reported them (no jack control: sound comes out, but an installed system
-//     won't switch by itself);
+//     beeps were heard only in the headphones (the speakers stayed quiet);
+//   - partial: the beeps came from the Mac's speakers too (observed); one side silent; or both
+//     sides right but the jack never reported them (no jack control: sound comes out, but an
+//     installed system won't switch by itself);
 //   - failed: nothing heard on either side (observed); the person says they're plugged in and
 //     the jack still hasn't noticed after hpWait, nothing played (observed); or no playback
 //     device (automatic);
@@ -61,9 +67,10 @@ import (
 //
 // audio.display-out, "Audio over HDMI / DisplayPort": right after the external display test,
 // with the monitor still plugged in. The HDMI/DP codec should get the monitor's audio
-// description (its ELD); the beeps play through the HDMI/DP device whose jack control says
-// plugged in (or, when no jack control tells, through all of them at once: only the connected
-// one makes a sound).
+// description (its ELD); once it has, Play (or, after 12 s without one, Play anyway) and the
+// countdown, and the beeps play through the HDMI/DP device whose jack control says plugged in
+// (or, when no jack control tells, through all of them at once: only the connected one makes a
+// sound).
 //
 //   - supported: a sink with a valid ELD and the count heard right through it;
 //   - partial: counted right, but the monitor's ELD never arrived (the tester chose "Play
@@ -122,7 +129,8 @@ const (
 	heardMissed = "missed"  // wrong twice
 	heardNone   = "silent"  // "I hear nothing"
 	heardSkip   = "skipped" // the speakers' word skipped: the beeps decide
-	// the headphones' last question: did the speakers stay quiet?
+	// the headphones' last question, where the beeps were heard: only in the headphones (the
+	// speakers stayed quiet), or from the Mac's speakers too
 	speakersQuiet  = "quiet"
 	speakersPlayed = "played"
 )
@@ -131,7 +139,8 @@ const (
 type listenRound struct {
 	side    int
 	word    bool
-	quiet   bool     // the headphones' question: did the speakers stay quiet? (Play it again: 3 beeps in both ears)
+	quiet   bool     // the headphones' question: where were the 3 beeps in both ears heard?
+	hold    bool     // the quiet round before its beeps: waiting for Play (headphones off, near the ears)
 	n       int      // beeps this try
 	answer  string   // the word this try
 	choices []string // the four words offered
@@ -213,13 +222,15 @@ type listen struct {
 	jackSeen bool // the jack reported headphones at some point
 	jackRead bool // the jack controls have been read once (jack is known)
 	sink     *ELD
-	anyway   bool // the person said "Ready" (headphones), "Play anyway" (no ELD) or "They're out"
+	anyway   bool // the person said "Play anyway" (no ELD) or "They're out"
 	unplug   bool // speakers: headphones were in, and had to come out first
 	polled   float64
 	setups   []string // how the device took the sounds (Player.Setup), each once, for the evidence
 	spkMix   Future[map[string]string]
 	spkState string // headphones: the speakers' pin and switches while the headphones played
 
+	goAt    float64 // when Play (Ready, Play anyway) was pressed: the countdown runs from it (-1: not yet)
+	set     bool    // Play is offered (playable), as of the last step
 	rounds  []*listenRound
 	players []Player
 	playing bool
@@ -231,7 +242,7 @@ type listen struct {
 
 func newListen(k outKind) func(*Env) Run {
 	return func(e *Env) Run {
-		l := &listen{kind: k, nextAt: -1}
+		l := &listen{kind: k, nextAt: -1, goAt: -1}
 		l.mono = k == outSpeakers && e != nil && e.Checks != nil && identify.OneSpeaker(e.Checks.Ident.Identifier)
 		return l
 	}
@@ -283,7 +294,7 @@ func (l *listen) Start(c *Ctx) {
 	}
 	l.found = true
 	if l.kind == outSpeakers {
-		c.Select(-1) // nothing to answer until the first beeps: a stray Enter mustn't skip
+		c.Select(-1) // nothing to answer until Play is offered
 	}
 }
 
@@ -306,6 +317,12 @@ func (l *listen) Step(c *Ctx) {
 	if l.kind == outHeadphones && !l.jackSeen && l.jacks == nil && c.T-l.polled >= 0.5 { // it may see them late
 		l.polled = c.T
 		l.jacks = l.snd.Jacks(l.out.Card)
+	}
+	if l.goAt >= 0 { // the quiet round's Play: the countdown, then its beeps
+		if c.T-l.goAt >= startCount {
+			l.goAt, l.nextAt = -1, c.T
+		}
+		return
 	}
 	if l.playing {
 		if err, done := l.played(); done {
@@ -357,24 +374,25 @@ func fmtScan(s, format string, v *int) bool {
 	return err == nil && n == 1
 }
 
-// waitReady is the part before the rounds.
+// waitReady is the part before the rounds: what the output needs (the headphones out for the
+// speakers, in for the headphones, a sink for display-out), then Play and the countdown.
 func (l *listen) waitReady(c *Ctx) {
+	if l.goAt >= 0 {
+		if c.T-l.goAt >= startCount {
+			l.begin(c)
+		}
+		return
+	}
 	poll := c.T-l.polled >= 0.5
 	if poll {
 		l.polled = c.T
 	}
 	switch l.kind {
-	case outSpeakers:
-		l.unplug = l.unplug || l.jackOn
-		if l.jacks == nil && (!l.jackOn || l.anyway) && c.T >= 0.4 {
-			l.begin(c)
-		} else if poll && l.jacks == nil {
-			l.jacks = l.snd.Jacks(l.out.Card)
+	case outSpeakers, outHeadphones: // the jack, until Play: headphones may go in or out meanwhile
+		if l.kind == outSpeakers {
+			l.unplug = l.unplug || l.jackOn
 		}
-	case outHeadphones: // only once the person says Ready: they're on their ears
-		if l.anyway {
-			l.begin(c)
-		} else if poll && l.jacks == nil {
+		if poll && l.jacks == nil {
 			l.jacks = l.snd.Jacks(l.out.Card)
 		}
 	case outDisplay:
@@ -388,10 +406,37 @@ func (l *listen) waitReady(c *Ctx) {
 				}
 			}
 		}
-		if l.sink != nil && l.jacks == nil || l.anyway {
-			l.begin(c)
+	}
+	if p := l.playable(); p != l.set {
+		l.set = p
+		if p && l.kind != outHeadphones { // the headphones' Ready screen has its own lines
+			l.say, l.sayAt, l.face = i18n.T("the speakers. ready when you are."), c.T, boot.Idle
+			if l.kind == outDisplay {
+				l.say = i18n.T("the monitor takes sound. ready when you are.")
+			}
+			c.Select(0) // Play
 		}
 	}
+}
+
+// playable reports whether Play (Ready) can start the countdown: the jack read and empty, or
+// "They're out" (speakers); the headphones in, or no jack control to ask (headphones); the
+// monitor's ELD in and its device found (display-out, which offers "Play anyway" before).
+func (l *listen) playable() bool {
+	switch l.kind {
+	case outSpeakers:
+		return l.jackRead && (!l.jackOn || l.anyway)
+	case outHeadphones:
+		return l.headphonesIn()
+	}
+	return l.sink != nil && l.jacks == nil
+}
+
+// start is Play (Ready, Play anyway): the countdown begins.
+func (l *listen) start(c *Ctx) {
+	l.goAt = c.T
+	l.say, l.sayAt, l.face = i18n.T("here goes. ears open…"), c.T, boot.Idle
+	c.Select(-1) // nothing to pick while it counts down
 }
 
 // onCard keeps the devices on one card (a sink's).
@@ -408,14 +453,15 @@ func onCard(ps []PCM, card int) []PCM {
 	return out
 }
 
-// begin starts the first round.
+// begin starts the first round, once the countdown is over: it plays straight away.
 func (l *listen) begin(c *Ctx) {
-	l.ready = true
+	l.ready, l.goAt = true, -1
+	side := sideLeft
 	if l.kind == outDisplay {
-		l.next(c, &listenRound{side: sideBoth})
-		return
+		side = sideBoth
 	}
-	l.next(c, &listenRound{side: sideLeft})
+	l.next(c, &listenRound{side: side})
+	l.nextAt = c.T
 }
 
 // next queues a round's first play.
@@ -586,7 +632,7 @@ func sideEN(r *listenRound) string {
 func (l *listen) listening(r *listenRound) string {
 	switch {
 	case r.quiet:
-		return i18n.T("beeps in both ears. and the speakers?")
+		return i18n.T("3 beeps in the headphones. and the Mac?")
 	case r.tries > 1 && r.word:
 		return i18n.T("a different word this time…")
 	case r.tries > 1:
@@ -602,7 +648,7 @@ func (l *listen) listening(r *listenRound) string {
 // question is Boot's line once a sound has played.
 func (l *listen) question() string {
 	if l.cur().quiet {
-		return i18n.T("did the speakers stay quiet?")
+		return i18n.T("where did you hear the beeps?")
 	}
 	if l.cur().word {
 		return i18n.T("which word was it?")
@@ -616,10 +662,13 @@ func (l *listen) question() string {
 func (l *listen) answers() []Action {
 	r := l.cur()
 	var a []Action
+	if r.quiet && (r.hold || l.goAt >= 0) {
+		return []Action{{Label: i18n.T("Play"), Does: i18n.T("3 beeps, after a %d s countdown", int(startCount)), Off: l.goAt >= 0}}
+	}
 	if r.quiet {
-		a = []Action{{Label: i18n.T("Yes, quiet"), Does: i18n.T("only the headphones")},
-			{Label: i18n.T("No, they played too"), Does: i18n.T("speakers beeped too")},
-			{Label: i18n.T("Play it again"), Does: i18n.T("3 beeps in both ears"), Gap: true}}
+		a = []Action{{Label: i18n.T("Only in the headphones"), Does: i18n.T("the Mac's speakers stayed quiet")},
+			{Label: i18n.T("From the Mac's speakers too"), Does: i18n.T("they beeped as well")},
+			{Label: i18n.T("Play it again"), Does: i18n.T("the same 3 beeps once more"), Gap: true}}
 		for i := range a {
 			a[i].Off = l.playing || l.nextAt >= 0
 		}
@@ -653,7 +702,15 @@ func (l *listen) Act(c *Ctx, i int) {
 		return
 	}
 	r := l.cur()
-	if r == nil || l.playing || l.nextAt >= 0 {
+	if r == nil || l.playing || l.nextAt >= 0 || l.goAt >= 0 {
+		return
+	}
+	if r.hold { // Play: the headphones are off, near the ears
+		if i == 0 {
+			r.hold = false
+			r.trail = append(r.trail, "the tester took the headphones off and held them near the ears")
+			l.start(c)
+		}
 		return
 	}
 	choices := l.choices(r)
@@ -663,7 +720,8 @@ func (l *listen) Act(c *Ctx, i int) {
 	switch {
 	case r.quiet && i < choices:
 		r.result = [...]string{speakersQuiet, speakersPlayed}[i]
-		r.trail = append(r.trail, "the tester said "+map[string]string{speakersQuiet: "they stayed quiet", speakersPlayed: "they played too"}[r.result])
+		r.trail = append(r.trail, "3 beeps, "+map[string]string{speakersQuiet: "heard only in the headphones: the speakers stayed quiet",
+			speakersPlayed: "heard from the Mac's speakers too: they played too"}[r.result])
 		l.after(c)
 	case i == choices: // play it again
 		r.trail = append(r.trail, "replayed")
@@ -730,6 +788,9 @@ func (l *listen) headphonesIn() bool { return l.jackRead && (l.jack == "" || l.j
 
 // actReady: the answers before the rounds.
 func (l *listen) actReady(c *Ctx, i int) {
+	if l.goAt >= 0 { // counting down
+		return
+	}
 	if l.kind == outHeadphones && i == 1 && !l.headphonesIn() && c.T >= hpWait { // They're in, nothing happens
 		l.decide(c, Result(l.kind.id(), checks.Failed, Observed,
 			fmt.Sprintf("the person said headphones are plugged in; %s never reported them in %.0f s; nothing played", l.jack, c.T),
@@ -740,17 +801,14 @@ func (l *listen) actReady(c *Ctx, i int) {
 	if i != 0 {
 		return
 	}
-	switch l.kind {
-	case outSpeakers: // "They're out": the jack control may be stuck
+	switch {
+	case l.kind == outSpeakers && l.jackOn && !l.anyway: // "They're out": the jack control may be stuck
 		l.anyway = true
-	case outHeadphones: // Ready, once the jack sees them (or has no control to tell)
-		if l.headphonesIn() {
-			l.anyway = true
-		}
-	case outDisplay:
-		if c.T >= 12 {
-			l.anyway = true
-		}
+	case l.playable(): // Play; the headphones' Ready, once the jack sees them (or has no control to tell)
+		l.start(c)
+	case l.kind == outDisplay && c.T >= 12: // Play anyway: no ELD
+		l.anyway = true
+		l.start(c)
 	}
 }
 
@@ -767,11 +825,13 @@ func (l *listen) after(c *Ctx) {
 		l.next(c, &listenRound{side: sideBoth, word: true})
 		return
 	case l.kind == outHeadphones && len(rs) == 2 && rs[0].result == heardOK && rs[1].result == heardOK:
-		l.say, l.sayAt, l.face = i18n.T("both ears check out. one question about the speakers."), c.T, boot.Pleased
-		// its 3 beeps in both ears play by themselves, like every round's, so there's something to
-		// listen to the speakers through; play puts the cursor on "Play it
-		// again", not a ready yes
-		l.next(c, &listenRound{side: sideBoth, quiet: true})
+		l.say, l.sayAt, l.face = i18n.T("both ears check out. now the Mac's own speakers."), c.T, boot.Pleased
+		// its 3 beeps wait for Play: the headphones come off first, kept near the ears, so the Mac's
+		// speakers can be heard if they play too; play then puts the cursor on "Play it again",
+		// not a ready answer
+		l.next(c, &listenRound{side: sideBoth, quiet: true, hold: true})
+		l.nextAt = -1
+		c.Select(0) // Play
 		return
 	}
 	var results []string
@@ -1002,7 +1062,7 @@ func (l *listen) steps() ([]string, int) {
 		}
 	case outHeadphones:
 		s = []string{i18n.T("Plug in headphones and put them on."), i18n.T("Count the beeps in your left ear."),
-			i18n.T("Count the beeps in your right ear."), i18n.T("Listen to the Mac's speakers while the headphones beep.")}
+			i18n.T("Count the beeps in your right ear."), i18n.T("Take the headphones off, keep them close to your ears, and listen to the Mac's speakers.")}
 		at++
 	case outDisplay:
 		s = []string{i18n.T("Keep the monitor plugged in, its speakers on."), i18n.T("Count the beeps from the monitor.")}
@@ -1010,6 +1070,9 @@ func (l *listen) steps() ([]string, int) {
 	}
 	if !l.ready {
 		at = 0
+		if l.unplug && (!l.jackOn || l.anyway) || l.goAt >= 0 && l.kind != outSpeakers { // the first count is next
+			at = 1
+		}
 	}
 	return s, max(0, at)
 }
@@ -1017,13 +1080,15 @@ func (l *listen) steps() ([]string, int) {
 func (l *listen) View(c *Ctx) Screen {
 	s := Screen{Say: l.say, SayAt: l.sayAt, Face: l.face, OutTitle: i18n.T("What I play")}
 	s.Steps, s.Step = l.steps()
-	switch l.kind {
-	case outSpeakers:
-		s.Happens = i18n.T("Beeps on one side at a time, then a word.")
-	case outHeadphones:
-		s.Happens = i18n.T("Quiet beeps, one ear at a time, then a question.")
-	case outDisplay:
-		s.Happens = i18n.T("Once the monitor says it takes sound (its ELD), beeps go over the cable.")
+	switch {
+	case l.kind == outSpeakers && l.mono:
+		s.Happens = i18n.T("2 to 5 beeps from the speaker, sent left, then right: count them. Then a word, said twice: pick it out of four.")
+	case l.kind == outSpeakers:
+		s.Happens = i18n.T("2 to 5 beeps from the left speaker, then from the right: count them. Then a word, said twice: pick it out of four.")
+	case l.kind == outHeadphones:
+		s.Happens = i18n.T("Quiet beeps, one ear at a time: count them. Then 3 beeps with the headphones off, held near your ears: where did you hear them?")
+	case l.kind == outDisplay:
+		s.Happens = i18n.T("Once the monitor says it takes sound (its ELD), 2 to 5 beeps go over the cable: count them.")
 	}
 	if !l.found {
 		if l.gone != "" {
@@ -1038,11 +1103,16 @@ func (l *listen) View(c *Ctx) Screen {
 	busy := l.playing || l.nextAt >= 0
 	s.Anim = l.anim(r.side, l.playing, r.quiet)
 	switch {
+	case l.goAt >= 0: // the quiet round's countdown
+		s.Anim = l.counting(s.Anim)
+		s.Waiting = "·  " + i18n.T("starting in %d s", int(math.Ceil(startCount-(c.T-l.goAt))))
+	case r.hold:
+		s.Waiting = "·  " + i18n.T("waiting for you to press %s", i18n.T("Play"))
 	case busy:
 		s.Waiting = "·  " + i18n.T("playing")
 	case r.quiet:
 		s.Waiting = "·  " + i18n.T("waiting for your answer")
-		s.Hint = i18n.T("not sure? take the headphones off, Play it again, and listen to the Mac itself.")
+		s.Hint = i18n.T("not sure? Play it again, and listen close to the Mac itself.")
 	case r.word:
 		s.Waiting = "·  " + i18n.T("waiting for the word")
 		s.Hint = i18n.T("missed it? Play it again says the same word once more.")
@@ -1057,7 +1127,12 @@ func (l *listen) View(c *Ctx) Screen {
 	if r.result != "" {
 		s.Live = append(s.Live, l.roundLine(r))
 	}
-	if busy { // never the count: only where it plays
+	switch {
+	case l.goAt >= 0:
+		s.Live = append(s.Live, Wait(i18n.T("about to play")))
+	case r.hold:
+		s.Live = append(s.Live, Wait(i18n.T("ready: nothing plays until you press %s", i18n.T("Play"))))
+	case busy: // never the count: only where it plays
 		what := Wait(i18n.T("playing %s", where(r.side, l.kind, l.mono)))
 		switch {
 		case !l.playing:
@@ -1092,6 +1167,14 @@ func (l *listen) anim(side int, playing, quiet bool) Panel {
 	return speakersArt(side, playing, false)
 }
 
+// counting is the band's picture p with the countdown since Play.
+func (l *listen) counting(p Panel) Panel {
+	if l.kind == outHeadphones {
+		return hpCounting(p, l.goAt)
+	}
+	return counting(p, l.goAt)
+}
+
 // jackState is the headphone jack for the picture: "" no jack control, "in", "out".
 func (l *listen) jackState() string {
 	switch {
@@ -1110,11 +1193,7 @@ func (l *listen) devLines() []Line {
 		if l.sink != nil {
 			out = append(out, Fact(i18n.T("%s: %s over %s", l.sink.File, orUnnamed(l.sink.Monitor), orUnnamed(l.sink.Connected))))
 		}
-		var ds []string
-		for _, p := range l.targets {
-			ds = append(ds, p.HW())
-		}
-		return append(out, Fact(i18n.T("playing through %s", strings.Join(ds, ", "))))
+		return append(out, Fact(i18n.T("playing through %s", hwList(l.targets))))
 	}
 	out := []Line{Fact(i18n.T("%s: %s", l.out.HW(), l.out.Name))}
 	if l.kind == outHeadphones {
@@ -1128,6 +1207,15 @@ func (l *listen) devLines() []Line {
 		}
 	}
 	return out
+}
+
+// hwList is the devices' ALSA names, "hw:0,3, hw:0,7".
+func hwList(ps []PCM) string {
+	var ds []string
+	for _, p := range ps {
+		ds = append(ds, p.HW())
+	}
+	return strings.Join(ds, ", ")
 }
 
 // roundLine is a finished listenRound under "What I see".
@@ -1151,13 +1239,16 @@ func (l *listen) roundLine(r *listenRound) Line {
 	return Gone(i18n.T("%s: missed twice", what))
 }
 
-// viewReady is the screen before the rounds.
+// viewReady is the screen before the rounds: what the output needs, then Play and the
+// countdown (viewPlay).
 func (l *listen) viewReady(c *Ctx, s Screen) Screen {
+	counting := l.goAt >= 0
 	switch l.kind {
 	case outSpeakers:
 		s.Live = l.devLines()
-		s.Anim = speakersArt(sideBoth, false, l.jackOn)
-		if l.jackOn {
+		s.Anim = speakersArt(sideBoth, false, l.jackOn && !l.anyway)
+		switch {
+		case l.jackOn && !l.anyway:
 			s.Anim = headphonesArt(sideBoth, false, "in", false, hpUnplug) // take them out: the plug coming out
 			s.Say, s.SayAt = i18n.T("headphones are in. the speakers stay quiet while they are."), 0.2
 			s.Hint = i18n.T("nothing in the jack? it may be stuck: They're out goes on anyway.")
@@ -1165,51 +1256,87 @@ func (l *listen) viewReady(c *Ctx, s Screen) Screen {
 			s.Live = append(s.Live, Fact(i18n.T("%s: plugged in", l.jack)), Wait(i18n.T("waiting for the jack to empty")))
 			s.Actions = []Action{{Label: i18n.T("They're out"), Does: i18n.T("nothing is plugged in; go on")}}
 			return s
+		case !l.playable():
+			s.Waiting = "·  " + i18n.T("getting ready")
+			s.Live = append(s.Live, Wait(i18n.T("getting ready")))
+			return s
 		}
-		s.Waiting = "·  " + i18n.T("getting ready")
-		s.Live = append(s.Live, Wait(i18n.T("getting ready")))
+		return l.viewPlay(c, s, i18n.T("Play"), i18n.T("the beeps start after a %d s countdown", int(startCount)))
 	case outHeadphones: // nothing plays until the person says Ready
-		s.Say, s.SayAt = i18n.T("waiting for the jack to notice some headphones."), 0.2
-		if l.headphonesIn() {
-			s.Say = i18n.T("there they are. ready when you are.")
+		if !counting {
+			s.Say, s.SayAt = i18n.T("waiting for the jack to notice some headphones."), 0.2
+			if l.headphonesIn() {
+				s.Say = i18n.T("there they are. ready when you are.")
+			}
+			s.Hint = i18n.T("still waiting? push the plug all the way in: the jack has to notice it.")
 		}
-		s.Hint = i18n.T("still waiting? push the plug all the way in: the jack has to notice it.")
 		motion := hpReach // plug them in: the plug reaching for the jack
 		if l.headphonesIn() {
 			motion = hpStill
 		}
 		s.Anim = headphonesArt(sideBoth, false, l.jackState(), false, motion)
 		s.Live = l.devLines()
-		ready := i18n.T("they're on: play the beeps")
+		ready := i18n.T("they're on: beeps after a %d s countdown", int(startCount))
 		switch { // devLines shows the jack's state
 		case !l.jackRead:
 			ready = i18n.T("checking the headphone jack")
 		case l.jack != "" && !l.jackOn:
 			ready = i18n.T("waiting for the jack to notice the headphones")
 		}
+		if counting || l.headphonesIn() {
+			return l.viewPlay(c, s, i18n.T("Ready"), ready)
+		}
 		s.Waiting = "·  " + i18n.T("waiting for the headphones")
-		s.Actions = []Action{{Label: i18n.T("Ready"), Does: ready, Off: !l.headphonesIn()}}
-		if !l.headphonesIn() && c.T >= hpWait {
+		s.Actions = []Action{{Label: i18n.T("Ready"), Does: ready, Off: true}}
+		if c.T >= hpWait {
 			s.Actions = append(s.Actions, Action{Label: i18n.T("They're in, nothing happens"),
 				Does: i18n.T("the jack doesn't notice them: record that, play nothing")})
 		}
 	case outDisplay:
-		s.Say, s.SayAt = i18n.T("the monitor's speakers next. waiting for it to say it takes sound."), 0.2
-		s.Hint = i18n.T("some monitors only describe their sound once their speakers are on. Play anyway tries regardless.")
 		s.Anim = monitorArt("", false, false)
 		for _, k := range externalConnectors(c.IO) {
 			if k.status == "connected" {
 				s.Live = append(s.Live, Fact(i18n.T("%s (%s): connected", k.name, portKind(k.name))))
 			}
 		}
+		if l.playable() {
+			s.Anim = monitorArt(l.sink.Monitor, true, false)
+			s.Live = append(s.Live, l.devLines()...)
+			return l.viewPlay(c, s, i18n.T("Play"), i18n.T("beeps from the monitor after a %d s countdown", int(startCount)))
+		}
+		if !counting {
+			s.Say, s.SayAt = i18n.T("the monitor's speakers next. waiting for it to say it takes sound."), 0.2
+			s.Hint = i18n.T("some monitors only describe their sound once their speakers are on. Play anyway tries regardless.")
+		}
 		for _, e := range elds(c.IO) {
 			if e.Present && !e.Valid {
 				s.Live = append(s.Live, Gone(i18n.T("%s: a monitor, but no audio description yet", e.File)))
 			}
 		}
+		does := i18n.T("it has speakers; send the beeps to every HDMI/DP output")
+		if counting { // Play anyway was pressed
+			s.Live = append(s.Live, Fact(i18n.T("playing through %s", hwList(l.targets))))
+			return l.viewPlay(c, s, i18n.T("Play anyway"), does)
+		}
 		s.Live = append(s.Live, Wait(i18n.T("waiting for a monitor that takes sound (its ELD)")))
 		s.Waiting = "·  " + i18n.T("waiting for the monitor")
-		s.Actions = []Action{{Label: i18n.T("Play anyway"), Does: i18n.T("it has speakers; send the beeps to every HDMI/DP output"), Off: c.T < 12}}
+		s.Actions = []Action{{Label: i18n.T("Play anyway"), Does: does, Off: c.T < 12}}
 	}
+	return s
+}
+
+// viewPlay is the ready screen's end: Play (label) waiting to be pressed, then greyed while the
+// countdown runs under the band's picture.
+func (l *listen) viewPlay(c *Ctx, s Screen, label, does string) Screen {
+	if l.goAt >= 0 {
+		s.Anim = l.counting(s.Anim)
+		s.Waiting = "·  " + i18n.T("starting in %d s", int(math.Ceil(startCount-(c.T-l.goAt))))
+		s.Live = append(s.Live, Wait(i18n.T("about to play")))
+		s.Actions = []Action{{Label: label, Does: does, Off: true}}
+		return s
+	}
+	s.Waiting = "·  " + i18n.T("waiting for you to press %s", label)
+	s.Live = append(s.Live, Wait(i18n.T("ready: nothing plays until you press %s", label)))
+	s.Actions = []Action{{Label: label, Does: does}}
 	return s
 }

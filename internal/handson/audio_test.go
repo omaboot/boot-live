@@ -459,7 +459,7 @@ type answerer func(r *listenRound) int
 
 func rightAnswer(r *listenRound) int {
 	if r.quiet {
-		return 0 // the speakers stayed quiet
+		return 0 // only in the headphones: the speakers stayed quiet
 	}
 	if r.word {
 		for i, w := range r.choices {
@@ -473,7 +473,7 @@ func rightAnswer(r *listenRound) int {
 
 func wrongAnswer(r *listenRound) int {
 	if r.quiet {
-		return 1 // the speakers played too
+		return 1 // from the Mac's speakers too
 	}
 	if r.word {
 		return (rightAnswer(r) + 1) % len(r.choices)
@@ -490,9 +490,10 @@ func nothingAnswer(r *listenRound) int {
 
 func skipAnswer(*listenRound) int { return -1 } // "Skip this one"
 
-// listenRun plays a listening test on the demo Mac (plus script), answering each round with
-// the answerer for its index (the last one for any after), picks at given times (-1 skip,
-// -2 stop the screen), and returns its outcome and the Fake.
+// listenRun plays a listening test on the demo Mac (plus script), pressing Play whenever it's
+// offered (not the headphones' Ready: a pick), answering each round with the answerer for its
+// index (the last one for any after), picks at given times (-1 skip, -2 stop the screen), and
+// returns its outcome and the Fake.
 func listenRun(t *testing.T, id string, until float64, script func(*Fake), ans []answerer, picks map[float64]int) (*Outcome, *Fake) {
 	t.Helper()
 	s, _ := Lookup(id)
@@ -522,7 +523,14 @@ func listenRun(t *testing.T, id string, until float64, script func(*Fake), ans [
 		if o := r.Outcome(); o != nil {
 			return o, f
 		}
-		if l, ok := r.Run.(*listen); ok && l.ready && !l.playing && l.nextAt < 0 && len(l.rounds) > 0 {
+		l, ok := r.Run.(*listen)
+		switch {
+		case !ok || l.goAt >= 0: // counting down
+		case !l.ready && l.set && l.kind != outHeadphones:
+			r.Act(0) // Play
+		case l.ready && !l.playing && l.nextAt < 0 && len(l.rounds) > 0 && l.cur().hold:
+			r.Act(0) // Play: the headphones off, near the ears
+		case l.ready && !l.playing && l.nextAt < 0 && len(l.rounds) > 0:
 			if cur := l.cur(); cur.result == "" {
 				if a := ans[min(len(l.rounds), len(ans))-1](cur); a < 0 {
 					r.Skip()
@@ -559,7 +567,7 @@ func TestListenRuns(t *testing.T) {
 			f.SetAt(4, "alsa:card0:Headphone Jack", "off")
 		}, []answerer{right}, nil, "supported/challenge"},
 		{"headphones", "audio.headphone", nil, []answerer{right}, map[float64]int{4: 0}, "supported/challenge"},
-		// false-pass route: both ears counted right, but the speakers kept playing (Cirrus codecs)
+		// false-pass route: both ears counted right, but the beeps came from the speakers too (Cirrus codecs)
 		{"headphones, the speakers played too", "audio.headphone", nil, []answerer{right, right, wrong}, map[float64]int{4: 0}, "partial/observed"},
 		// Ready waits for the jack: pressed too early it does nothing
 		{"headphones, Ready before the jack saw them", "audio.headphone", nil, []answerer{right}, map[float64]int{0.5: 0, 4: 0}, "supported/challenge"},
@@ -571,6 +579,7 @@ func TestListenRuns(t *testing.T) {
 		{"headphones skipped", "audio.headphone", nil, nil, map[float64]int{1: -1}, "not_tested/no-equipment"},
 		{"display out", "audio.display-out", nil, []answerer{right}, nil, "supported/challenge"},
 		{"display out silent", "audio.display-out", nil, []answerer{nothing}, nil, "failed/observed"},
+		// Play anyway (after 12 s without an ELD) counts down like Play
 		{"display out, no ELD", "audio.display-out", func(f *Fake) { f.script = nil }, []answerer{right}, map[float64]int{13: 0}, "partial/challenge"},
 		{"display out, no HDMI device", "audio.display-out", func(f *Fake) {
 			f.Set("/proc/asound/pcm", "00-00: CS4206 Analog : CS4206 Analog : playback 1 : capture 1")
@@ -597,23 +606,29 @@ func TestListenRuns(t *testing.T) {
 	// the speaker pin's state while the headphones played is in the evidence
 	o, f := listenRun(t, "audio.headphone", 60, nil, []answerer{right}, map[float64]int{4: 0})
 	if ev := o.Results[0].Evidence; !strings.Contains(ev, "speaker pin 0x10 pin-ctls 0x00 (output off)") ||
-		!strings.Contains(ev, "Speaker Playback Switch on,on") || !strings.Contains(ev, "they stayed quiet") {
+		!strings.Contains(ev, "Speaker Playback Switch on,on") || !strings.Contains(ev, "the speakers stayed quiet") {
 		t.Errorf("headphones evidence: %s", ev)
 	}
-	// the speakers' question plays its 3 beeps by itself: left, right, then both ears
+	// the speakers' question plays its 3 beeps once Play is pressed: left, right, then both ears
 	if n := len(strings.Split(strings.TrimSpace(f.Read("alsa:played")), "\n")); n != 3 {
 		t.Errorf("headphones played %d times, want 3:\n%s", n, f.Read("alsa:played"))
 	}
+	// nothing plays before Play and its countdown
+	_, f = listenRun(t, "audio.speakers", 60, nil, nil, map[float64]int{startCount - 0.2: -2})
+	if f.Read("alsa:played") != "" {
+		t.Errorf("played before the countdown was over: %q", f.Read("alsa:played"))
+	}
 	// leaving mid-beep stops the sound
-	_, f = listenRun(t, "audio.speakers", 60, nil, nil, map[float64]int{1.5: -2})
+	_, f = listenRun(t, "audio.speakers", 60, nil, nil, map[float64]int{startCount + 0.6: -2})
 	if n, _ := f.Int("alsa:open"); n != 0 || f.Read("alsa:played") == "" {
 		t.Errorf("stopped mid-play: %d open, played %q", n, f.Read("alsa:played"))
 	}
 }
 
-// micRun plays the microphone test on the demo Mac (plus script); claps gives how many claps
-// the person makes when asked for n (from 1 s after the ask, 0.4 s apart; 0 for none), picks
-// are answers at given times. It returns the outcome and the Fake.
+// micRun plays the microphone test on the demo Mac (plus script), pressing Start straight
+// away; claps gives how many claps the person makes when asked for n (from 1 s after the ask,
+// 0.4 s apart; 0 for none), picks are answers at given times. It returns the outcome and the
+// Fake.
 func micRun(t *testing.T, script func(*Fake), claps func(n int) int, picks map[float64]int) (*Outcome, *Fake) {
 	t.Helper()
 	s, _ := Lookup("audio.microphone")
@@ -636,6 +651,9 @@ func micRun(t *testing.T, script func(*Fake), claps func(n int) int, picks map[f
 		r.Step(tt)
 		if o := r.Outcome(); o != nil {
 			return o, f
+		}
+		if m.phase == micStart && m.goAt < 0 {
+			r.Act(0) // Start
 		}
 		if m.phase == micClap && m.tries > asked && claps != nil {
 			asked = m.tries
@@ -694,13 +712,14 @@ func TestMicRuns(t *testing.T) {
 		// false-pass routes: a level that rises without the tone or the claps is never a pass
 		{"noise burst during the notes, no claps", func(f *Fake) {
 			noLoop(f)
-			f.SetAt(2, "alsa:mic", "-20")
-			f.SetAt(4, "alsa:mic", "-58")
+			f.SetAt(5, "alsa:mic", "-20")
+			f.SetAt(7, "alsa:mic", "-58")
 		}, nil, nil, "partial/automatic"},
 		{"a bump during the claps", noLoop, func(int) int { return 1 }, nil, "partial/automatic"},
 		{"too many claps", noLoop, func(n int) int { return n + 1 }, nil, "partial/automatic"},
 		{"digital silence", func(f *Fake) { f.Set("alsa:mic", "flat") }, right, nil, "failed/automatic"},
-		{"nothing moved", noLoop, nil, map[float64]int{22: 1}, "failed/observed"},
+		// the claps missed twice, and the tester says the level bar stayed put
+		{"the bar stayed put", noLoop, nil, map[float64]int{26: 1}, "failed/observed"},
 		{"no capture device", func(f *Fake) {
 			f.Set("/proc/asound/pcm", "00-00: CS4206 Analog : CS4206 Analog : playback 1")
 		}, nil, nil, "failed/automatic"},

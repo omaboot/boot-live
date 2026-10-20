@@ -44,7 +44,7 @@ type Env interface {
 	Font(px int) error
 	// Frames is the frame timing (dev).
 	Frames() Frames
-	// Target is where Submit sends (dev).
+	// Target is where reports, bug reports and the network tests go (dev).
 	Target() Target
 	// Record notes a redo or change command for the report (read-only ones never are).
 	Record(command string, kind Kind)
@@ -134,12 +134,18 @@ type Frames struct {
 	W, H     int
 }
 
-// Target is where Submit sends.
+// Target is where reports, bug reports and the network tests go.
 type Target struct {
 	URL        string
 	Shown      string // as the screens name it
 	Production bool   // DoesItOmarchy.com itself: a marked run can't go there
 	CanSubmit  bool
+	// Bugs is where bug reports go, CanSendBug whether the image has their upload key; Watch is
+	// the bootwatchd the network tests measure against. A new endpoint in target.conf belongs
+	// here too, so the console's target lists every place the image talks to.
+	Bugs       string
+	CanSendBug bool
+	Watch      string
 }
 
 // Catalog is the catalog snapshot as catalog shows it.

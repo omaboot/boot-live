@@ -74,7 +74,7 @@ type Backend interface {
 	Rerun(id string) (string, error)
 	Force(id, status string) error // dev: a result set by hand (pass, partial, fail, skip)
 	Console(command, kind string)  // a redo or change command, for the report's console entries
-	Target() command.Target        // where Submit sends
+	Target() command.Target        // where reports, bug reports and the network tests go
 	Catalog() command.Catalog      // the catalog snapshot in use, for catalog (CatalogOf)
 
 	// Boot's sounds (sound.go): Sound plays one (a WAV, internal/sounds) on the Mac's own
