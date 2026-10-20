@@ -171,3 +171,67 @@ func TestMerge(t *testing.T) {
 		}
 	}
 }
+
+// The brightness keys pass only when F2 and F1 each moved the backlight and the tester saw the
+// screen follow; at full brightness they ask for dimmer first; repeated presses that did the same
+// fold in the evidence; the backlight goes back to where it was.
+func TestBrightKeys(t *testing.T) {
+	const id, bl = "display.brightness.keys", "/sys/class/backlight/intel_backlight/brightness"
+	both := keyPresses(keyBrightnessUp, 2, 2.6, 3.2)
+	cases := []struct {
+		name      string
+		top       bool // the backlight starts at the top
+		script    func(*Fake)
+		picks     map[float64]int
+		want      string
+		downFirst bool
+		evidence  string
+	}{
+		{"both ways, the screen followed", false, func(f *Fake) { both(f); keyPresses(keyBrightnessDown, 5, 5.5)(f) }, map[float64]int{9: 0}, "supported/observed", false, ""},
+		{"both ways, the screen stayed", false, func(f *Fake) { both(f); keyPresses(keyBrightnessDown, 5, 5.5)(f) }, map[float64]int{9: 1}, "failed/observed", false, ""},
+		{"at the top: brighter three times, then dimmer, then brighter", true, func(f *Fake) {
+			keyPresses(keyBrightnessUp, 1, 1.5, 2)(f)
+			keyPresses(keyBrightnessDown, 3)(f)
+			keyPresses(keyBrightnessUp, 4)(f)
+		}, map[float64]int{9: 0}, "supported/observed", true, "F2: already at 4882 ×3"},
+		{"only dimmer", true, keyPresses(keyBrightnessDown, 2, 3), map[float64]int{16: 0}, "partial/observed", true, ""},
+		{"nothing pressed, no answer", false, nil, nil, "undecided", false, ""},
+	}
+	for _, c := range cases {
+		s, _ := Lookup(id)
+		f := NewFake()
+		DemoMac(f)
+		start := "3400"
+		if c.top {
+			start = "4882"
+			f.Set(bl, start)
+		}
+		if c.script != nil {
+			c.script(f)
+		}
+		r := Begin(s, &Env{}, f)
+		if k, ok := r.Run.(*brightKeys); ok && k.downFirst != c.downFirst {
+			t.Errorf("%s: dimmer first %v, want %v", c.name, k.downFirst, c.downFirst)
+		}
+		var o *Outcome
+		for tt := 0.0; tt <= 25 && o == nil; tt += 0.1 {
+			for at, a := range c.picks {
+				if at > tt-0.1 && at <= tt {
+					r.Act(a)
+				}
+			}
+			r.Step(tt)
+			o = r.Outcome()
+		}
+		r.Stop()
+		if got := status(o); got != c.want {
+			t.Errorf("%s: %s, want %s", c.name, got, c.want)
+		}
+		if c.evidence != "" && (o == nil || !strings.Contains(o.Results[0].Evidence, c.evidence)) {
+			t.Errorf("%s: the evidence doesn't say %q", c.name, c.evidence)
+		}
+		if got := f.Read(bl); got != start {
+			t.Errorf("%s: the backlight left at %s, want %s", c.name, got, start)
+		}
+	}
+}

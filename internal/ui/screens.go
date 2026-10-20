@@ -85,8 +85,12 @@ type State struct {
 	SwitchSel  int
 
 	HelloSel int
-	PlanOff  bool // the run plan was ignored at Hello, or stopped there (runplan.go)
-	PlanWait bool // the run plan waits for the console's plan run (start: console)
+	// Hello's keyboard layout picker (keyboard.go): open, its cursor, the other layouts showing
+	// instead of the main ones, and its rows per column as last drawn (for ←→)
+	Kbd, KbdOther   bool
+	KbdSel, KbdRows int
+	PlanOff         bool // the run plan was ignored at Hello, or stopped there (runplan.go)
+	PlanWait        bool // the run plan waits for the console's plan run (start: console)
 
 	// Finish's Send a bug report (PF-13): its form open, sending (saving first), and how it went:
 	// the code, or that it waits on external storage, or why it didn't go.
@@ -201,11 +205,17 @@ func spinner(t float64) string { return string("|/-\\"[int(math.Floor(t*8))%4]) 
 
 func blinkOn(t float64) bool { return int(math.Floor(t*2))%2 == 1 }
 
+// omarchy is the header's Omarchy version, with the running kernel in brackets ("Omarchy 4.0.6
+// (7.2.8-9-omarchy)"); header shortens the kernel where the Mac's name wouldn't fit.
 func omarchy(f *Facts) string {
-	if f.Omarchy == "" {
-		return i18n.T("Omarchy")
+	s := i18n.T("Omarchy")
+	if f.Omarchy != "" {
+		s = i18n.T("Omarchy %s", f.Omarchy)
 	}
-	return i18n.T("Omarchy %s", f.Omarchy)
+	if f.Kernel != "" {
+		s += " (" + f.Kernel + ")"
+	}
+	return s
 }
 
 // viaUp is the header's "online" word: the phone by its name ("iPhone up").
@@ -352,7 +362,8 @@ func helloActions(o *Options, f *Facts) []Action {
 func drawHello(gr *g.Grid, o *Options, st *State, f *Facts) Box {
 	t := st.T
 	fatal := f.Fatal != ""
-	b := frame(gr, o, st, f.Mac, frameSpec{title: i18n.T("Hello"), step: 0, ho: st.HO, right: omarchy(f) + "    " + i18n.T("starting"), keys: Keys{Esc: true}})
+	b := frame(gr, o, st, f.Mac, frameSpec{title: i18n.T("Hello"), step: 0, ho: st.HO, right: omarchy(f) + "    " + i18n.T("starting"),
+		keys: Keys{Esc: true, EscClose: st.Kbd, Back: st.Kbd && st.KbdOther}})
 	l := layout(b, o.Plain)
 	if o.Plain {
 		gr.Put(l.FieldX, l.BandTop, i18n.T("Test this Mac"), g.WHT)
@@ -392,27 +403,43 @@ func drawHello(gr *g.Grid, o *Options, st *State, f *Facts) Box {
 		at         float64
 		mark, text string
 		mc         g.Color
+		kbd        bool // the keyboard's: Tab's cap after it
+	}
+	kbd, kbdBad := kbdLine(f)
+	kbdMark := g.BVIO
+	if kbdBad {
+		kbdMark = g.YEL
 	}
 	// whole lines, one after another (no typing); the system and the image
-	// above the console
+	// above the console, the keyboard layout under it
 	setup := []setupLine{
-		{helloDisksAt, "■", f.DisksLine, g.BVIO},
-		{1.6, "■", f.SystemLine, g.BVIO},
-		{1.8, "■", f.ImageLine, g.BVIO},
-		{2.0, "■", console, g.BVIO},
-		{2.2, "■", f.SnapshotLine, g.BVIO},
+		{helloDisksAt, "■", f.DisksLine, g.BVIO, false},
+		{1.6, "■", f.SystemLine, g.BVIO, false},
+		{1.8, "■", f.ImageLine, g.BVIO, false},
+		{2.0, "■", console, g.BVIO, false},
+		{2.1, "■", kbd, kbdMark, true},
+		{2.2, "■", f.SnapshotLine, g.BVIO, false},
 	}
 	if fatal {
-		setup = []setupLine{{1.4, "×", f.Fatal, g.BRED}}
+		setup = []setupLine{{1.4, "×", f.Fatal, g.BRED, false}}
+	}
+	x, y := b.X+1, l.ContentY
+	if st.Kbd && !fatal { // the picker in the setup box's place
+		drawKbd(gr, st, f, x, y, b.W-2, l.Bottom-y+1)
+		return b
 	}
 	// the setup lines in a terminal-like window, like a test's Output box:
 	// as wide as its longest line, as tall as all of them, so it never moves as they come
-	x, y := b.X+1, l.ContentY
+	change := i18n.T("change")
 	n, ww := 0, 0
 	for _, s := range setup {
 		if s.text != "" {
 			n++
-			ww = max(ww, width(s.text)+2)
+			w := width(s.text) + 2
+			if s.kbd {
+				w += 3 + width(kbdCap) + 1 + width(change)
+			}
+			ww = max(ww, w)
 		}
 	}
 	bw := min(b.W-2, max(ww+4, 48))
@@ -423,7 +450,11 @@ func drawHello(gr *g.Grid, o *Options, st *State, f *Facts) Box {
 		for _, s := range setup {
 			if t > s.at && s.text != "" {
 				gr.Put(x+2, ly, s.mark, s.mc)
-				gr.Put(x+4, ly, cut(s.text, bw-6), g.GRY)
+				end := gr.Put(x+4, ly, cut(s.text, bw-6), g.GRY)
+				if s.kbd && t > helloReady { // Tab changes it once the keys work
+					gr.PutBG(end+3, ly, kbdCap, g.K, g.VIO)
+					gr.Put(end+3+width(kbdCap)+1, ly, change, g.DIM)
+				}
 				ly++
 			}
 		}

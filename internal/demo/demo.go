@@ -9,6 +9,7 @@ import (
 	"github.com/omaboot/boot-live/internal/boot"
 	"github.com/omaboot/boot-live/internal/i18n"
 	"github.com/omaboot/boot-live/internal/identify"
+	"github.com/omaboot/boot-live/internal/keyboard"
 	"github.com/omaboot/boot-live/internal/pace"
 	"github.com/omaboot/boot-live/internal/safety"
 	"github.com/omaboot/boot-live/internal/ui"
@@ -25,6 +26,7 @@ const (
 // Facts shown while starting up.
 const (
 	Omarchy        = "4.0.4"
+	Kernel         = "7.2.5-1-omarchy" // as the kernel log's Linux version line
 	Disks          = "sda"
 	DiskCount      = 1
 	SnapshotDate   = "2026-10-08"
@@ -151,6 +153,7 @@ func Facts() *ui.Facts {
 		Known:     true,
 		Parts:     MacParts,
 		Omarchy:   Omarchy,
+		Kernel:    Kernel,
 		DisksLine: i18n.N("%d internal disk set read-only (%s)", "%d internal disks set read-only (%s)", DiskCount, DiskCount, Disks),
 		// the MacBook Air's SSD as Hello draws it
 		Disk: &safety.Layout{Name: "sda", Model: "APPLE SSD SM128E", Bytes: 121332826112, Parts: []safety.Part{
@@ -169,8 +172,12 @@ func Facts() *ui.Facts {
 		FixNames:     []string{"applesmc"},
 		FinishedIn:   FinishedIn,
 		TimeScale:    TimeScale,
+		Keyboard:     keyboard.Choice{Layout: keyboard.US, How: keyboard.FromMacOS, NVRAM: NVRAM},
 	}
 }
+
+// NVRAM is the demo Mac's prev-lang:kbd: macOS last typed with the U.S. layout.
+const NVRAM = "en:0"
 
 // Summary is what the backend sends when the demo's quick pass is done.
 func Summary() ui.QuickDoneMsg {

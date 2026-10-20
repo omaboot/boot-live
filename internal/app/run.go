@@ -22,6 +22,7 @@ import (
 	"github.com/omaboot/boot-live/internal/handson"
 	"github.com/omaboot/boot-live/internal/i18n"
 	"github.com/omaboot/boot-live/internal/identify"
+	"github.com/omaboot/boot-live/internal/keyboard"
 	"github.com/omaboot/boot-live/internal/network"
 	"github.com/omaboot/boot-live/internal/safety"
 	"github.com/omaboot/boot-live/internal/send"
@@ -73,15 +74,18 @@ type Run struct {
 	handsOn   []checks.Result // the hands-on tests' results so far (Record)
 	passStart time.Time
 	passEnd   time.Time
-	code      string            // the report's code once sent
-	keep      string            // the copy kept on the stick before a test that sleeps (Keep), "" before one
-	saved     string            // the copy saved to the stick (Save), "" before one
-	offer     *resumeNote       // an unfinished run's copy from this Mac to pick up (findResume), until answered
-	older     []resumeNote      // this Mac's other unsent copies: set aside with the answer
-	other     *resumeNote       // the newest unsent copy of this Mac's from another version: named, never offered
-	sounds    sounds.Prefs      // the sound settings the last boot kept on the stick (loadSounds)
-	plan      *runPlan          // the run plan on the stick (loadPlan), nil for none
-	bugMem    map[string][]byte // the bug reports saved in this run, by their name on the stick (bugsend.go)
+	code      string          // the report's code once sent
+	keep      string          // the copy kept on the stick before a test that sleeps (Keep), "" before one
+	saved     string          // the copy saved to the stick (Save), "" before one
+	offer     *resumeNote     // an unfinished run's copy from this Mac to pick up (findResume), until answered
+	older     []resumeNote    // this Mac's other unsent copies: set aside with the answer
+	other     *resumeNote     // the newest unsent copy of this Mac's from another version: named, never offered
+	sounds    sounds.Prefs    // the sound settings the last boot kept on the stick (loadSounds)
+	kbd       keyboard.Choice // the keyboard layout in use (keyboard.go)
+	// loadKeymap loads a layout picked on Hello on the console; nil off it (KeyboardLoaded)
+	loadKeymap func(keymap string) error
+	plan       *runPlan          // the run plan on the stick (loadPlan), nil for none
+	bugMem     map[string][]byte // the bug reports saved in this run, by their name on the stick (bugsend.go)
 	// quickRestored: the quick pass's results came from the copy picked up (no pass this start)
 	quickRestored bool
 	noteReq       uint64      // the note ops asked for (noteTicket)
@@ -144,6 +148,7 @@ func (r *Run) Fixture() bool { return !r.Opt.Root.IsSystem() }
 // thermal watchdog, reads the hardware, loads the catalog snapshot and identifies the Mac.
 func (r *Run) Setup() {
 	root := r.Opt.Root
+	r.loadKeyboard() // first: Hello shows it whatever happens next
 	if root.IsSystem() {
 		if err := safety.Guard(sysroot.System); err != nil {
 			r.Fatal = err
@@ -262,10 +267,10 @@ func (r *Run) Facts(o *ui.Options) *ui.Facts {
 	}
 	if r.Fatal != nil {
 		f.Fatal = r.Fatal.Error()
-		f.Omarchy = r.omarchy()
+		f.Omarchy, f.Kernel = r.omarchy(), r.HW.Kernel
 		return f
 	}
-	f.Omarchy = r.omarchy()
+	f.Omarchy, f.Kernel = r.omarchy(), r.HW.Kernel
 	f.DisksLine, f.SnapshotLine = r.DisksLine(), r.SnapshotLine()
 	if in := safety.Internal(r.Disks); len(in) > 0 {
 		l := safety.DiskLayout(r.Opt.Root, in[0])
@@ -327,6 +332,7 @@ func (r *Run) Facts(o *ui.Options) *ui.Facts {
 	}
 	f.Resume, f.OtherCopy = r.resumeFacts(), r.otherFacts()
 	f.Sounds = r.sounds
+	f.Keyboard = r.Keyboard()
 	f.Plan = r.planFacts()
 	return f
 }
@@ -421,6 +427,7 @@ func (r *Run) Report(handle, notice, notes string) *report.File {
 	if x, ok := r.bootExtra(); ok {
 		extras = append(extras, x)
 	}
+	extras = append(extras, r.keyboardExtra())
 	var fixes []string
 	seen := map[string]bool{}
 	for _, f := range r.Fixes {

@@ -5,6 +5,7 @@ import (
 	"os/exec"
 	"sync"
 
+	"github.com/omaboot/boot-live/internal/keyboard"
 	"github.com/omaboot/boot-live/internal/sounds"
 )
 
@@ -38,3 +39,8 @@ func (b *Backend) Sound(wav []byte) {
 
 // SaveSounds: the demo keeps nothing.
 func (b *Backend) SaveSounds(sounds.Prefs) {}
+
+// Keyboard: the demo loads no keymap; the layout picked is the one in use.
+func (b *Backend) Keyboard(l keyboard.Layout) keyboard.Choice {
+	return keyboard.Choice{Layout: l, How: keyboard.FromTester, NVRAM: NVRAM}
+}

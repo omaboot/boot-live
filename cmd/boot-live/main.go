@@ -127,12 +127,23 @@ func run() int {
 	}
 
 	// Ctrl+↑/↓ (the console's tall and short) need their own keymap lines on the console: the real
-	// run only, never the demo or a fixture run
+	// run only, never the demo or a fixture run; the keyboard layout too, loaded first
 	tall := !*demoMode && sysroot.Root(*root).IsSystem()
-	con, err := console.Setup(console.Options{ForceTerm: *termMode, Palette: grid.OmaBoot, TallKeys: tall})
+	co := console.Options{ForceTerm: *termMode, Palette: grid.OmaBoot, TallKeys: tall}
+	if tall {
+		co.Keymap = r.StartKeymap()
+	}
+	con, err := console.Setup(co)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "boot-live:", err)
 		return exitFailed
+	}
+	if r != nil {
+		if tall && con.Mode == grid.VT {
+			r.KeyboardLoaded(con.LoadKeymap, con.KeymapErr)
+		} else {
+			r.KeyboardLoaded(nil, nil) // a fixture run or a terminal emulator: nothing loaded
+		}
 	}
 	defer con.Restore()
 	defer func() { // a panic still gives the console back before it is reported

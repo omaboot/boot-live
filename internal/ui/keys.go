@@ -58,6 +58,10 @@ func (m *Model) key(k tea.KeyMsg) tea.Cmd {
 		m.pwKey(k) // the password box has the keyboard: Esc goes back to the list
 		return nil
 	}
+	if st.Scene == Hello && st.Kbd {
+		m.kbdPickKey(key) // the keyboard picker has the keys: Esc closes it
+		return nil
+	}
 	if key == "esc" && st.Scene == Test {
 		return m.testKey(key) // not while it's going to sleep
 	}
@@ -217,6 +221,10 @@ func (m *Model) logKey(key string) {
 func (m *Model) helloKey(key string) tea.Cmd {
 	st := &m.st
 	if st.T <= helloReady {
+		return nil
+	}
+	if key == kbdKey && m.f.Fatal == "" {
+		m.openKbd()
 		return nil
 	}
 	if !listKey(key, helloActions(&m.o, m.f), &st.HelloSel) {

@@ -140,6 +140,9 @@ type Env struct {
 	// Hung are the tests the run was picked up after (the Mac didn't come back from them), with
 	// the failed outcome recorded for each (NoComeback): Sleep and wake offers light sleep then.
 	Hung map[string]Outcome
+	// Letters is where the keyboard layout picked on Hello has its letter keys (keyboard.Layout's
+	// Letters: "", "qwertz", "azerty"): the keyboard test's legends follow it.
+	Letters string
 }
 
 // Phone is a phone on USB tethering, as the network step found it.

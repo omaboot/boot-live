@@ -11,6 +11,7 @@ import (
 	"github.com/omaboot/boot-live/internal/command"
 	g "github.com/omaboot/boot-live/internal/grid"
 	"github.com/omaboot/boot-live/internal/handson"
+	"github.com/omaboot/boot-live/internal/keyboard"
 	"github.com/omaboot/boot-live/internal/pace"
 	"github.com/omaboot/boot-live/internal/sounds"
 )
@@ -81,6 +82,10 @@ type Backend interface {
 	// output, cutting off the one before it; SaveSounds keeps the settings for the next boot.
 	Sound(wav []byte)
 	SaveSounds(p sounds.Prefs)
+
+	// Keyboard loads a layout picked on Hello and answers with the layout in use (the one before
+	// it, and why, when it didn't load).
+	Keyboard(l keyboard.Layout) keyboard.Choice
 }
 
 // KeepInfo is what the copy saved before a test that sleeps records besides the report, so a
@@ -251,6 +256,7 @@ func (m *Model) goTo(s Scene) {
 		m.starts[s], m.seen[s] = time.Now(), true
 	}
 	m.st.Scene, m.st.Overlay, m.st.LogTop, m.st.ReportTop = s, NoOverlay, 0, 0
+	m.st.Kbd = false // the keyboard picker is Hello's
 	m.st.T = m.timeIn(s)
 	m.lastKey = time.Now()
 	if s == Results {

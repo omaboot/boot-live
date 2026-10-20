@@ -7,6 +7,7 @@ import (
 	"github.com/omaboot/boot-live/internal/boot"
 	"github.com/omaboot/boot-live/internal/i18n"
 	"github.com/omaboot/boot-live/internal/identify"
+	"github.com/omaboot/boot-live/internal/keyboard"
 	"github.com/omaboot/boot-live/internal/network"
 	"github.com/omaboot/boot-live/internal/pace"
 	"github.com/omaboot/boot-live/internal/plan"
@@ -62,6 +63,7 @@ type Facts struct {
 	Known   bool    // the Mac is identified (or picked)
 	Parts   string  // the line under the Mac on Which Mac
 	Omarchy string  // the Omarchy version the image carries
+	Kernel  string  // the running kernel's release (uname -r), shown after the Omarchy version
 
 	// Disk is the first internal disk, drawn next to Hello's wordmark, MoreDisks
 	// how many others there are; nil when there are none. DryRun: a fixture run, nothing was set
@@ -93,6 +95,8 @@ type Facts struct {
 	Sounds sounds.Prefs
 	// Plan is the run plan found on the stick (runplan.go), nil for none.
 	Plan *PlanFacts
+	// Keyboard is the keyboard layout in use (Hello's line; keyboard.go).
+	Keyboard keyboard.Choice
 
 	Site      string // where reports go, as shown: "DoesItOmarchy.com" (or the staging host)
 	CanSubmit bool
