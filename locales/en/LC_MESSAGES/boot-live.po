@@ -3623,6 +3623,18 @@ msgstr ""
 msgid "nothing moving? F1 and F2, the keys with the little sun on them. some Macs need fn held."
 msgstr ""
 
+#: internal/handson/brightkeys.go
+msgid "Press F1 a few times (on a Mac set to F-keys first, hold fn)."
+msgstr ""
+
+#: internal/handson/brightkeys.go
+msgid "Now press F2 a few times."
+msgstr ""
+
+#: internal/handson/brightkeys.go
+msgid "the screen's at full brightness. dimmer first, please."
+msgstr ""
+
 #: internal/handson/brightkeys.go internal/handson/keylight.go
 msgid "Nothing to press here."
 msgstr ""
@@ -3633,6 +3645,14 @@ msgstr ""
 
 #: internal/handson/brightkeys.go
 msgid "did the screen follow along?"
+msgstr ""
+
+#: internal/handson/brightkeys.go
+msgid "good. now bring it back up."
+msgstr ""
+
+#: internal/handson/brightkeys.go
+msgid "up works. now down."
 msgstr ""
 
 #: internal/handson/brightkeys.go internal/handson/keylight.go
@@ -8466,6 +8486,190 @@ msgstr ""
 msgid "Model ID"
 msgstr ""
 
+#: internal/keyboard/keyboard.go
+msgid "English (US)"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "English (UK)"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "German"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "French"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "Spanish"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "Italian"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "Swedish"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "Danish"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "Norwegian"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "Finnish"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "German (Switzerland)"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "French (Switzerland)"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "French (Canada)"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "Japanese"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "Portuguese"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "Dutch"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "English (US, Dvorak)"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "English (US, Colemak)"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "Belarusian"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "Belgian"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "Bulgarian"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "Croatian"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "Czech"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "Estonian"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "Georgian"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "Greek"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "Hebrew"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "Hungarian"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "Icelandic"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "Irish"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "Kazakh"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "Kyrgyz"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "Latvian"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "Lithuanian"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "Macedonian"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "Polish"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "Portuguese (Brazil)"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "Romanian"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "Russian"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "Serbian"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "Slovak"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "Slovenian"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "Spanish (Latin American)"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "Tajik"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "Turkish"
+msgstr ""
+
+#: internal/keyboard/keyboard.go
+msgid "Ukrainian"
+msgstr ""
+
 #: internal/network/static.go
 msgid "Address/prefix is empty: for example 192.168.1.50/24"
 msgstr ""
@@ -9746,6 +9950,54 @@ msgstr ""
 msgid "a copy of the report is on external storage: %s"
 msgstr ""
 
+#: internal/ui/keyboard.go
+msgid "from macOS"
+msgstr ""
+
+#: internal/ui/keyboard.go
+msgid "picked"
+msgstr ""
+
+#: internal/ui/keyboard.go
+msgid "the default"
+msgstr ""
+
+#: internal/ui/keyboard.go
+#, c-format
+msgid "keyboard: %s, %s"
+msgstr ""
+
+#: internal/ui/keyboard.go
+#, c-format
+msgid "%s didn't load: kept %s"
+msgstr ""
+
+#: internal/ui/keyboard.go
+msgid "(not loaded: not the Linux console)"
+msgstr ""
+
+#: internal/ui/keyboard.go
+msgid "Keyboard layout"
+msgstr ""
+
+#: internal/ui/keyboard.go
+msgid "Other keyboard layouts"
+msgstr ""
+
+#: internal/ui/keyboard.go
+#, c-format
+msgid "Enter loads it now · Esc keeps %s"
+msgstr ""
+
+#: internal/ui/keyboard.go
+#, c-format
+msgid "Enter loads it now · delete: the main list · Esc keeps %s"
+msgstr ""
+
+#: internal/ui/keyboard.go
+msgid "Other layouts…"
+msgstr ""
+
 #: internal/ui/keys.go
 msgid "Picked from the list."
 msgstr ""
@@ -10925,6 +11177,10 @@ msgstr ""
 #: internal/ui/screens.go
 #, c-format
 msgid "console: terminal emulator, %d×%d"
+msgstr ""
+
+#: internal/ui/screens.go
+msgid "change"
 msgstr ""
 
 #: internal/ui/screens.go

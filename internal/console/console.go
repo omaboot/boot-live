@@ -25,6 +25,9 @@ type Options struct {
 	// TallKeys loads the keymap lines that give Ctrl+↑ and Ctrl+↓ their own sequences (the real
 	// run on the console only; TallKeymap).
 	TallKeys bool
+	// Keymap is the keyboard layout to load first (loadkeys, e.g. "uk"; "" keeps the console's),
+	// the tall keys' lines over it. Console.KeymapErr says how it went.
+	Keymap string
 }
 
 // TallKeymap makes Ctrl+↑ and Ctrl+↓ send xterm's sequences, which Bubble Tea reads as ctrl+up and
@@ -53,7 +56,11 @@ type Console struct {
 	out       *os.File
 	savedCmap []byte
 	origFont  string // the console font we started with, saved by setfont -O
-	keymap    string // the keymap we started with, saved by dumpkeys, when TallKeys changed it
+	keymap    string // the keymap we started with, saved by dumpkeys, when we changed it
+	tall      bool   // TallKeys: its lines go back over every layout loaded
+	// KeymapErr is why Options.Keymap didn't load (the console's own layout stays), nil when it
+	// did or there was none to load.
+	KeymapErr error
 	printk    string // the kernel's console log level we started with, when we lowered it
 	tmpDir    string
 	once      sync.Once
@@ -85,7 +92,14 @@ func Setup(o Options) (*Console, error) {
 	if m, err := getCmap(fd); err == nil {
 		c.savedCmap = m
 	}
+	if o.Keymap != "" || o.TallKeys {
+		c.saveKeymap()
+	}
+	if o.Keymap != "" {
+		c.KeymapErr = loadkeys(o.Keymap)
+	}
 	if o.TallKeys {
+		c.tall = true
 		c.tallKeys()
 	}
 	c.Font = pickFont(DetectScreen())
@@ -131,10 +145,13 @@ func (c *Console) temp() string {
 	return c.tmpDir
 }
 
-// tallKeys saves the keymap (dumpkeys) and loads TallKeymap over it (loadkeys, both from kbd, like
-// setfont). Without a saved copy the two bindings stay after the tool ends; they only make
-// Ctrl+↑/↓ send their own sequences.
-func (c *Console) tallKeys() {
+// saveKeymap saves the keymap we started with (dumpkeys, from kbd like setfont), for Restore.
+// Without a saved copy what we load stays after the tool ends: the layout picked, and the tall
+// keys' two bindings, which only make Ctrl+↑/↓ send their own sequences.
+func (c *Console) saveKeymap() {
+	if c.keymap != "" {
+		return
+	}
 	if dir := c.temp(); dir != "" {
 		if km, err := exec.Command("dumpkeys", "--full-table").Output(); err == nil && len(km) > 0 {
 			p := filepath.Join(dir, "keymap")
@@ -143,20 +160,53 @@ func (c *Console) tallKeys() {
 			}
 		}
 	}
+}
+
+// tallKeys loads TallKeymap over the keymap in use.
+func (c *Console) tallKeys() error {
 	dir := c.temp()
 	if dir == "" {
-		return
+		return fmt.Errorf("no temporary directory")
 	}
 	p := filepath.Join(dir, "tall.map")
 	err := os.WriteFile(p, []byte(TallKeymap), 0o600)
 	if err == nil {
-		err = exec.Command("loadkeys", p).Run()
+		err = loadkeys(p)
 	}
 	os.Remove(p)
-	if err != nil && c.keymap != "" {
-		os.Remove(c.keymap) // nothing changed: nothing to put back
-		c.keymap = ""
+	return err
+}
+
+// loadkeys loads a keymap by name or file, quietly; its own words in the error.
+func loadkeys(km string) error {
+	if out, err := exec.Command("loadkeys", "-q", km).CombinedOutput(); err != nil {
+		if o := strings.TrimSpace(string(out)); o != "" {
+			return fmt.Errorf("loadkeys %s: %s", km, firstLine(o))
+		}
+		return fmt.Errorf("loadkeys %s: %v", km, err)
 	}
+	return nil
+}
+
+func firstLine(s string) string {
+	l, _, _ := strings.Cut(s, "\n")
+	return l
+}
+
+// LoadKeymap loads another keyboard layout (Hello's picker): the layout, then the tall keys'
+// lines again, since a whole layout puts Ctrl+↑/↓ back to plain arrows. A layout that fails to
+// load changes nothing (loadkeys reads the whole file before it loads any of it). Restore still
+// puts the keymap we started with back.
+func (c *Console) LoadKeymap(km string) error {
+	if c.Mode != grid.VT {
+		return fmt.Errorf("not on the Linux console")
+	}
+	c.saveKeymap()
+	err := loadkeys(km)
+	if c.tall {
+		c.tallKeys()
+	}
+	return err
 }
 
 // SetFont loads omaboot-v at another cell height (16, 24 or 32): the console's font command

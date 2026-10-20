@@ -786,7 +786,7 @@ func (b *Backend) GPUGo() {
 func (b *Backend) HandsOn() handson.Setup {
 	r := b.R
 	io := b.system()
-	env := &handson.Env{Checks: r.env(), Phone: r.tetherPhone()}
+	env := &handson.Env{Checks: r.env(), Phone: r.tetherPhone(), Letters: r.Keyboard().Layout.Letters}
 	r.mu.Lock()
 	if r.netFacts.Online && r.net.Iface != "" {
 		env.Online = r.net.Iface + ", " + viaName(r.net.Kind)

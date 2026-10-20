@@ -5,6 +5,7 @@
 package ui
 
 import (
+	"regexp"
 	"strings"
 
 	"github.com/omaboot/boot-live/internal/command"
@@ -62,11 +63,15 @@ func width(s string) int { return len([]rune(s)) }
 // cells set them apart.
 func header(gr *g.Grid, o *Options, right string, mac bool, m MacInfo) {
 	gr.Fill(0, 0, gr.W, 1, ' ', g.GRY, g.K)
-	end := gr.W - width(right) - 3 // the left side stops short of the right one
 	x := gr.Put(1, 0, "OmaBoot", g.WHT)
 	x = gr.Put(x, 0, "?", g.BVIO)
 	x = gr.Put(x, 0, " "+o.Edition.Name, g.WHT)
 	x += 4
+	// the kernel in its short form ("7.2.8-9") where the full one would cut the Mac's name
+	if mac && x+width(m.Name+" ["+m.ID+"]") > gr.W-width(right)-3 {
+		right = kernelFlavour.ReplaceAllString(right, "($1)")
+	}
+	end := gr.W - width(right) - 3 // the left side stops short of the right one
 	if mac {
 		x = gr.Put(x, 0, cut(m.Name+" ["+m.ID+"]", end-x), g.GRY)
 		if x+4+width(m.Config) <= end {
@@ -85,6 +90,9 @@ func header(gr *g.Grid, o *Options, right string, mac bool, m MacInfo) {
 		x++
 	}
 }
+
+// kernelFlavour is the kernel's flavour after its version in the header: "(7.2.8-9-omarchy)".
+var kernelFlavour = regexp.MustCompile(`\((\d+\.\d+[.\d]*-\d+)-[a-z0-9]+\)`)
 
 // MacInfo names the Mac in the header.
 type MacInfo struct{ Name, ID, Config string }

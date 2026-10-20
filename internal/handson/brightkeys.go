@@ -29,6 +29,10 @@ import (
 //   - failed: neither changed it and the tester says the keys do nothing, or both did and the
 //     tester saw the screen stay the same (observed); the kernel refused the writes (automatic).
 //
+// The screen is usually at full brightness when the test starts, where brighter can do nothing:
+// then it asks for dimmer first, else brighter first. Repeated presses that did the same
+// are folded in the evidence ("F2: already at 15 ×8").
+//
 // A key that comes as its F-key (KEY_F1: the keyboard is set to F-keys first) moves nothing, as
 // on Omarchy; the output says to hold fn. With the steps, Merge joins the two results into one
 // (supported only when both are, failed only when both are, else partial).
@@ -74,23 +78,25 @@ func appleKeyboard(io IO, d Device) bool {
 }
 
 type brightKeys struct {
-	dir      string
-	mx, orig int
-	step     int // a tenth of the range, at least 1
-	in       Input
-	kbd      []Device
-	id       devID // the first keyboard's, for the evidence
-	upOK     bool  // a brighter press changed the backlight
-	downOK   bool
-	presses  int
-	asFKey   map[uint16]bool // F-key codes seen instead
-	lastKey  float64         // the last brightness key (or its F-key)
-	pressAt  float64         // the last press, for the drawing
-	pressUp  bool
-	trail    []Line   // the Output: each press and what the backlight did
-	log      []string // the same for the evidence, in English
-	askAt    float64  // both seen: when the question went up (-1: not yet)
-	said     string   // the answer, for the Output
+	dir       string
+	mx, orig  int
+	step      int // a tenth of the range, at least 1
+	in        Input
+	kbd       []Device
+	id        devID // the first keyboard's, for the evidence
+	upOK      bool  // a brighter press changed the backlight
+	downOK    bool
+	presses   int
+	asFKey    map[uint16]bool // F-key codes seen instead
+	lastKey   float64         // the last brightness key (or its F-key)
+	pressAt   float64         // the last press, for the drawing
+	pressUp   bool
+	trail     []Line   // the Output: each press and what the backlight did
+	log       []string // the same for the evidence, in English
+	logN      []int    // how many presses each log entry stands for
+	downFirst bool     // the backlight was at the top: dimmer is asked for first
+	askAt     float64  // both seen: when the question went up (-1: not yet)
+	said      string   // the answer, for the Output
 }
 
 func (k *brightKeys) Start(c *Ctx) {
@@ -114,6 +120,7 @@ func (k *brightKeys) Start(c *Ctx) {
 	}
 	k.mx, k.step = mx, max(1, mx/10)
 	k.orig, _ = c.IO.Int(k.dir + "/brightness")
+	k.downFirst = k.orig >= k.mx
 	in, devs := OpenAll(c.IO, func(d Device) bool { return appleKeyboard(c.IO, d) }, false)
 	if len(devs) == 0 {
 		in.Close()
@@ -152,7 +159,7 @@ func (k *brightKeys) Step(c *Ctx) {
 					name = "F1"
 				}
 				k.trail = append(k.trail, Gone(i18n.T("%s came as an F-key: hold fn and press it again", name)))
-				k.log = append(k.log, name+" came as an F-key")
+				k.note(name + " came as an F-key")
 			}
 		}
 		if c.Outcome() != nil {
@@ -185,7 +192,7 @@ func (k *brightKeys) press(c *Ctx, up bool) {
 			at = i18n.T("already at the top")
 		}
 		k.trail = append(k.trail, Gone(i18n.T("%s (%s): %s", name, word, at)))
-		k.log = append(k.log, fmt.Sprintf("%s: already at %d", name, cur))
+		k.note(fmt.Sprintf("%s: already at %d", name, cur))
 		return
 	}
 	if err := c.IO.Write(k.dir+"/brightness", fmt.Sprint(want)); err != nil {
@@ -203,11 +210,20 @@ func (k *brightKeys) press(c *Ctx, up bool) {
 		k.downOK = true
 	default:
 		k.trail = append(k.trail, Bad(i18n.T("%s (%s): the backlight stayed at %d", name, word, got)))
-		k.log = append(k.log, fmt.Sprintf("%s: wrote %d, read back %d", name, want, got))
+		k.note(fmt.Sprintf("%s: wrote %d, read back %d", name, want, got))
 		return
 	}
 	k.trail = append(k.trail, Fact(i18n.T("%s (%s): %d of %d", name, word, got, k.mx)))
-	k.log = append(k.log, fmt.Sprintf("%s: %d -> %d", name, cur, got))
+	k.note(fmt.Sprintf("%s: %d -> %d", name, cur, got))
+}
+
+// note adds a press to the evidence's log, folding it into the last entry when it did the same.
+func (k *brightKeys) note(e string) {
+	if n := len(k.log); n > 0 && k.log[n-1] == e {
+		k.logN[n-1]++
+		return
+	}
+	k.log, k.logN = append(k.log, e), append(k.logN, 1)
 }
 
 func (k *brightKeys) restore(c *Ctx) {
@@ -233,7 +249,14 @@ func (k *brightKeys) evidence(tail string) string {
 	ev := fmt.Sprintf("%s (0 to %d, from %d), stepped by %d per press, on KEY_BRIGHTNESSUP/DOWN (F2, F1) from %s (%s): brighter %s, dimmer %s",
 		path.Base(k.dir), k.mx, k.orig, k.step, k.kbd[0].Name, k.id, movedBL(k.upOK), movedBL(k.downOK))
 	if len(k.log) > 0 {
-		ev += "; presses: " + strings.Join(k.log, ", ")
+		ps := make([]string, len(k.log))
+		for i, e := range k.log {
+			ps[i] = e
+			if k.logN[i] > 1 {
+				ps[i] += fmt.Sprintf(" ×%d", k.logN[i])
+			}
+		}
+		ev += "; presses: " + strings.Join(ps, ", ")
 	}
 	return ev + "; back to " + fmt.Sprint(k.orig) + tail
 }
@@ -286,6 +309,10 @@ func (k *brightKeys) View(c *Ctx) Screen {
 		Happens: i18n.T("Each press moves the backlight a tenth of the way; it never goes dark. It goes back to where it was after."),
 		Say:     i18n.T("brighter, please."), SayAt: 0.3,
 		Hint: i18n.T("nothing moving? F1 and F2, the keys with the little sun on them. some Macs need fn held.")}
+	if k.downFirst { // at full brightness: dimmer first, brighter can't go higher yet
+		s.Steps[0], s.Steps[1] = i18n.T("Press F1 a few times (on a Mac set to F-keys first, hold fn)."), i18n.T("Now press F2 a few times.")
+		s.Say = i18n.T("the screen's at full brightness. dimmer first, please.")
+	}
 	if c.T-k.lastKey < 20 { // the keys come through evdev, not the console: the run knows when they're idle
 		s.Hint = ""
 	}
@@ -308,6 +335,13 @@ func (k *brightKeys) View(c *Ctx) Screen {
 	case k.askAt >= 0:
 		s.Step = 2
 		s.Say, s.SayAt = i18n.T("did the screen follow along?"), k.askAt
+	case k.downFirst && k.downOK:
+		s.Step = 1
+		s.Say, s.SayAt = i18n.T("good. now bring it back up."), k.pressAt
+	case k.downFirst:
+		if k.upOK {
+			s.Say, s.SayAt = i18n.T("up works. now down."), k.pressAt
+		}
 	case k.upOK:
 		s.Step = 1
 		s.Say, s.SayAt = i18n.T("good. now take it down."), k.pressAt
@@ -337,9 +371,13 @@ func (k *brightKeys) View(c *Ctx) Screen {
 		}
 		a.Off = !k.idle(c)
 		s.Actions = []Action{a}
-		s.Waiting = "·  " + i18n.T("waiting for %s", "F2")
-		if k.upOK {
-			s.Waiting = "·  " + i18n.T("waiting for %s", "F1")
+		first, then, firstOK := "F2", "F1", k.upOK
+		if k.downFirst {
+			first, then, firstOK = "F1", "F2", k.downOK
+		}
+		s.Waiting = "·  " + i18n.T("waiting for %s", first)
+		if firstOK {
+			s.Waiting = "·  " + i18n.T("waiting for %s", then)
 		}
 	}
 	return s

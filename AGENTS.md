@@ -20,7 +20,8 @@ The [README](README.md) is the public overview.
   rules and the quick pass on the three Macs, building a report that passes `report.Check`, the
   safety guard and disk classification, the pacing, the glyph check, the static address check,
   one report per run, the console's parsing and completion, and the console guard (a run with a
-  result changed in the console never reaches DoesItOmarchy.com). Everything else is covered end
+  result changed in the console never reaches DoesItOmarchy.com), and the keyboard layout macOS
+  left in NVRAM. Everything else is covered end
   to end (the image's QEMU smoke tests and runs on real Macs).
 - **Screens for review** are rendered with `make screens` at 160×45, 16 px, and shown 1:1.
 - **No private names.** `make check` ends with the scrub check (`tools/scrub-check.sh`): it fails
@@ -63,6 +64,7 @@ them (`make build TAGS=` leaves them out of a dev build too).
 | `internal/fsread` | Finds a file in a disk's top folder by reading its partition table and file system (FAT, exFAT, HFS+) raw, never mounting (tested on real images). |
 | `internal/sysroot` | Reads system files under a root, so fixtures stand in for a Mac. |
 | `internal/console` | Linux VT detection, palette, font choice from EDID, `setfont`, restore. |
+| `internal/keyboard` | The keyboard layouts Hello offers (Omarchy installer's names and console keymaps) and the default from macOS's `prev-lang:kbd` in NVRAM (tested). |
 | `internal/grid` | The character grid screens draw on; palette; rows to escape codes. |
 | `internal/ui` | The frame, the steps, the full log, the quit question, the screensaver, the console's box and keys; a backend drives them. |
 | `internal/command` | The console's commands: one file per command, registered from `init`; parsing, completion, history, the run's marks (tested). Dev-only commands carry the `omaboot_dev` build tag. |
@@ -189,7 +191,9 @@ font or palette setup). `boot-live --help` lists every flag.
 On a virtual console (`TERM=linux`) boot-live sets its 16-colour palette (`GIO_CMAP`/`PIO_CMAP`,
 `\e]P` as a fallback) and restores the old one on exit; picks omaboot-v at 16, 24 or 32 px from
 the screen's physical size (the panel's EDID size and the framebuffer resolution), loads it with
-`setfont` and restores the original font on exit; hides the cursor and redraws only the lines that
+`setfont` and restores the original font on exit; loads the keyboard layout (`loadkeys`: macOS's
+last one from NVRAM, else US; Tab on Hello picks another) with the lines that give Ctrl+↑/↓ their
+own sequences over it, and puts the keymap it started with back on exit; hides the cursor and redraws only the lines that
 changed, with animations kept inside Boot's area at 15 fps. Fonts are looked up in
 `/usr/share/omaboot/fonts/` (the images), then `assets/fonts/` (this repo).
 

@@ -17,7 +17,8 @@ import (
 // input.keyboard, "Built-in keyboard and function keys" (laptops only: the criterion's `when` is
 // feature:builtin-keyboard, so desktops never get this test). The screen draws the Mac's
 // keyboard in its physical shape (US ANSI, ISO or JIS, when the keyboard tells: keyboardShape;
-// the legends are US ones whatever the shape) and lights each key as the built-in keyboard
+// the legends are US ones whatever the shape, but for the letters of a QWERTZ or AZERTY layout
+// picked on Hello: relabel) and lights each key as the built-in keyboard
 // reports it through evdev. The keyboard is grabbed for the test, so no key reaches the console:
 // no VT switch, no Ctrl+Alt+Del, nothing the screen would act on.
 //
@@ -369,6 +370,41 @@ func keyboardLayout(ident, chip string, b kbBoard) kbLayout {
 	return l
 }
 
+// letterLegends are the legends a keyboard layout puts on the letter keys where it moves them
+// from US QWERTY, by key code (from kbd's qwertz-layout.inc and azerty-layout.inc): QWERTZ swaps
+// Y and Z; AZERTY swaps A and Q, Z and W, and moves M right of L, which shifts , ; : one key
+// left on the bottom row (the key after them keeps its US legend: it differs between AZERTY
+// keyboards).
+var letterLegends = map[string]map[uint16]string{
+	"qwertz": {21: "z", 44: "y"},
+	"azerty": {16: "a", 30: "q", 17: "z", 44: "w", 39: "m", 50: ",", 51: ";", 52: ":"},
+}
+
+// relabel puts the picked layout's letter legends on the drawn keys (Env.Letters). Only the
+// legends change: each key is still counted by its code, and the evidence still names it by its
+// US legend, so reports read the same whatever the layout.
+func relabel(l *kbLayout, letters string) {
+	m := letterLegends[letters]
+	if m == nil {
+		return
+	}
+	for r := range l.rows {
+		for i := range l.rows[r] {
+			k := &l.rows[r][i]
+			if k.word || len(k.codes) != 1 {
+				continue
+			}
+			if t, ok := m[k.codes[0]]; ok && t != k.label {
+				if k.name == "" {
+					k.name = k.label
+				}
+				k.label = t
+			}
+		}
+	}
+	l.how += ", legends for " + letters
+}
+
 // keys are the layout's keys in drawing order, with each one's row.
 func (l kbLayout) keys() (out []kbKey, row []int) {
 	for r, ks := range l.rows {
@@ -468,6 +504,9 @@ func (k *keyboard) Start(c *Ctx) {
 		chip = c.Env.Checks.Ident.Chip
 	}
 	k.lay = keyboardLayout(identifier(c.Env), chip, readBoard(c.IO, k.builtin))
+	if c.Env != nil {
+		relabel(&k.lay, c.Env.Letters)
+	}
 	k.keys, k.row = k.lay.keys()
 	k.code, k.alt = k.lay.lookup()
 	k.seen = make([]bool, len(k.keys))
