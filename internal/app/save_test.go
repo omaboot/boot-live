@@ -42,3 +42,26 @@ func TestResaveAfterSend(t *testing.T) {
 		t.Error("the resaved copy hasn't the handle")
 	}
 }
+
+// The copy kept before a test that sleeps is written again once the report is sent, as one the
+// tester saved is: the tester may send without saving.
+func TestResaveKeptCopy(t *testing.T) {
+	dir := t.TempDir()
+	r := New(Options{Root: sysroot.Root("../../testdata/macbookair5,2"), Edition: ui.Live, StickDir: dir, Version: "1.0.1"})
+	defer r.Close()
+	kept, err := r.Keep(r.Report("", "", ""), ui.KeepInfo{}, 0)
+	if err != nil {
+		t.Fatal(err)
+	}
+	r.code = "514a902afa" // sent
+	p, ok, err := r.Resave(r.Report("CRH", "", ""))
+	if !ok || err != nil {
+		t.Fatalf("resave: ok %v, %v", ok, err)
+	}
+	if want := send.FileName(r.Ident.Identifier, "514a902afa", time.Now()); p != want {
+		t.Errorf("resaved as %s, want the code's name", p)
+	}
+	if _, err := os.Stat(filepath.Join(dir, kept)); !os.IsNotExist(err) {
+		t.Errorf("the kept copy (%s) is still there", kept)
+	}
+}

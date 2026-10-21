@@ -593,14 +593,14 @@ func (r *Run) Save(f *report.File) (string, error) {
 	return p, err
 }
 
-// Resave writes the report again over a copy saved before it was sent, now under its code's
-// name and as sent (the tester's handle in it), so the stick never holds a sent report that
-// looks unsent. ok is false when no copy was saved.
+// Resave writes the report again over a copy saved before it was sent (by the tester, or kept
+// before a test that sleeps), now under its code's name and as sent (the tester's handle in it),
+// so the stick never holds a sent report that looks unsent. ok is false when no copy was saved.
 func (r *Run) Resave(f *report.File) (p string, ok bool, err error) {
 	r.mu.Lock()
-	saved := r.saved
+	saved, keep := r.saved, r.keep
 	r.mu.Unlock()
-	if saved == "" {
+	if saved == "" && keep == "" {
 		return "", false, nil
 	}
 	p, err = r.Save(f)

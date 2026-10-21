@@ -1,6 +1,6 @@
 # boot-live: OmaBoot? Live's tester.
 
-VERSION ?= 1.0.0
+VERSION ?= 1.0.1
 COMMIT  ?= $(shell git rev-parse --short=7 HEAD 2>/dev/null)
 OMARCHY ?= 4.0.6
 PKG     := github.com/omaboot/boot-live/internal/buildinfo
