@@ -29,8 +29,6 @@ const (
 	Kernel         = "7.2.8-9-omarchy" // as the kernel log's Linux version line
 	Disks          = "sda"
 	DiskCount      = 1
-	SnapshotDate   = "2026-10-08"
-	SnapshotConfs  = 371
 	RefreshedDate  = "2026-10-10"
 	RefreshedConfs = 372
 	WifiChip       = "BCM43224"
@@ -144,6 +142,19 @@ func View() *identify.View {
 	return &v
 }
 
+// SnapshotLine is Hello's catalog line for the snapshot built in, as a real run names it.
+func SnapshotLine() string {
+	cat, err := identify.Embedded()
+	if err != nil {
+		return ""
+	}
+	v := cat.Snap.Version
+	if len(v) > 8 {
+		v = v[:8]
+	}
+	return i18n.T("catalog snapshot %s, %d configurations", cat.Date+" ("+v+")", cat.Configs())
+}
+
 // Facts are the demo's run for the screens, as it starts: the results come from the backend.
 func Facts() *ui.Facts {
 	return &ui.Facts{
@@ -164,7 +175,7 @@ func Facts() *ui.Facts {
 		SystemLine:   "Omarchy " + Omarchy + " · " + i18n.T("%s (the kernel an install gives this Mac)", "linux-omarchy 7.2.8-9") + " · Mesa 26.2.5 · " + i18n.T("64-bit EFI"),
 		ImageLine:    i18n.T("image %s", Image) + " · " + i18n.T("fixes: %s", "applesmc"),
 		Image:        Image,
-		SnapshotLine: i18n.T("catalog snapshot %s, %d configurations", SnapshotDate+" (51bdb7c5)", SnapshotConfs),
+		SnapshotLine: SnapshotLine(),
 		MatchNote:    i18n.T("The only match in the catalog (board ID %s). When several match, you pick yours from a list.", BoardID),
 		Site:         Site,
 		Production:   true,
@@ -189,8 +200,8 @@ func Summary() ui.QuickDoneMsg {
 			i18n.T("boot-live drew at %s", ui.Duration(43*time.Second)) + " · " + i18n.T("checks at %s", ui.Duration(58*time.Second)) + " · " + i18n.T("drive %.1f MB/s", 31.4)}
 }
 
-// Image is the demo's image name, with its build date.
-const Image = "omaboot-live dev a79585d (2026-10-12)"
+// Image is the demo's image name: a release's, whose version names it.
+const Image = "omaboot-live v4.0.6-1"
 
 // Startup is the full log's startup section, as systemd reports it on a Mac.
 var Startup = []string{
