@@ -57,6 +57,7 @@ func main() {
 	fonts := flag.String("fonts", "assets/fonts", "the omaboot-v fonts")
 	only := flag.String("only", "", "only shots whose name contains this")
 	root := flag.String("sysroot", "", "also draw the real mode's screens from a quick pass on this fixture tree")
+	movie := flag.Float64("movie", 0, "instead of the shots, draw the quick pass and its results as numbered frames at this many per second (at the first size)")
 	size := flag.String("size", "", "draw at these sizes instead, COLSxROWSxPX[,…]: 180x56x16 a 13-inch MacBook Air, 240x67x32 a 27-inch 5K iMac")
 	flag.Parse()
 	if *size != "" {
@@ -68,6 +69,15 @@ func main() {
 			}
 			sizes = append(sizes, struct{ w, h, px int }{w, h, px})
 		}
+	}
+
+	if *movie > 0 {
+		sz := sizes[0]
+		font, err := glyphs.Load(filepath.Join(*fonts, fmt.Sprintf("omaboot-v%dn.psf.gz", sz.px)))
+		must(err)
+		must(os.MkdirAll(*out, 0o755))
+		fmt.Printf("wrote %d frames to %s\n", quickMovie(*out, *movie, sz.w, sz.h, font), *out)
+		return
 	}
 
 	shots := append(append(demoShots(), whichMacShots()...), handsOnShots()...)
@@ -468,4 +478,60 @@ func pickedFacts(f *ui.Facts) *ui.Facts {
 		c.MatchNote = i18n.T("Picked from the list.")
 	}
 	return &c
+}
+
+// quickMovie draws the demo's quick pass, then its results, as numbered frames (00001.png …) for
+// the omaboot.live hero. The pass plays sped up, except the panel's colour bars and the GPU's
+// torus, which hold longer than on the Mac and play at their own pace; the results hold a while.
+// It returns the frame count.
+func quickMovie(dir string, fps float64, w, h int, font *glyphs.Font) int {
+	const fast, hold = 2.5, 4.5 // seconds of the pass per second of film; the bars' and torus's hold
+	shown := func(c ui.Check) bool { return c.Effect == boot.Bars || c.Effect == boot.Torus }
+	play := pace.New(pace.Default, len(demo.Checks), i18n.T("here we go."), i18n.T("quick pass done. let's see."))
+	for _, c := range demo.Checks {
+		// no start times: the player then doesn't cut an effect short for the next check, which
+		// on the demo's real timeline is already running
+		it := ui.Item(c)
+		it.Begin = 0
+		if shown(c) {
+			it.Hold = hold
+		}
+		play.Add(it)
+	}
+	facts := demo.Finished()
+	var slow [][2]float64 // from the effect starting to the next check starting
+	slots := play.Slots()
+	for i, s := range slots {
+		for _, c := range demo.Checks {
+			if c.ID == s.ID && shown(c) && i+1 < len(slots) {
+				slow = append(slow, [2]float64{s.T0, slots[i+1].T0})
+			}
+		}
+	}
+	rate := func(t float64) float64 {
+		for _, sp := range slow {
+			if t >= sp[0] && t < sp[1] {
+				return 1
+			}
+		}
+		return fast
+	}
+	o := ui.Options{Edition: ui.Live, Mode: grid.VT, Palette: grid.OmaBoot, Version: "0.7.7 dev", Font: "omaboot-v", FontPx: font.H}
+	ho := ui.NewHandsOn(demo.HandsOnSetup())
+	n := 0
+	frame := func(scene ui.Scene, t float64) {
+		stt := st(scene, t, wifiUp)
+		stt.HO = ho
+		gr := grid.New(w, h)
+		ui.Render(gr, &o, &stt, facts, play)
+		n++
+		must(writePNG(filepath.Join(dir, fmt.Sprintf("%05d.png", n)), gr, font, &o.Palette))
+	}
+	for t := 0.0; t < play.End()+1.5; t += rate(t) / fps {
+		frame(ui.Quick, t)
+	}
+	for t := 0.0; t < 9; t += 1 / fps {
+		frame(ui.Results, t)
+	}
+	return n
 }
