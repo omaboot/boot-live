@@ -25,8 +25,8 @@ const (
 
 // Facts shown while starting up.
 const (
-	Omarchy        = "4.0.4"
-	Kernel         = "7.2.5-1-omarchy" // as the kernel log's Linux version line
+	Omarchy        = "4.0.6"
+	Kernel         = "7.2.8-9-omarchy" // as the kernel log's Linux version line
 	Disks          = "sda"
 	DiskCount      = 1
 	SnapshotDate   = "2026-10-08"
@@ -161,7 +161,7 @@ func Facts() *ui.Facts {
 			{Name: "sda2", Label: "Macintosh HD", Bytes: 120473067520},
 			{Name: "sda3", Label: "Recovery HD", Bytes: 650002432}}},
 		Written:      func() int64 { return 0 },
-		SystemLine:   "Omarchy " + Omarchy + " · " + i18n.T("%s (the kernel an install gives this Mac)", "linux-omarchy 7.2.5-1") + " · Mesa 26.2.2 · " + i18n.T("64-bit EFI"),
+		SystemLine:   "Omarchy " + Omarchy + " · " + i18n.T("%s (the kernel an install gives this Mac)", "linux-omarchy 7.2.8-9") + " · Mesa 26.2.5 · " + i18n.T("64-bit EFI"),
 		ImageLine:    i18n.T("image %s", Image) + " · " + i18n.T("fixes: %s", "applesmc"),
 		Image:        Image,
 		SnapshotLine: i18n.T("catalog snapshot %s, %d configurations", SnapshotDate+" (51bdb7c5)", SnapshotConfs),
@@ -184,7 +184,7 @@ func Summary() ui.QuickDoneMsg {
 	return ui.QuickDoneMsg{Groups: Groups, Headline: i18n.T("This Mac boots Omarchy."),
 		AnswerSay: i18n.T("the applesmc fix got the SMC talking: fans, glow, light sensor. the ▲ ones need Omarchy installed."),
 		DoneWord:  i18n.T("Yay!"), QuickPassIn: QuickPassIn, ReportKB: ReportKB, Startup: Startup,
-		TestedOn: "Omarchy " + Omarchy + " · linux-omarchy 7.2.5-1 · Mesa 26.2.2, HD Graphics 4000", StartedIn: ui.Duration(41 * time.Second),
+		TestedOn: "Omarchy " + Omarchy + " · linux-omarchy 7.2.8-9 · Mesa 26.2.5, HD Graphics 4000", StartedIn: ui.Duration(41 * time.Second),
 		BootLine: i18n.T("Booted in %s: %s", ui.Duration(41*time.Second), "firmware 1 s, loader 2 s, kernel 3 s, userspace 35 s") + " · " +
 			i18n.T("boot-live drew at %s", ui.Duration(43*time.Second)) + " · " + i18n.T("checks at %s", ui.Duration(58*time.Second)) + " · " + i18n.T("drive %.1f MB/s", 31.4)}
 }

@@ -28,7 +28,7 @@ func (b *Backend) IDs() []command.ID {
 
 // Kmsg is the demo Mac's kernel log.
 var Kmsg = []string{
-	"[    0.000] Linux version 7.2.5-1-omarchy (linux-omarchy@archlinux) #1 SMP PREEMPT_DYNAMIC",
+	"[    0.000] Linux version 7.2.8-9-omarchy (linux-omarchy@archlinux) #1 SMP PREEMPT_DYNAMIC",
 	"[    0.412] i915 0000:00:02.0: vgaarb: deactivate vga console",
 	"[    1.207] [drm] Initialized i915 1.6.0 for 0000:00:02.0 on minor 0",
 	"[    1.733] brcmsmac bcma0:1: mfg 4bf core 812 rev 17 class 0 irq 17",
