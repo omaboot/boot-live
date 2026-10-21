@@ -106,6 +106,8 @@ func consoleShots() []shot {
 		con("console-9-shutdown", st(ui.Network, 13, net(online), done), full(), "shutdown", "\n"),
 		con("console-9-exit-sent", st(ui.Finish, 20, online, done, func(s *ui.State) { s.SentAt = 11.4 }), sent, "exit", "\n"),
 		testCon("console-9-restart-hands-on", playShot("", "ports.usb-a", 6, nil), "restart", "\n"),
+		// omaboot.live's Fig. 4: the console's everyday commands and what they print
+		con("gallery-console", st(ui.Results, 10, online, done), full(), "^up", "ids", "\n", "why thermal.fans", "\n", "catalog mac", "\n", "note fans got loud at the end", "\n"),
 		con("console-9-help", st(ui.Results, 10, online, done), full(), "^up", "?", "\n"),
 		con("console-13-testfile", st(ui.Results, 10, online, done), full(), "^up", "testfile", "\n", "testfile write sdc1", "\n", "y", "\n"),
 		// 0.7.3: PgUp stops at the oldest full page; smc reads a key raw; Boot dozes over the console
