@@ -147,7 +147,7 @@ boot-live on tty1. It writes:
   key for it), `watch=` (the bootwatchd the network tests use; default `https://boot.watch`),
   `bugs=` and `bugkey=` (where bug reports go); `#` starts a comment. Without a key, Submit is
   greyed out with a note and saving still works. `--target`, `--key` and `--watch` override them.
-- `/usr/share/omaboot/omarchy-version` (e.g. `4.0.6`) and `/usr/share/omaboot/image`. Without
+- `/usr/share/omaboot/omarchy-version` (e.g. `4.5.0`) and `/usr/share/omaboot/image`. Without
   them the report takes the Omarchy version from `/etc/os-release` or the package database (else
   the built-in `OMARCHY`), and the image name from `/usr/share/omaboot/build`.
 
