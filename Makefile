@@ -2,7 +2,7 @@
 
 VERSION ?= 1.0.1
 COMMIT  ?= $(shell git rev-parse --short=7 HEAD 2>/dev/null)
-OMARCHY ?= 4.0.6
+OMARCHY ?= 4.5.0
 PKG     := github.com/omaboot/boot-live/internal/buildinfo
 LDFLAGS := -s -w -X '$(PKG).Version=$(VERSION)' -X '$(PKG).Commit=$(COMMIT)' -X '$(PKG).Omarchy=$(OMARCHY)'
 BIN     := dist/boot-live
